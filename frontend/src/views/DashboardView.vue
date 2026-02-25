@@ -15,13 +15,9 @@
       <!-- Right Column -->
       <section class="dashboard-right">
         <div class="dashboard-topbar">
-          <h3 class="h3">{{ uitext.VITALITY.sectionTitle }}</h3>
+          
           <div class="dashboard-cards">
-            <VitalityCard type="metabolic" />
-            <VitalityCard type="regeneration" />
-            <VitalityCard type="expansion">
-              <CircularGraph />
-            </VitalityCard>
+            <VitalityCard />
           </div>
         </div>
         <div class="dashboard-bottom">
@@ -90,7 +86,6 @@ import * as uitext from '../uitext.js'
 .dashboard-cards {
   display: flex;
   gap: var(--space-lg);
-  margin-top: var(--space-md);
 }
 .dashboard-bottom {
   display: flex;

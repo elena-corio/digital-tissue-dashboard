@@ -59,7 +59,7 @@
     /* Radius */
     --radius-sm: 8px;
     --radius-md: 16px;
-    --radius-lg: 32px;
+    --radius-lg: 24px;
 
     /* Spacing */
     --space-xs: 4px;
@@ -130,6 +130,12 @@ h6, .h6 {
   font-weight: var(--font-weight-regular);
   color: var(--grey-100);
   line-height: var(--line-height-loose);
+}
+.card-title {
+  font-size: var(--font-size-h4);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-normal);
+  margin: 0 0 var(--space-sm) 0;
 }
 
 /* Utility classes */
