@@ -1,10 +1,10 @@
 <template>
-  <div class="vitality-card-parent">
-    <h4 class="card-title">{{ uitext.VITALITY.sectionTitle }}</h4>
+  <div class="card vitality-card-parent">
+    <div class="card-title">{{ uitext.VITALITY.sectionTitle }}</div>
     <div class="vitality-children-wrapper">
-    <div class="vitality-card-child" v-for="card in cards" :key="card">
-      <span class="vitality-label">{{ card }}</span>
-    </div>
+      <div class="card vitality-card-child" v-for="card in cards" :key="card">
+        <span class="vitality-label">{{ card }}</span>
+      </div>
     </div>
   </div>
 </template>
@@ -21,32 +21,20 @@ import * as uitext from '../uitext.js'
 <style scoped>
 .vitality-card-parent {
   display: flex;
-  background: white;
-  border: 1.5px solid var(--grey-100);
-  border-radius: var(--radius-lg);
-  padding: var(--space-md);
-  box-shadow: var(--shadow-soft);
-  justify-content: center;
   flex-direction: column;
+  justify-content: center;
 }
 .vitality-children-wrapper {
   display: flex;
   flex-direction: row;
-  gap: var(--space-lg);
+  gap: var(--space-md);
 }
 .vitality-card-child {
   min-width: 180px;
   min-height: 120px;
-  background:  white;
-  border: 1.5px solid var(--grey-100);
-  border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: box-shadow 0.2s;
-}
-.vitality-card-child:hover {
-  box-shadow: var(--shadow-card);
 }
 .vitality-label {
   color: var(--navy-50);

@@ -1,5 +1,5 @@
 <template>
-  <div class="growth-cycles">GrowthCycles</div>
+  <div class="card growth-cycles">GrowthCycles</div>
 </template>
 <script setup>
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <header class="header-bar">
+  <header class="header-bar dashboard-header">
     <div class="header-left">
       <h3 class="header-title h3">
         <span class="digital">digital</span>.<span class="tissue">tissue</span>
