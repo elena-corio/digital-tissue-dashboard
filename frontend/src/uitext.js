@@ -1,3 +1,7 @@
+export const DASHBOARD = {
+  title: 'Digital Tissue Dashboard',
+  subtitle: 'Check the health of your project at a glance',
+};
 // All UI text for digital.tissue dashboard
 // Export as named constants or objects
 
