@@ -2,6 +2,10 @@
   <div class="dashboard-root">
     <!-- Header -->
     <HeaderBar />
+    <div class="dashboard-title-block">
+      <h1 class="h1">{{ uitext.DASHBOARD.title }}</h1>
+      <div class="subtitle">{{ uitext.DASHBOARD.subtitle }}</div>
+    </div>
     <div class="dashboard-main">
       <!-- Left Column -->
       <section class="dashboard-left">
@@ -52,6 +56,13 @@ import * as uitext from '../uitext.js'
   flex-direction: column;
   min-height: 100vh;
   background: var(--grey-50);
+}
+.dashboard-title-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: var(--space-xl) var(--space-xl) 0 var(--space-xl);
+  gap: var(--space-xs);
 }
 .dashboard-main {
   display: flex;
