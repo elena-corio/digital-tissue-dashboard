@@ -22,8 +22,8 @@ export const TEAM = {
   members: [], // Fill with team data
 };
 
-export const GROWTH_CYCLES = {
-  title: 'Growth Cycles',
+export const GROWTH_PHASES = {
+  title: 'Growth Phases',
   labels: Array.from({length: 10}, (_, i) => `W${(i+1).toString().padStart(2, '0')}`),
 };
 

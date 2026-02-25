@@ -1,0 +1,187 @@
+/* digital.tissue global styles */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+
+:root {
+    /* Typography */
+    --font-family: 'Inter', sans-serif;
+    --font-size-h1: 2.5rem;
+    --font-size-h2: 2rem;
+    --font-size-h3: 1.5rem;
+    --font-size-h4: 1.25rem;
+    --font-size-h5: 1.125rem;
+    --font-size-h6: 1rem;
+    --font-size-body: 1rem;
+    --font-size-caption: 0.875rem;
+    --font-weight-regular: 400;
+    --font-weight-medium: 500;
+    --font-weight-bold: 700;
+    --line-height-tight: 1.1;
+    --line-height-normal: 1.4;
+    --line-height-loose: 1.7;
+  /* Semantic colors */
+  --color-success: #4697e3;
+  --color-warning: #f0b43a;
+  --color-error: #e7882f;
+
+  /* Custom palette */
+
+  --navy-100: #303179;
+  --navy-50: #7d81ac;
+  
+  --blue-100: #3b479f;
+  --blue-50: #b3bad8;
+
+  --light-blue-100: #4697e3;
+  --light-blue-50: #a7cafc;
+
+  --fucsia-100: #e9268c;
+  --fucsia-50: #f19fcb;
+  
+  --orange-100: #e7882f;
+  --orange-50: #f9ca9c;
+
+  --yellow-100: #f0b43a;
+  --yellow-50: #ffdb93;
+
+  --lila-100: #d8d9ed;
+  --lila-50: #f0f2f9;
+
+  --grey-100: #dadad9;
+  --grey-50: #ececec;
+
+    /* Shadows */
+    --shadow-soft: 0 4px 24px 0 rgba(10, 26, 47, 0.08);
+    --shadow-card: 0 8px 32px 0 rgba(10, 26, 47, 0.12);
+    --shadow-glow-blue: 0 0 24px 0 rgba(31, 79, 255, 0.18);
+    --shadow-glow-lila: 0 0 24px 0 rgba(200, 162, 255, 0.18);
+
+    /* Radius */
+    --radius-sm: 8px;
+    --radius-md: 16px;
+    --radius-lg: 32px;
+
+    /* Spacing */
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 32px;
+    --space-xl: 64px;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--grey-50);
+  color: var(--navy-100);
+  margin: 0;
+  min-height: 100vh;
+}
+
+/* Typography utility classes */
+h1, .h1 {
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  margin: 0 0 var(--space-md) 0;
+}
+h2, .h2 {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  margin: 0 0 var(--space-md) 0;
+}
+h3, .h3 {
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-normal);
+  margin: 0 0 var(--space-sm) 0;
+}
+h4, .h4 {
+  font-size: var(--font-size-h4);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-normal);
+  margin: 0 0 var(--space-sm) 0;
+}
+h5, .h5 {
+  font-size: var(--font-size-h5);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-normal);
+  margin: 0 0 var(--space-xs) 0;
+}
+h6, .h6 {
+  font-size: var(--font-size-h6);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-normal);
+  margin: 0 0 var(--space-xs) 0;
+}
+.subtitle {
+  font-size: var(--font-size-h4);
+  font-weight: var(--font-weight-regular);
+  color: var(--navy-50);
+  line-height: var(--line-height-normal);
+}
+.body {
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-normal);
+}
+.caption {
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-regular);
+  color: var(--grey-100);
+  line-height: var(--line-height-loose);
+}
+
+/* Utility classes */
+.btn {
+  display: inline-block;
+  font-family: inherit;
+  font-size: 1rem;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--white, #fff);
+  border: 1px solid var(--grey-100);
+  border-radius: var(--radius-md);
+  color: var(--navy-100);
+  cursor: pointer;
+  transition: box-shadow 0.2s, border-color 0.2s;
+  box-shadow: var(--shadow-soft);
+}
+.btn:active, .btn:focus {
+  outline: none;
+  border-color: var(--blue-100);
+  box-shadow: var(--shadow-glow-blue);
+}
+.btn.active {
+  border-color: var(--blue-100);
+  box-shadow: var(--shadow-glow-blue);
+}
+
+.card {
+  background: var(--white, #fff);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-lg);
+  transition: box-shadow 0.2s;
+}
+.card:hover {
+  box-shadow: 0 12px 40px 0 rgba(10, 26, 47, 0.16);
+}
+
+
+/* Animation placeholders */
+@keyframes breathe {
+  0% { transform: scale(0.98); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(0.98); }
+}
+
+@keyframes pulse {
+  0% { opacity: 0.4; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.1); }
+  100% { opacity: 0.4; transform: scale(0.9); }
+}
+
+/* Minimal reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
