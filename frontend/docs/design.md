@@ -4,14 +4,28 @@
 - Font: Inter
 - Typographic scale: h1–h6, subtitle, body, caption
 
-## Color Palette
-- White: #FFFFFF
-- Grey: #D9D9D9
-- Light Grey: #F2F2F2
-- Navy: #0A1A2F
-- Blue: #1F4FFF
-- Fucsia: #FF2DAA
-- Lila: #C8A2FF
+### Main Palette
+- Navy 100: #303179
+- Navy 50: #7d81ac
+- Blue 100: #3b479f
+- Blue 50: #b3bad8
+- Light Blue 100: #4697e3
+- Light Blue 50: #a7cafc
+- Fucsia 100: #e9268c
+- Fucsia 50: #f19fcb
+- Orange 100: #e7882f
+- Orange 50: #f9ca9c
+- Yellow 100: #f0b43a
+- Yellow 50: #ffdb93
+- Lila 100: #d8d9ed
+- Lila 50: #f0f2f9
+- Grey 100: #dadad9
+- Grey 50: #ececec
+
+### Semantic Colors
+- Success: #4697e3
+- Warning: #f0b43a
+- Error: #e7882f
 
 ## Visual Rules
 - Flat light-grey background
