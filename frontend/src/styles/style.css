@@ -115,7 +115,7 @@ h6, .h6 {
   margin: 0 0 var(--space-xs) 0;
 }
 .subtitle {
-  font-size: var(--font-size-h4);
+  font-size: var(--font-size-h5);
   font-weight: var(--font-weight-regular);
   color: var(--navy-50);
   line-height: var(--line-height-normal);

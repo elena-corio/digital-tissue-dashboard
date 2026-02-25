@@ -3,7 +3,7 @@
     <!-- Header -->
     <HeaderBar />
     <div class="dashboard-title-block">
-      <h1 class="h1">{{ uitext.DASHBOARD.title }}</h1>
+      <h2 class="h2">{{ uitext.DASHBOARD.title }}</h2>
       <div class="subtitle">{{ uitext.DASHBOARD.subtitle }}</div>
     </div>
     <div class="dashboard-main">
@@ -15,7 +15,7 @@
       <!-- Right Column -->
       <section class="dashboard-right">
         <div class="dashboard-topbar">
-          <h2 class="h2">{{ uitext.VITALITY.sectionTitle }}</h2>
+          <h3 class="h3">{{ uitext.VITALITY.sectionTitle }}</h3>
           <div class="dashboard-cards">
             <VitalityCard type="metabolic" />
             <VitalityCard type="regeneration" />
@@ -68,7 +68,7 @@ import * as uitext from '../uitext.js'
   display: flex;
   flex: 1 1 auto;
   gap: var(--space-xl);
-  padding: var(--space-xl) var(--space-xl) 0 var(--space-xl);
+  padding: var(--space-lg) var(--space-lg) 0 var(--space-lg);
 }
 .dashboard-left {
   flex: 2 2 0%;
@@ -106,6 +106,7 @@ import * as uitext from '../uitext.js'
   gap: var(--space-md);
 }
 .dashboard-organs {
-  margin-top: var(--space-lg);
+  margin-top: var(--space-md);
+  margin-bottom: var(--space-lg);
 }
 </style>

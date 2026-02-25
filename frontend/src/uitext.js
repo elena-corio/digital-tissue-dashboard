@@ -1,13 +1,13 @@
 export const DASHBOARD = {
-  title: 'Digital Tissue Dashboard',
-  subtitle: 'Check the health of your project at a glance',
+  title: 'Welcome to Digital Tissue',
+  subtitle: 'A quick pulse check of your project',
 };
 // All UI text for digital.tissue dashboard
 // Export as named constants or objects
 
 export const HEADER = {
   title: 'digital.tissue',
-  nav: ['Dashboard', 'Site', 'Project', 'Metrics'],
+  nav: ['Overview', 'Site', 'Project', 'Metrics'],
   avatarPlaceholder: 'EC',
   userName: 'Elena Corio',
   userRole: 'Full-stack Developer',
@@ -17,7 +17,7 @@ export const HEADER = {
 export const ORGAN_NAMES = ['Heart', 'Lungs', 'Tissue'];
 
 export const VITALITY = {
-  sectionTitle: 'Digital Tissue Vitality',
+  sectionTitle: 'Vitality',
   cards: {
     metabolic: 'Metabolic Stability',
     regeneration: 'Regeneration Cycle',
