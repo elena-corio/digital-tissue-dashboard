@@ -61,7 +61,7 @@ import * as uitext from '../uitext.js'
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  margin: var(--space-xl) var(--space-xl) 0 var(--space-xl);
+  margin: var(--space-lg) var(--space-lg) 0 var(--space-lg);
   gap: var(--space-xs);
 }
 .dashboard-main {

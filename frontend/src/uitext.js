@@ -8,6 +8,10 @@ export const DASHBOARD = {
 export const HEADER = {
   title: 'digital.tissue',
   nav: ['Dashboard', 'Site', 'Project', 'Metrics'],
+  avatarPlaceholder: 'AB',
+  userName: 'Abraham Smith',
+  userRole: 'Therapist',
+  dropdown: ['Sign out'],
 };
 
 export const ORGAN_NAMES = ['Heart', 'Lungs', 'Tissue'];
