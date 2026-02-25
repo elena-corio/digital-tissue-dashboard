@@ -10,7 +10,7 @@ export const HEADER = {
   nav: ['Overview', 'Site', 'Project', 'Metrics'],
   avatarPlaceholder: 'EC',
   userName: 'Elena Corio',
-  userRole: 'Full-stack Developer',
+  userRole: 'Software Engineer',
   dropdown: ['Sign out'],
 };
 
@@ -27,7 +27,16 @@ export const VITALITY = {
 
 export const TEAM = {
   title: 'Team Members',
-  members: [], // Fill with team data
+  members: [
+    { name: 'Elena Corio', role: 'Software Engineer' },
+    { name: 'Symon Kipkemei', role: 'Software Engineer' },
+    { name: 'Rania Chihaoui', role: 'Facade Expert' },
+    { name: 'Eleni T. Maglari', role: 'Structural Engineer' },
+    { name: 'Eduardo Martinez Toribio', role: 'BIM Specialist' },
+    { name: 'Andrea Cutroni', role: 'Computational Designer' },
+    { name: 'Tue Minh (Chloe)', role: 'Architect' },
+    { name: 'Eva Vasileska', role: 'Architect' }
+  ],
 };
 
 export const GROWTH_PHASES = {

@@ -1,32 +1,36 @@
 <template>
   <div class="dashboard-root">
-    <!-- Header -->
-    <HeaderBar />
+    <div class="dashboard-header">
+      <HeaderBar />
+    </div>
     <div class="dashboard-title-block">
       <h2 class="h2">{{ uitext.DASHBOARD.title }}</h2>
       <div class="subtitle">{{ uitext.DASHBOARD.subtitle }}</div>
     </div>
     <div class="dashboard-main">
       <!-- Left Column -->
-      <section class="dashboard-left">
-        <TissueCanvas />
-        <OrganSelector class="dashboard-organs" />
-      </section>
-      <!-- Right Column -->
-      <section class="dashboard-right">
-        <div class="dashboard-topbar">
-          
-          <div class="dashboard-cards">
-            <VitalityCard />
+      <section class="dashboard-left dashboard-col">
+        <div class="dashboard-left-stack">
+          <div class="tissue-organ-wrapper">
+            <TissueCanvas />
+            <OrganSelector class="dashboard-organs" />
           </div>
         </div>
-        <div class="dashboard-bottom">
-          <div class="dashboard-bottom-left">
-            <TeamList />
+      </section>
+      <!-- Right Column -->
+      <section class="dashboard-right dashboard-col">
+        <div class="dashboard-right-stack">
+          <div class="dashboard-vitality-wrapper">
+            <VitalityCard />
           </div>
-          <div class="dashboard-bottom-right">
-            <GrowthCycles />
-            <IssueFound />
+          <div class="dashboard-team-growth-wrapper">
+            <div class="dashboard-team-growth-left">
+              <TeamList />
+            </div>
+            <div class="dashboard-team-growth-right">
+              <GrowthCycles />
+              <IssueFound />
+            </div>
           </div>
         </div>
       </section>
@@ -57,51 +61,78 @@ import * as uitext from '../uitext.js'
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  margin: var(--space-lg) var(--space-lg) 0 var(--space-lg);
+  justify-content: flex-start;
+  margin-left: var(--space-xl);
+  margin-right: var(--space-xl);
+  margin-top: var(--space-md);
   gap: var(--space-xs);
 }
 .dashboard-main {
   display: flex;
   flex: 1 1 auto;
-  gap: var(--space-xl);
-  padding: var(--space-lg) var(--space-lg) 0 var(--space-lg);
+  gap: var(--space-lg);
+  margin-left: var(--space-xl);
+  margin-right: var(--space-xl);
+  margin-top: var(--space-lg);
+  align-items: stretch;
+  min-height: 0;
 }
-.dashboard-left {
+.dashboard-left.dashboard-col {
+  display: flex;
+  flex-direction: column;
   flex: 2 2 0%;
+  min-height: 0;
+}
+.dashboard-right.dashboard-col {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: var(--space-lg);
-}
-.dashboard-right {
   flex: 3 3 0%;
+  min-height: 0;
+}
+.dashboard-left-stack {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+.dashboard-right-stack {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: var(--space-lg);
+}
+.dashboard-vitality-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.dashboard-team-growth-wrapper {
+  display: flex;
+  flex: 1 1 0%;
+  gap: var(--space-lg);
+  height: 100%;
+  align-items: flex-start;
+}
+.dashboard-team-growth-left {
+  flex: 1 1 0%;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.dashboard-team-growth-right {
+  flex: 1 1 0%;
   display: flex;
   flex-direction: column;
   gap: var(--space-lg);
-}
-.dashboard-topbar {
-  width: 100%;
-  margin-bottom: var(--space-lg);
-}
-.dashboard-cards {
-  display: flex;
-  gap: var(--space-lg);
-}
-.dashboard-bottom {
-  display: flex;
-  gap: var(--space-lg);
-}
-.dashboard-bottom-left {
-  flex: 1 1 0%;
-}
-.dashboard-bottom-right {
-  flex: 1 1 0%;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-md);
 }
 .dashboard-organs {
-  margin-top: var(--space-md);
+  margin-top: var(--space-sm);
   margin-bottom: var(--space-lg);
+}
+.tissue-organ-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0%;
+  min-height: 0;
 }
 </style>
