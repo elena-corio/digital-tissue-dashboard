@@ -8,9 +8,9 @@ export const DASHBOARD = {
 export const HEADER = {
   title: 'digital.tissue',
   nav: ['Dashboard', 'Site', 'Project', 'Metrics'],
-  avatarPlaceholder: 'AB',
-  userName: 'Abraham Smith',
-  userRole: 'Therapist',
+  avatarPlaceholder: 'EC',
+  userName: 'Elena Corio',
+  userRole: 'Full-stack Developer',
   dropdown: ['Sign out'],
 };
 
