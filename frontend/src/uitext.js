@@ -58,3 +58,9 @@ export const ISSUES = {
   found: 'Issue Found',
   none: 'No issues detected',
 };
+
+export const PULSE = {
+  label: 'Pulse',
+  value: 78,
+  status: 'Stable',
+};

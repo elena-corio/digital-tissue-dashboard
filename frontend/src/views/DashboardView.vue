@@ -3,9 +3,14 @@
     <div class="dashboard-header">
       <HeaderBar />
     </div>
-    <div class="dashboard-title-block">
-      <h2 class="h2">{{ uitext.DASHBOARD.title }}</h2>
-      <div class="subtitle">{{ uitext.DASHBOARD.subtitle }}</div>
+    <div class="dashboard-title-row">
+      <div class="dashboard-title-block">
+        <h2 class="h2">{{ uitext.DASHBOARD.title }}</h2>
+        <div class="subtitle">{{ uitext.DASHBOARD.subtitle }}</div>
+      </div>
+      <div class="dashboard-status-indicator">
+        <StatusIndicator />
+      </div>
     </div>
     <div class="dashboard-main">
       <!-- Left Column -->
@@ -47,6 +52,7 @@ import CircularGraph from '../components/CircularGraph.vue'
 import GrowthCycles from '../components/GrowthCycles.vue'
 import IssueFound from '../components/IssueFound.vue'
 import TeamList from '../components/TeamList.vue'
+import StatusIndicator from '../components/StatusIndicator.vue'
 import * as uitext from '../uitext.js'
 </script>
 
@@ -62,10 +68,23 @@ import * as uitext from '../uitext.js'
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
+  margin-top: var(--space-md);
+  gap: var(--space-xs);
+}
+.dashboard-title-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
   margin-left: var(--space-xl);
   margin-right: var(--space-xl);
   margin-top: var(--space-md);
-  gap: var(--space-xs);
+  gap: var(--space-lg);
+}
+.dashboard-status-indicator {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+  margin-left: auto;
 }
 .dashboard-main {
   display: flex;
@@ -98,7 +117,8 @@ import * as uitext from '../uitext.js'
 .dashboard-right-stack {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  flex: 1 1 0%;
+  min-height: 0;
   gap: var(--space-lg);
 }
 .dashboard-vitality-wrapper {
