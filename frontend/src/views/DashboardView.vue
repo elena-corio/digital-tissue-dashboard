@@ -123,7 +123,7 @@ import * as uitext from '../uitext.js'
   flex: 1 1 0%;
   display: flex;
   flex-direction: column;
-  gap: var(--space-lg);
+  gap: var(--space-md);
 }
 .dashboard-organs {
   margin-top: var(--space-sm);
