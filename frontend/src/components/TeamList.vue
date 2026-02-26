@@ -1,5 +1,5 @@
 <template>
-  <div class="team-card card team-list-margin team-list-bottom-space">
+  <div class="team-card card">
     <div class="card-title">{{ uitext.TEAM.title }}</div>
     <ul class="team-list">
       <li v-for="member in uitext.TEAM.members" :key="member.name" class="team-list-item">
@@ -15,6 +15,14 @@ import * as uitext from '../uitext.js'
 </script>
 
 <style scoped>
+.team-card {
+  display: flex;
+  flex-direction: column;
+flex: 1 1 0%;
+  min-height: auto;
+  min-width: auto;
+}
+
 .team-list {
   list-style: none;
   margin: 0;
@@ -22,6 +30,7 @@ import * as uitext from '../uitext.js'
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
+ 
 }
 .team-list-item {
   display: flex;
@@ -30,6 +39,7 @@ import * as uitext from '../uitext.js'
   padding: var(--space-xs) 0;
   border-bottom: 1px solid var(--grey-100);
   font-size: var(--font-size-body);
+   
 }
 .team-list-item:last-child {
   border-bottom: none;
