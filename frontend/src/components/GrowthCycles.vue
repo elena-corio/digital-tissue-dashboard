@@ -29,10 +29,14 @@ function selectNail(idx) {
 </script>
 
 <style scoped>
+.growth-cycles {
+  flex: 1.5 1 0%;
+  min-height: auto;
+}
 .growth-nails {
   display: flex;
   gap: var(--space-sm);
-  margin-top: var(--space-md);
+  margin-top: var(--space-lg);
   justify-content: center;
 }
 .growth-nail {

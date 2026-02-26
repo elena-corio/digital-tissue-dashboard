@@ -82,7 +82,7 @@ import * as uitext from '../uitext.js'
 .dashboard-status-indicator {
   display: flex;
   align-items: center;
-  margin-bottom: 4px;
+  margin-bottom: var(--space-xs);
   margin-left: auto;
 }
 .dashboard-main {
@@ -99,8 +99,8 @@ import * as uitext from '../uitext.js'
   display: flex;
   flex-direction: column;
   flex: 2 2 0%;
-  min-height: 0;
-}
+    min-height: 0;
+  }
 .dashboard-right.dashboard-col {
   display: flex;
   flex-direction: column;
@@ -110,48 +110,50 @@ import * as uitext from '../uitext.js'
 .dashboard-left-stack {
   display: flex;
   flex-direction: column;
-  height: 100%;
-  overflow: hidden;
+ flex: 1 1 0%;
+  min-height: 0;
 }
 .dashboard-right-stack {
   display: flex;
   flex-direction: column;
   flex: 1 1 0%;
   min-height: 0;
-  gap: var(--space-lg);
+  gap: var(--space-md);
 }
 .dashboard-vitality-wrapper {
   display: flex;
+   flex: 0 0 auto;
   flex-direction: column;
-  justify-content: flex-start;
+  min-height: 0;
 }
 .dashboard-team-growth-wrapper {
   display: flex;
   flex: 1 1 0%;
-  gap: var(--space-lg);
-  height: 100%;
-  align-items: flex-start;
+  gap: var(--space-md);
+  min-height: 0;
+  overflow: hidden;
+   margin-bottom: var(--space-lg);
 }
 .dashboard-team-growth-left {
   flex: 1 1 0%;
   display: flex;
   flex-direction: column;
-  height: 100%;
+  min-height: 0;
 }
 .dashboard-team-growth-right {
   flex: 1 1 0%;
   display: flex;
   flex-direction: column;
   gap: var(--space-md);
+  min-height: 0;
 }
-.dashboard-organs {
-  margin-top: var(--space-sm);
-  margin-bottom: var(--space-lg);
-}
+
 .tissue-organ-wrapper {
   display: flex;
   flex-direction: column;
   flex: 1 1 0%;
   min-height: 0;
+ gap: var(--space-md);
+   margin-bottom: var(--space-lg);
 }
 </style>
