@@ -72,19 +72,15 @@ import * as uitext from '../uitext.js'
 }
 .dashboard-title-row {
   display: flex;
-  align-items: flex-end;
+  flex-direction: row;
+  align-items: flex-start;
   justify-content: space-between;
   margin-left: var(--space-xl);
   margin-right: var(--space-xl);
   margin-top: var(--space-md);
   gap: var(--space-lg);
 }
-.dashboard-status-indicator {
-  display: flex;
-  align-items: center;
-  margin-bottom: var(--space-xs);
-  margin-left: auto;
-}
+
 .dashboard-main {
   display: flex;
   flex: 1 1 auto;

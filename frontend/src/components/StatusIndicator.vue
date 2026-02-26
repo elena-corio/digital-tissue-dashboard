@@ -16,13 +16,14 @@ import * as uitext from '../uitext.js'
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-top: 16px;
-  font-size: 1.1rem;
+  font-size: var(--font-size-body);
   background: white;
   border-radius: var(--radius-lg);
   padding: var(--space-sm) var(--space-md);
   border: 1px solid var(--grey-100);
+  margin-left: var(--space-lg);
 }
+
 .status-indicator:hover {
    box-shadow: var(--shadow-card);
 }
