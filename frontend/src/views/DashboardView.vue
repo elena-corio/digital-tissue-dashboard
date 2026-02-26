@@ -75,21 +75,27 @@ import * as uitext from '../uitext.js'
   flex-direction: row;
   align-items: flex-start;
   justify-content: space-between;
-  margin-left: var(--space-xl);
-  margin-right: var(--space-xl);
   margin-top: var(--space-md);
   gap: var(--space-lg);
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+    padding-left: var(--space-lg);
+    padding-right: var(--space-lg);
 }
 
 .dashboard-main {
   display: flex;
   flex: 1 1 auto;
   gap: var(--space-lg);
-  margin-left: var(--space-xl);
-  margin-right: var(--space-xl);
   margin-top: var(--space-lg);
   align-items: stretch;
   min-height: 0;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+    padding-left: var(--space-lg);
+    padding-right: var(--space-lg);
 }
 .dashboard-left.dashboard-col {
   display: flex;

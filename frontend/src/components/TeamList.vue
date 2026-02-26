@@ -19,7 +19,9 @@ import * as uitext from '../uitext.js'
   display: flex;
   flex-direction: column;
 flex: 1 1 0%;
-  min-height: auto;}
+  min-height: auto;
+  min-width: auto;
+}
 
 .team-list {
   list-style: none;
