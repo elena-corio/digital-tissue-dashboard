@@ -48,6 +48,11 @@ const emit = defineEmits(['update:modelValue'])
 	border: none;
 	font-weight: var(--font-weight-medium);
 }
+.nav-tab:hover {
+	color: var(--navy-100);
+	box-shadow: var(--shadow-soft);
+	transition: background 0.2s, box-shadow 0.2s;
+}
 .nav-tab.active {
 	background: #fff!important;
 	color: var(--navy-100);

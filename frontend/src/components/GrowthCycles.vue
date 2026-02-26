@@ -49,6 +49,10 @@ function selectNail(idx) {
   transition: background 0.2s, box-shadow 0.2s;
   box-shadow: var(--shadow-soft);
 }
+.growth-nail:hover {
+  background: var(--grey-100);
+	box-shadow: var(--shadow-soft);
+}
 .growth-nail.selected {
   background: var(--blue-100);
   box-shadow:var(--shadow-glow-blue);
@@ -84,6 +88,7 @@ function selectNail(idx) {
   background: white;
   color: var(--blue-100);
 }
+
 .growth-phase-details {
   margin-top: var(--space-md);
   text-align: left;
