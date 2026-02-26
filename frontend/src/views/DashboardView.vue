@@ -68,7 +68,6 @@ import * as uitext from '../uitext.js'
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  margin-top: var(--space-md);
   gap: var(--space-xs);
 }
 .dashboard-title-row {
