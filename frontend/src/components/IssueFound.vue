@@ -1,5 +1,5 @@
 <template>
-  <div class="issue-found">IssueFound</div>
+  <div class="card issue-found">IssueFound</div>
 </template>
 <script setup>
 </script>

@@ -1,19 +1,23 @@
 export const DASHBOARD = {
-  title: 'Digital Tissue Dashboard',
-  subtitle: 'Check the health of your project at a glance',
+  title: 'Welcome to Digital Tissue',
+  subtitle: 'A quick pulse check of your project',
 };
 // All UI text for digital.tissue dashboard
 // Export as named constants or objects
 
 export const HEADER = {
   title: 'digital.tissue',
-  nav: ['Dashboard', 'Site', 'Project', 'Metrics'],
+  nav: ['Overview', 'Site', 'Project', 'Metrics'],
+  avatarPlaceholder: 'EC',
+  userName: 'Elena Corio',
+  userRole: 'Software Engineer',
+  dropdown: ['Sign out'],
 };
 
 export const ORGAN_NAMES = ['Heart', 'Lungs', 'Tissue'];
 
 export const VITALITY = {
-  sectionTitle: 'Digital Tissue Vitality',
+  sectionTitle: 'Vitality',
   cards: {
     metabolic: 'Metabolic Stability',
     regeneration: 'Regeneration Cycle',
@@ -23,15 +27,40 @@ export const VITALITY = {
 
 export const TEAM = {
   title: 'Team Members',
-  members: [], // Fill with team data
+  members: [
+    { name: 'Elena Corio', role: 'Software Engineer' },
+    { name: 'Symon Kipkemei', role: 'Software Engineer' },
+    { name: 'Rania Chihaoui', role: 'Facade Expert' },
+    { name: 'Eleni T. Maglari', role: 'Structural Engineer' },
+    { name: 'Eduardo Martinez Toribio', role: 'BIM Specialist' },
+    { name: 'Andrea Cutroni', role: 'Computational Designer' },
+    { name: 'Tue Minh (Chloe)', role: 'Architect' },
+    { name: 'Eva Vasileska', role: 'Architect' }
+  ],
 };
 
 export const GROWTH_PHASES = {
   title: 'Growth Phases',
-  labels: Array.from({length: 10}, (_, i) => `W${(i+1).toString().padStart(2, '0')}`),
+  phases: [
+    { label: '1', title: 'Foundations', description: 'Site Research · Initial Planning' },
+    { label: '2', title: 'Constraints Definition', description: 'Plot Choice · KPIs & Metrics' },
+    { label: '3', title: 'Design Exploration', description: 'Massing Proposals· Algorithmic Thinking' },
+    { label: '4', title: 'Data Streaming', description: 'Speckle Streams · Speckle Framework' },
+    { label: '5', title: 'Feedback Integration', description: 'Iterative Design · Agile Development ' },
+    { label: '6', title: 'Neighbors Test', description: 'Coordination · Sight Analysis' },
+    { label: '7', title: 'Automation', description: 'Process Optimization · Workflow Automation' },
+    { label: '8', title: 'Data Visualization', description: 'Interactive Dashboards · Insights' },
+    { label: '9', title: 'Final Stretch', description: 'Refine Narrative · Final Adjustments' },
+  ]
 };
 
 export const ISSUES = {
   found: 'Issue Found',
   none: 'No issues detected',
+};
+
+export const PULSE = {
+  label: 'Pulse',
+  value: 78,
+  status: 'Stable',
 };
