@@ -25,9 +25,17 @@
         <div class="nucleus-halo"></div>
       </template>
       <div v-if="cell.showCard" class="tissue-hover-card">
-        <div class="card-title">{{ NODE_CARD.title }}</div>
-        <div class="body">{{ NODE_CARD.typeLabel }}: {{ cell.label }}</div>
-        <div class="caption">{{ NODE_CARD.activityLabel }}: {{ cell.activity }}</div>
+        <div class="kpi-name">{{ NODE_CARD.kpis[idx % NODE_CARD.kpis.length].name }}</div>
+        <div class="kpi-card">
+          <div class="kpi-metrics">
+            <span v-for="(metric, m) in NODE_CARD.kpis[idx % NODE_CARD.kpis.length].metrics" :key="m" class="kpi-metric-row">
+              <span class="metric-label">{{ metric.label }}</span>
+              <span :class="['metric-pill', metric.type]">
+                {{ metric.value.replace('%','') }}
+              </span>
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -101,6 +109,63 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
+.kpi-card {
+  background: rgba(255,255,255,1);
+  border-radius: 0.7em;
+  box-shadow: var(--shadow-card);
+  padding: 0.7em 1.1em 0.7em 1.1em;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  opacity: 1;
+}
+.kpi-name {
+  font-weight: 600;
+  font-size: 1.08em;
+  margin-bottom: 0.3em;
+}
+.kpi-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+.kpi-metric-row {
+  display: flex;
+  align-items: center;
+  gap: 0.7em;
+  justify-content: space-between;
+}
+.metric-label {
+  font-size: 0.97em;
+  color: var(--navy-100, #1a2233);
+  min-width: 90px;
+}
+.metric-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.2em;
+  height: 1.7em;
+  padding: 0 0.7em;
+  border-radius: 1em;
+  font-size: 0.98em;
+  font-weight: 700;
+  background: var(--grey-30, #f3f3f7);
+  color: var(--navy-100, #1a2233);
+  border: 2px solid #e0e0e0;
+  box-shadow: 0 1px 2px 0 #0001;
+  line-height: 1.1;
+}
+.metric-pill.success {
+  background: var(--success-bg, #e6f9f0);
+  color: var(--success, #1eb980);
+  border-color: var(--success, #1eb980);
+}
+.metric-pill.error {
+  background: var(--error-bg, #ffeaea);
+  color: var(--error, #e23c3c);
+  border-color: var(--error, #e23c3c);
+}
 .tissue-canvas {
   width: 100%;
   height: 100%;
@@ -175,22 +240,19 @@ onBeforeUnmount(() => {
   top: 50%;
   transform: translate(-50%, -50%);
   min-width: 120px;
-  background: #fff;
+  background: rgba(255,255,255,0.3);
   color: var(--navy-100);
-  border-radius: 12px;
-  box-shadow: 0 4px 24px 0 rgba(10,26,47,0.12);
-  padding: 12px 16px;
-  font-size: 1rem;
+  border: 1px solid var(--grey-100);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-md);
+  font-size: var(--font-size-body);
   z-index: 30;
   pointer-events: none;
 }
 .card-title {
   font-weight: bold;
-  margin-bottom: 4px;
-}
-.caption {
-  font-size: 0.85em;
-  color: var(--blue-100);
+  margin-bottom: var(--space-sm);
 }
 @keyframes breathe {
   0% { transform: scale(1); }

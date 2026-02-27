@@ -5,9 +5,37 @@ export const DASHBOARD = {
 // All UI text for digital.tissue dashboard
 // Export as named constants or objects
 export const NODE_CARD = {
-  title: 'Cell Info',
-  typeLabel: 'Type',
-  activityLabel: 'Activity',
+  title: 'KPI Overview',
+  kpis: [
+    {
+      name: 'Liveability',
+      metrics: [
+        { label: 'Green Space Index', value: '+10%', type: 'success' },
+        { label: 'Daylight Factor', value: '-5%', type: 'error' }
+      ]
+    },
+    {
+      name: 'Interconnection',
+      metrics: [
+        { label: 'Program Diversity', value: '+12%', type: 'success' },
+        { label: 'Circulation Efficiency', value: '-8%', type: 'error' }
+      ]
+    },
+    {
+      name: 'Adaptability',
+      metrics: [
+        { label: 'Net-Floor-Area Ratio', value: '+22%', type: 'success' },
+        { label: 'Occupancy Efficiency', value: '-3%', type: 'error' }
+      ]
+    },
+        {
+      name: 'Sustainability',
+      metrics: [
+        { label: 'Carbon Efficiency', value: '+22%', type: 'success' },
+        { label: 'Form Factor', value: '-3%', type: 'error' }
+      ]
+    }
+  ]
 };
 
 export const HEADER = {
