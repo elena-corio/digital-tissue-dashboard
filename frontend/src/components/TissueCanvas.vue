@@ -1,23 +1,262 @@
 <template>
-  <div class="card tissue-canvas-placeholder">
-    <span class="tissue-label">Tissue Canvas Placeholder</span>
+  <div class="tissue-canvas">
+    <svg ref="svgRef" class="tissue-svg" :width="canvasW" :height="canvasH">
+      <line
+        v-for="(conn, i) in connections"
+        :key="'line-'+i"
+        :x1="cells[conn[0]].cx"
+        :y1="cells[conn[0]].cy"
+        :x2="cells[conn[1]].cx"
+        :y2="cells[conn[1]].cy"
+        stroke="var(--blue-50)" stroke-width="6" stroke-linecap="round" opacity="0.18"
+      />
+    </svg>
+    <div
+      v-for="(cell, idx) in cells"
+      :key="idx"
+      class="tissue-cell"
+      :class="{ large: cell.large }"
+      :style="cell.style"
+      @mouseenter="() => showCard(idx)"
+      @mouseleave="() => hideCard(idx)"
+    >
+      <template v-if="cell.large">
+        <div class="nucleus-center"></div>
+        <div class="nucleus-halo"></div>
+      </template>
+      <div v-if="cell.showCard" class="tissue-hover-card">
+        <div class="kpi-name">{{ NODE_CARD.kpis[idx % NODE_CARD.kpis.length].name }}</div>
+        <div class="kpi-card">
+          <div class="kpi-metrics">
+            <span v-for="(metric, m) in NODE_CARD.kpis[idx % NODE_CARD.kpis.length].metrics" :key="m" class="kpi-metric-row">
+              <span class="metric-label">{{ metric.label }}</span>
+              <span :class="['metric-pill', metric.type]">
+                {{ metric.value.replace('%','') }}
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
+import { ref, reactive, onMounted, nextTick, onBeforeUnmount } from 'vue'
+import { NODE_CARD } from '../uitext.js'
+const tissueColors = [
+  'var(--navy-100)',
+  'var(--blue-100)',
+  'var(--light-blue-100)',
+  'var(--lila-100)'
+]
+const svgRef = ref(null)
+const canvasW = ref(700)
+const canvasH = ref(340)
+const cellDefs = [
+  { x: 18, y: 22, r: 90, color: tissueColors[0], large: true, label: 'Navy', activity: 'Stable' },
+  { x: 60, y: 30, r: 80, color: tissueColors[1], large: true, label: 'Blue', activity: 'Active' },
+  { x: 28, y: 65, r: 100, color: tissueColors[2], large: true, label: 'Light Blue', activity: 'Expanding' },
+  { x: 70, y: 70, r: 85, color: tissueColors[3], large: true, label: 'Lila', activity: 'Resting' },
+  { x: 35, y: 12, r: 40, color: tissueColors[2], large: false, label: 'Small', activity: 'Idle' },
+  { x: 80, y: 10, r: 35, color: tissueColors[1], large: false, label: 'Small', activity: 'Idle' },
+  { x: 10, y: 32, r: 30, color: tissueColors[3], large: false, label: 'Small', activity: 'Idle' },
+  { x: 85, y: 28, r: 30, color: tissueColors[0], large: false, label: 'Small', activity: 'Idle' },
+  { x: 45, y: 50, r: 35, color: tissueColors[1], large: false, label: 'Small', activity: 'Idle' },
+  { x: 75, y: 55, r: 32, color: tissueColors[2], large: false, label: 'Small', activity: 'Idle' },
+  { x: 15, y: 80, r: 30, color: tissueColors[0], large: false, label: 'Small', activity: 'Idle' },
+  { x: 90, y: 75, r: 26, color: tissueColors[3], large: false, label: 'Small', activity: 'Idle' }
+]
+const cells = reactive(cellDefs.map(c => ({ ...c, cx: 0, cy: 0, style: '', showCard: false })))
+const connections = [
+  [0,1],[0,2],[1,2],[2,3],[1,3],[0,4],[2,4],[3,5],[1,5],[0,6],[3,7],[2,8],[1,9],[3,9],
+  [0,10],[2,10],[3,11],[8,10],[9,11],[4,10],[5,11],[6,10],[7,11],[10,11]
+]
+function resizeCanvas() {
+  if (!svgRef.value) return
+  const parent = svgRef.value.parentElement
+  if (parent) {
+    canvasW.value = parent.offsetWidth
+    canvasH.value = parent.offsetHeight
+    cells.forEach(cell => {
+      cell.cx = (cell.x / 100) * canvasW.value
+      cell.cy = (cell.y / 100) * canvasH.value
+      cell.style = `left: calc(${cell.x}% - ${cell.r/2}px); top: calc(${cell.y}% - ${cell.r/2}px); width: ${cell.r*2}px; height: ${cell.r*2}px; box-shadow: 0 0 10px 0 ${cell.color}, 0 2px 8px 0 rgba(10,26,47,0.06); background: radial-gradient(circle at 60% 40%, #fff 0%, ${cell.color} 80%); animation: breathe 6s infinite;`;
+    })
+  }
+}
+function showCard(idx) {
+  if (cells[idx].large) cells[idx].showCard = true
+}
+function hideCard(idx) {
+  if (cells[idx].large) cells[idx].showCard = false
+}
+let resizeObserver
+onMounted(() => {
+  nextTick(() => {
+    resizeCanvas()
+    resizeObserver = new ResizeObserver(resizeCanvas)
+    if (svgRef.value && svgRef.value.parentElement) {
+      resizeObserver.observe(svgRef.value.parentElement)
+    }
+  })
+})
+onBeforeUnmount(() => {
+  if (resizeObserver && svgRef.value && svgRef.value.parentElement) {
+    resizeObserver.unobserve(svgRef.value.parentElement)
+  }
+})
 </script>
 
 <style scoped>
-.tissue-canvas-placeholder {
-  width: 100%;
-  flex: 1 1 0%;
+.kpi-card {
+  background: rgba(255,255,255,1);
+  border-radius: 0.7em;
+  box-shadow: var(--shadow-card);
+  padding: 0.7em 1.1em 0.7em 1.1em;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  opacity: 1;
+}
+.kpi-name {
+  font-weight: 600;
+  font-size: 1.08em;
+  margin-bottom: 0.3em;
+}
+.kpi-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+.kpi-metric-row {
   display: flex;
   align-items: center;
-  
+  gap: 0.7em;
+  justify-content: space-between;
 }
-.tissue-label {
-  color: var(--navy-50);
-  font-size: var(--font-size-h4);
-  font-weight: var(--font-weight-medium);
+.metric-label {
+  font-size: 0.97em;
+  color: var(--navy-100, #1a2233);
+  min-width: 90px;
+}
+.metric-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.2em;
+  height: 1.7em;
+  padding: 0 0.7em;
+  border-radius: 1em;
+  font-size: 0.98em;
+  font-weight: 700;
+  background: var(--grey-30, #f3f3f7);
+  color: var(--navy-100, #1a2233);
+  border: 2px solid #e0e0e0;
+  box-shadow: 0 1px 2px 0 #0001;
+  line-height: 1.1;
+}
+.metric-pill.success {
+  background: var(--success-bg, #e6f9f0);
+  color: var(--success, #1eb980);
+  border-color: var(--success, #1eb980);
+}
+.metric-pill.error {
+  background: var(--error-bg, #ffeaea);
+  color: var(--error, #e23c3c);
+  border-color: var(--error, #e23c3c);
+}
+.tissue-canvas {
+  width: 100%;
+  height: 100%;
+  min-height: 240px;
+  background: var(--grey-50);
+  position: relative;
+  overflow: hidden;
+}
+.tissue-svg {
+  position: absolute;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+.tissue-cell {
+  position: absolute;
+  border-radius: 50%;
+  transition: box-shadow 0.3s, transform 0.2s;
+  z-index: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.tissue-cell.large:hover {
+  z-index: 10;
+  box-shadow: 0 0 0 4px var(--blue-50), 0 2px 8px 0 rgba(10,26,47,0.10);
+}
+.nucleus-center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 28%;
+  height: 28%;
+  background: #fff;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0.98;
+  z-index: 2;
+  box-shadow: 0 0 0 0 #0000;
+}
+.nucleus-halo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 48%;
+  height: 48%;
+  background: #fff;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0.13;
+  z-index: 2;
+  pointer-events: none;
+}
+.tissue-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 80%;
+  height: 80%;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  /* No shadow for digital look */
+  pointer-events: none;
+  z-index: 3;
+}
+.tissue-hover-card {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 120px;
+  background: rgba(255,255,255,0.3);
+  color: var(--navy-100);
+  border: 1px solid var(--grey-100);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-md);
+  font-size: var(--font-size-body);
+  z-index: 30;
+  pointer-events: none;
+}
+.card-title {
+  font-weight: bold;
+  margin-bottom: var(--space-sm);
+}
+@keyframes breathe {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+  100% { transform: scale(1); }
 }
 </style>
