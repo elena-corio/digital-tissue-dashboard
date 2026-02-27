@@ -25,9 +25,9 @@
         <div class="nucleus-halo"></div>
       </template>
       <div v-if="cell.showCard" class="tissue-hover-card">
-        <div class="card-title">Cell Info</div>
-        <div class="body">Type: {{ cell.label }}</div>
-        <div class="caption">Activity: {{ cell.activity }}</div>
+        <div class="card-title">{{ NODE_CARD.title }}</div>
+        <div class="body">{{ NODE_CARD.typeLabel }}: {{ cell.label }}</div>
+        <div class="caption">{{ NODE_CARD.activityLabel }}: {{ cell.activity }}</div>
       </div>
     </div>
   </div>
@@ -35,6 +35,7 @@
 
 <script setup>
 import { ref, reactive, onMounted, nextTick, onBeforeUnmount } from 'vue'
+import { NODE_CARD } from '../uitext.js'
 const tissueColors = [
   'var(--navy-100)',
   'var(--blue-100)',
@@ -47,18 +48,21 @@ const canvasH = ref(340)
 const cellDefs = [
   { x: 18, y: 22, r: 90, color: tissueColors[0], large: true, label: 'Navy', activity: 'Stable' },
   { x: 60, y: 30, r: 80, color: tissueColors[1], large: true, label: 'Blue', activity: 'Active' },
-  { x: 35, y: 65, r: 100, color: tissueColors[2], large: true, label: 'Light Blue', activity: 'Expanding' },
+  { x: 28, y: 65, r: 100, color: tissueColors[2], large: true, label: 'Light Blue', activity: 'Expanding' },
   { x: 70, y: 70, r: 85, color: tissueColors[3], large: true, label: 'Lila', activity: 'Resting' },
-  { x: 45, y: 18, r: 40, color: tissueColors[2], large: false, label: 'Small', activity: 'Idle' },
-  { x: 80, y: 18, r: 35, color: tissueColors[1], large: false, label: 'Small', activity: 'Idle' },
-  { x: 10, y: 60, r: 30, color: tissueColors[3], large: false, label: 'Small', activity: 'Idle' },
-  { x: 85, y: 50, r: 30, color: tissueColors[0], large: false, label: 'Small', activity: 'Idle' },
-  { x: 55, y: 80, r: 35, color: tissueColors[1], large: false, label: 'Small', activity: 'Idle' },
-  { x: 75, y: 55, r: 32, color: tissueColors[0], large: false, label: 'Small', activity: 'Idle' }
+  { x: 35, y: 12, r: 40, color: tissueColors[2], large: false, label: 'Small', activity: 'Idle' },
+  { x: 80, y: 10, r: 35, color: tissueColors[1], large: false, label: 'Small', activity: 'Idle' },
+  { x: 10, y: 32, r: 30, color: tissueColors[3], large: false, label: 'Small', activity: 'Idle' },
+  { x: 85, y: 28, r: 30, color: tissueColors[0], large: false, label: 'Small', activity: 'Idle' },
+  { x: 45, y: 50, r: 35, color: tissueColors[1], large: false, label: 'Small', activity: 'Idle' },
+  { x: 75, y: 55, r: 32, color: tissueColors[2], large: false, label: 'Small', activity: 'Idle' },
+  { x: 15, y: 80, r: 30, color: tissueColors[0], large: false, label: 'Small', activity: 'Idle' },
+  { x: 90, y: 75, r: 26, color: tissueColors[3], large: false, label: 'Small', activity: 'Idle' }
 ]
 const cells = reactive(cellDefs.map(c => ({ ...c, cx: 0, cy: 0, style: '', showCard: false })))
 const connections = [
-  [0,1],[0,2],[1,2],[2,3],[1,3],[0,4],[2,4],[3,5],[1,5],[0,6],[3,7],[2,8],[1,9],[3,9]
+  [0,1],[0,2],[1,2],[2,3],[1,3],[0,4],[2,4],[3,5],[1,5],[0,6],[3,7],[2,8],[1,9],[3,9],
+  [0,10],[2,10],[3,11],[8,10],[9,11],[4,10],[5,11],[6,10],[7,11],[10,11]
 ]
 function resizeCanvas() {
   if (!svgRef.value) return

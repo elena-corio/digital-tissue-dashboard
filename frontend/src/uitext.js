@@ -4,6 +4,11 @@ export const DASHBOARD = {
 };
 // All UI text for digital.tissue dashboard
 // Export as named constants or objects
+export const NODE_CARD = {
+  title: 'Cell Info',
+  typeLabel: 'Type',
+  activityLabel: 'Activity',
+};
 
 export const HEADER = {
   title: 'digital.tissue',
