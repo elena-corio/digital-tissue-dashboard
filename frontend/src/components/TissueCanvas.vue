@@ -168,8 +168,8 @@ onBeforeUnmount(() => {
 .tissue-hover-card {
   position: absolute;
   left: 50%;
-  top: 0%;
-  transform: translate(-50%, -110%);
+  top: 50%;
+  transform: translate(-50%, -50%);
   min-width: 120px;
   background: #fff;
   color: var(--navy-100);
@@ -177,7 +177,7 @@ onBeforeUnmount(() => {
   box-shadow: 0 4px 24px 0 rgba(10,26,47,0.12);
   padding: 12px 16px;
   font-size: 1rem;
-  z-index: 20;
+  z-index: 30;
   pointer-events: none;
 }
 .card-title {
