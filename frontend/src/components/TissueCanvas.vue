@@ -20,8 +20,10 @@
       @mouseenter="() => showCard(idx)"
       @mouseleave="() => hideCard(idx)"
     >
-      <div class="tissue-core"></div>
-      <div v-if="cell.large" class="tissue-ring"></div>
+      <template v-if="cell.large">
+        <div class="nucleus-center"></div>
+        <div class="nucleus-halo"></div>
+      </template>
       <div v-if="cell.showCard" class="tissue-hover-card">
         <div class="card-title">Cell Info</div>
         <div class="body">Type: {{ cell.label }}</div>
@@ -67,7 +69,7 @@ function resizeCanvas() {
     cells.forEach(cell => {
       cell.cx = (cell.x / 100) * canvasW.value
       cell.cy = (cell.y / 100) * canvasH.value
-      cell.style = `left: calc(${cell.x}% - ${cell.r/2}px); top: calc(${cell.y}% - ${cell.r/2}px); width: ${cell.r*2}px; height: ${cell.r*2}px; box-shadow: 0 0 40px 0 ${cell.color}, 0 8px 32px 0 rgba(10,26,47,0.12); background: radial-gradient(circle at 60% 40%, #fff 0%, ${cell.color} 80%); animation: breathe 6s infinite;`;
+      cell.style = `left: calc(${cell.x}% - ${cell.r/2}px); top: calc(${cell.y}% - ${cell.r/2}px); width: ${cell.r*2}px; height: ${cell.r*2}px; box-shadow: 0 0 10px 0 ${cell.color}, 0 2px 8px 0 rgba(10,26,47,0.06); background: radial-gradient(circle at 60% 40%, #fff 0%, ${cell.color} 80%); animation: breathe 6s infinite;`;
     })
   }
 }
@@ -122,19 +124,33 @@ onBeforeUnmount(() => {
 }
 .tissue-cell.large:hover {
   z-index: 10;
-  box-shadow: 0 0 0 8px var(--blue-50), 0 8px 32px 0 rgba(10,26,47,0.18);
+  box-shadow: 0 0 0 4px var(--blue-50), 0 2px 8px 0 rgba(10,26,47,0.10);
 }
-.tissue-core {
+.nucleus-center {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 40%;
-  height: 40%;
-  background: radial-gradient(circle, #fff 0%, var(--grey-50) 80%);
+  width: 28%;
+  height: 28%;
+  background: #fff;
   border-radius: 50%;
   transform: translate(-50%, -50%);
-  opacity: 0.7;
+  opacity: 0.98;
   z-index: 2;
+  box-shadow: 0 0 0 0 #0000;
+}
+.nucleus-halo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 48%;
+  height: 48%;
+  background: #fff;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0.13;
+  z-index: 2;
+  pointer-events: none;
 }
 .tissue-ring {
   position: absolute;
@@ -142,10 +158,10 @@ onBeforeUnmount(() => {
   top: 50%;
   width: 80%;
   height: 80%;
-  border: 4px solid #fff;
+  border: 3px solid #fff;
   border-radius: 50%;
   transform: translate(-50%, -50%);
-  box-shadow: 0 0 24px 4px #fff8;
+  /* No shadow for digital look */
   pointer-events: none;
   z-index: 3;
 }
