@@ -1,175 +1,32 @@
 import { gql } from '@urql/vue'
 
-export const GET_MODEL_DATA = gql`
-  query GetModelData($projectId: String!, $modelId: String!) {
+// Step 1: Get the latest version and its referenced object ID
+export const GET_LATEST_VERSION = gql`
+  query GetLatestModelVersion($projectId: String!, $modelId: String!) {
     project(id: $projectId) {
       model(id: $modelId) {
         id
         name
-        properties {
-          daylight_potential
-          green_space_index
-          program_diversity_index
-          circulation_efficiency
-          occupancy_efficiency
-          net_floor_area_ratio
-          envelope_efficiency
-          carbon_efficiency
-        }
-        towers {
-          tower_a {
+        versions(limit: 1) {
+          items {
             id
-            name
-            levels {
-              id
-              name
-              properties {
-                daylight_potential
-                green_space_index
-                program_diversity_index
-                circulation_efficiency
-                occupancy_efficiency
-                net_floor_area_ratio
-                envelope_efficiency
-                carbon_efficiency
-              }
-              objects {
-                id
-                name
-                type
-                properties {
-                  area
-                  volume
-                  height
-                  width
-                  length
-                  daylight_potential
-                  green_space_index
-                  program_diversity_index
-                  circulation_efficiency
-                  occupancy_efficiency
-                  net_floor_area_ratio
-                  envelope_efficiency
-                  carbon_efficiency
-                }
-              }
-            }
-          }
-          tower_b {
-            id
-            name
-            levels {
-              id
-              name
-              properties {
-                daylight_potential
-                green_space_index
-                program_diversity_index
-                circulation_efficiency
-                occupancy_efficiency
-                net_floor_area_ratio
-                envelope_efficiency
-                carbon_efficiency
-              }
-              objects {
-                id
-                name
-                type
-                properties {
-                  area
-                  volume
-                  height
-                  width
-                  length
-                  daylight_potential
-                  green_space_index
-                  program_diversity_index
-                  circulation_efficiency
-                  occupancy_efficiency
-                  net_floor_area_ratio
-                  envelope_efficiency
-                  carbon_efficiency
-                }
-              }
-            }
-          }
-          tower_c {
-            id
-            name
-            levels {
-              id
-              name
-              properties {
-                daylight_potential
-                green_space_index
-                program_diversity_index
-                circulation_efficiency
-                occupancy_efficiency
-                net_floor_area_ratio
-                envelope_efficiency
-                carbon_efficiency
-              }
-              objects {
-                id
-                name
-                type
-                properties {
-                  area
-                  volume
-                  height
-                  width
-                  length
-                  daylight_potential
-                  green_space_index
-                  program_diversity_index
-                  circulation_efficiency
-                  occupancy_efficiency
-                  net_floor_area_ratio
-                  envelope_efficiency
-                  carbon_efficiency
-                }
-              }
-            }
-          }
-          tower_d {
-            id
-            name
-            levels {
-              id
-              name
-              properties {
-                daylight_potential
-                green_space_index
-                program_diversity_index
-                circulation_efficiency
-                occupancy_efficiency
-                net_floor_area_ratio
-                envelope_efficiency
-                carbon_efficiency
-              }
-              objects {
-                id
-                name
-                type
-                properties {
-                  area
-                  volume
-                  height
-                  width
-                  length
-                  daylight_potential
-                  green_space_index
-                  program_diversity_index
-                  circulation_efficiency
-                  occupancy_efficiency
-                  net_floor_area_ratio
-                  envelope_efficiency
-                  carbon_efficiency
-                }
-              }
-            }
+            referencedObject
+            createdAt
           }
         }
+      }
+    }
+  }
+`
+
+// Step 2: Get the root object with all properties
+export const GET_ROOT_OBJECT = gql`
+  query GetRootObject($projectId: String!, $objectId: String!) {
+    project(id: $projectId) {
+      object(id: $objectId) {
+        id
+        speckleType
+        data
       }
     }
   }

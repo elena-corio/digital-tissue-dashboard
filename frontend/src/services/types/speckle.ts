@@ -1,64 +1,72 @@
-// Base properties shared across all hierarchy levels
+// Performance metrics (values are strings from Speckle)
 export interface PerformanceMetrics {
-  daylight_potential: number
-  green_space_index: number
-  program_diversity_index: number
-  circulation_efficiency: number
-  occupancy_efficiency: number
-  net_floor_area_ratio: number
-  envelope_efficiency: number
-  carbon_efficiency: number
+  daylight_potential: string
+  green_space_index: string
+  program_diversity_index: string
+  circulation_efficiency: string
+  occupancy_efficiency: string
+  net_floor_area_ratio: string
+  envelope_efficiency: string
+  carbon_efficiency: string
 }
 
-// Object-level specific properties
-export interface ObjectGeometry {
-  area: number
-  volume: number
-  height: number
-  width: number
-  length: number
+// Level properties within a tower
+export interface LevelProperties {
+  [levelName: string]: PerformanceMetrics
 }
 
-// Base entity with id and name
-export interface SpeckleEntity {
-  id: string
-  name: string
-}
-
-// Object within a level
-export interface SpeckleObject extends SpeckleEntity {
-  type: string
-  properties: PerformanceMetrics & ObjectGeometry
-}
-
-// Level within a tower
-export interface SpeckleLevel extends SpeckleEntity {
+// Tower structure with levels and overall properties
+export interface TowerData {
   properties: PerformanceMetrics
-  objects: SpeckleObject[]
+  [levelName: string]: PerformanceMetrics | LevelProperties
 }
 
-// Tower within a model
-export interface SpeckleTower extends SpeckleEntity {
-  levels: SpeckleLevel[]
+// Root properties structure from Speckle object data
+export interface RootProperties {
+  'tower-a'?: TowerData
+  'tower-b'?: TowerData
+  'tower-c'?: TowerData
+  'tower-d'?: TowerData
+  'connections'?: TowerData
+  'overall-properties'?: PerformanceMetrics
 }
 
-// Model structure
-export interface SpeckleModel extends SpeckleEntity {
-  properties: PerformanceMetrics
-  towers: {
-    tower_a?: SpeckleTower
-    tower_b?: SpeckleTower
-    tower_c?: SpeckleTower
-    tower_d?: SpeckleTower
-  }
-}
-
-// Root query response
-export interface SpeckleModelData {
+// Step 1: Latest version response
+export interface LatestVersionResponse {
   project: {
-    model: SpeckleModel
+    model: {
+      id: string
+      name: string
+      versions: {
+        items: Array<{
+          id: string
+          referencedObject: string
+          createdAt: string
+        }>
+      }
+    }
   }
 }
 
-// Helper type for accessing any tower by key
-export type TowerKey = 'tower_a' | 'tower_b' | 'tower_c' | 'tower_d'
+// Step 2: Root object response
+export interface RootObjectResponse {
+  project: {
+    object: {
+      id: string
+      data: any // Can be string (JSON) or object
+    }
+  }
+}
+
+// Combined data structure for the composable
+export interface SpeckleModelData {
+  modelId: string
+  modelName: string
+  versionId: string
+  objectId: string
+  createdAt: string
+  properties: RootProperties
+}
+
+// Helper type for tower keys
+export type TowerKey = 'tower-a' | 'tower-b' | 'tower-c' | 'tower-d' | 'connections'

@@ -6,7 +6,9 @@ export const speckleClient = createClient({
   exchanges: [cacheExchange, fetchExchange],
   fetchOptions: () => ({
     headers: {
-      Authorization: `Bearer ${SPECKLE_CONFIG.token}`
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${SPECKLE_CONFIG.token}`,
+      'Apollo-Require-Preflight': 'true'
     }
   })
 })
