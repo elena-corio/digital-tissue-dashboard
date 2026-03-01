@@ -14,6 +14,8 @@ Fetches Speckle model data via GraphQL with automatic caching.
    projectId: 'your-project-id'
    modelId: 'your-model-id'
    ```
+   
+   **Important**: Ensure the `projectId` and `modelId` reference the same Speckle project. The model must belong to the specified project, otherwise the object query will return `null`.
 
 3. **Install dependencies** (if needed):
    ```bash

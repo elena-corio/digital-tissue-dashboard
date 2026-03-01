@@ -46,39 +46,59 @@ const handleRefresh = async () => {
           <span class="value">{{ refreshTime }}ms</span>
         </div>
 
-        <div v-if="data.properties['overall-properties']" class="metrics">
-          <h3>Performance Metrics</h3>
-          <div class="stat">
-            <span class="label">Daylight Potential</span>
-            <span class="value">{{ data.properties['overall-properties'].daylight_potential }}</span>
+        <div v-if="data.data?.metrics" class="metrics">
+          <h3>{{ data.data.name }} Metrics</h3>
+          <div class="metrics-grid">
+            <div class="stat">
+              <span class="label">Carbon Efficiency</span>
+              <span class="value">{{ data.data.metrics.carbon_efficiency.value.toFixed(2) }}</span>
+              <span class="benchmark">{{ data.data.metrics.carbon_efficiency.benchmark }}</span>
+            </div>
+            <div class="stat">
+              <span class="label">Daylight Potential</span>
+              <span class="value">{{ data.data.metrics.daylight_potential.value.toFixed(2) }}</span>
+              <span class="benchmark">{{ data.data.metrics.daylight_potential.benchmark }}</span>
+            </div>
+            <div class="stat">
+              <span class="label">Green Space Index</span>
+              <span class="value">{{ data.data.metrics.green_space_index.value.toFixed(2) }}</span>
+              <span class="benchmark">{{ data.data.metrics.green_space_index.benchmark }}</span>
+            </div>
+            <div class="stat">
+              <span class="label">Usable Area Ratio</span>
+              <span class="value">{{ data.data.metrics.usable_area_ratio.value.toFixed(2) }}</span>
+              <span class="benchmark">{{ data.data.metrics.usable_area_ratio.benchmark }}</span>
+            </div>
+            <div class="stat">
+              <span class="label">Circulation Efficiency</span>
+              <span class="value">{{ data.data.metrics.circulation_efficiency.value.toFixed(2) }}</span>
+              <span class="benchmark">{{ data.data.metrics.circulation_efficiency.benchmark }}</span>
+            </div>
+            <div class="stat">
+              <span class="label">Net Floor Area Ratio</span>
+              <span class="value">{{ data.data.metrics.net_floor_area_ratio.value.toFixed(2) }}</span>
+              <span class="benchmark">{{ data.data.metrics.net_floor_area_ratio.benchmark }}</span>
+            </div>
+            <div class="stat">
+              <span class="label">Program Diversity</span>
+              <span class="value">{{ data.data.metrics.program_diversity_index.value.toFixed(2) }}</span>
+              <span class="benchmark">{{ data.data.metrics.program_diversity_index.benchmark }}</span>
+            </div>
+            <div class="stat">
+              <span class="label">Volume/Envelope Ratio</span>
+              <span class="value">{{ data.data.metrics.volume_to_envelope_ratio.value.toFixed(2) }}</span>
+              <span class="benchmark">{{ data.data.metrics.volume_to_envelope_ratio.benchmark }}</span>
+            </div>
           </div>
-          <div class="stat">
-            <span class="label">Green Space Index</span>
-            <span class="value">{{ data.properties['overall-properties'].green_space_index }}</span>
-          </div>
-          <div class="stat">
-            <span class="label">Program Diversity</span>
-            <span class="value">{{ data.properties['overall-properties'].program_diversity_index }}</span>
-          </div>
-          <div class="stat">
-            <span class="label">Circulation Efficiency</span>
-            <span class="value">{{ data.properties['overall-properties'].circulation_efficiency }}</span>
-          </div>
-          <div class="stat">
-            <span class="label">Occupancy Efficiency</span>
-            <span class="value">{{ data.properties['overall-properties'].occupancy_efficiency }}</span>
-          </div>
-          <div class="stat">
-            <span class="label">Net Floor Area Ratio</span>
-            <span class="value">{{ data.properties['overall-properties'].net_floor_area_ratio }}</span>
-          </div>
-          <div class="stat">
-            <span class="label">Envelope Efficiency</span>
-            <span class="value">{{ data.properties['overall-properties'].envelope_efficiency }}</span>
-          </div>
-          <div class="stat">
-            <span class="label">Carbon Efficiency</span>
-            <span class="value">{{ data.properties['overall-properties'].carbon_efficiency }}</span>
+        </div>
+
+        <div v-if="data.data?.elements" class="clusters">
+          <h3>Clusters ({{ data.data.elements.length }})</h3>
+          <div class="clusters-grid">
+            <div v-for="cluster in data.data.elements" :key="cluster.id" class="cluster-info">
+              <span class="label">{{ cluster.name }}</span>
+              <span class="value">{{ cluster.elements.length }} levels</span>
+            </div>
           </div>
         </div>
         
@@ -105,7 +125,7 @@ const handleRefresh = async () => {
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   padding: 32px;
-  max-width: 500px;
+  max-width: 800px;
   width: 100%;
 }
 
@@ -202,5 +222,70 @@ h2 {
   color: #6b7280;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  grid-column: 1 / -1;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 24px;
+}
+
+.metrics .stat {
+  display: grid;
+  grid-template-columns: 1fr min-content min-content;
+  gap: 8px;
+  align-items: center;
+}
+
+.metrics .stat .value {
+  white-space: nowrap;
+  max-width: none;
+}
+
+.benchmark {
+  font-size: 11px;
+  color: #9ca3af;
+  font-family: 'SF Mono', Monaco, monospace;
+  margin-left: 8px;
+}
+
+.benchmark::before {
+  content: '↑';
+  margin-right: 2px;
+}
+
+.clusters {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 2px solid #f0f0f0;
+}
+
+.clusters h3 {
+  margin: 0 0 16px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  grid-column: 1 / -1;
+}
+
+.clusters-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 24px;
+}
+
+.cluster-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.cluster-info:last-child {
+  border-bottom: none;
 }
 </style>

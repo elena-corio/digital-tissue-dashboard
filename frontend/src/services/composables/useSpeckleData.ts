@@ -44,11 +44,17 @@ export function useSpeckleData() {
     ).toPromise()
     
     if (result.error) throw new Error(`Object fetch failed: ${result.error.message}`)
-    if (!result.data?.project?.object?.data) throw new Error('No object data')
+    if (!result.data?.project?.object) {
+      throw new Error('Object not found. Please verify that projectId and modelId in speckle.config.ts reference the same Speckle project.')
+    }
+    if (!result.data.project.object.data) throw new Error('No object data')
     
     const data = result.data.project.object.data
     const parsed = typeof data === 'string' ? JSON.parse(data) : data
-    if (!parsed.properties) throw new Error('No properties found')
+    
+    // Validate: new structure requires 'metrics'
+    if (!parsed.id || !parsed.name) throw new Error('Invalid data structure: missing id or name')
+    if (!parsed.metrics) throw new Error('New structure required: missing metrics field')
     
     return parsed
   }
@@ -70,7 +76,7 @@ export function useSpeckleData() {
         versionId: version.id,
         objectId: version.referencedObject,
         createdAt: version.createdAt,
-        properties: rootData.properties
+        data: rootData
       }
 
       lastFetched.value = new Date()

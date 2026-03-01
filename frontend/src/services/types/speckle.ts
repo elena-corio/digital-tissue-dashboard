@@ -1,34 +1,51 @@
-// Performance metrics (values are strings from Speckle)
-export interface PerformanceMetrics {
-  daylight_potential: string
-  green_space_index: string
-  program_diversity_index: string
-  circulation_efficiency: string
-  occupancy_efficiency: string
-  net_floor_area_ratio: string
-  envelope_efficiency: string
-  carbon_efficiency: string
+// Metric with value and benchmark
+export interface Metric {
+  value: number
+  benchmark: number
 }
 
-// Level properties within a tower
-export interface LevelProperties {
-  [levelName: string]: PerformanceMetrics
+// Performance metrics structure
+export interface Metrics {
+  carbon_efficiency: Metric
+  green_space_index: Metric
+  usable_area_ratio: Metric
+  daylight_potential: Metric
+  net_floor_area_ratio: Metric
+  circulation_efficiency: Metric
+  program_diversity_index: Metric
+  volume_to_envelope_ratio: Metric
 }
 
-// Tower structure with levels and overall properties
-export interface TowerData {
-  properties: PerformanceMetrics
-  [levelName: string]: PerformanceMetrics | LevelProperties
+// Level element
+export interface LevelElement {
+  id: string
+  name: string
+  x?: number
+  y?: number
+  z?: number
+  units?: string
+  metrics: Metrics
+  properties?: {
+    level: number
+    cluster_id: string
+  }
+  speckle_type?: string
 }
 
-// Root properties structure from Speckle object data
-export interface RootProperties {
-  'tower-a'?: TowerData
-  'tower-b'?: TowerData
-  'tower-c'?: TowerData
-  'tower-d'?: TowerData
-  'connections'?: TowerData
-  'overall-properties'?: PerformanceMetrics
+// Cluster element
+export interface ClusterElement {
+  id: string
+  name: string
+  metrics: Metrics
+  elements: LevelElement[]
+}
+
+// Root data structure
+export interface RootData {
+  id: string
+  name: string
+  metrics: Metrics
+  elements: ClusterElement[]
 }
 
 // Step 1: Latest version response
@@ -65,8 +82,5 @@ export interface SpeckleModelData {
   versionId: string
   objectId: string
   createdAt: string
-  properties: RootProperties
+  data: RootData
 }
-
-// Helper type for tower keys
-export type TowerKey = 'tower-a' | 'tower-b' | 'tower-c' | 'tower-d' | 'connections'
