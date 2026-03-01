@@ -1,13 +1,13 @@
 <script setup>
 import './main.css'
 import DashboardView from './views/DashboardView.vue'
-import VitalityCardExample from './services/example/vitalityCard.vue'
+import HealthCheck from './services/example/healthCheck.vue'
 </script>
 
 
 <template>
   <!-- Temporary: Testing Speckle Integration -->
-  <VitalityCardExample />
+  <HealthCheck />
   
   <!-- Original Dashboard (commented out for testing) -->
   <!-- <DashboardView /> -->
