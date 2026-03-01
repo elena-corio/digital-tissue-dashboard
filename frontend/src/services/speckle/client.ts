@@ -1,11 +1,12 @@
-import { createClient } from '@urql/vue'
-import { SPECKLE_CONFIG } from '@/config/speckle.config'
+import { createClient, fetchExchange, cacheExchange } from '@urql/vue'
+import { SPECKLE_CONFIG } from '../config/speckle.config'
 
 export const speckleClient = createClient({
   url: `${SPECKLE_CONFIG.serverUrl}/graphql`,
-  fetchOptions: {
+  exchanges: [cacheExchange, fetchExchange],
+  fetchOptions: () => ({
     headers: {
       Authorization: `Bearer ${SPECKLE_CONFIG.token}`
     }
-  }
+  })
 })

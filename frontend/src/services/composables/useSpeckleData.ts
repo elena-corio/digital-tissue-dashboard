@@ -1,10 +1,11 @@
 import { ref, onMounted } from 'vue'
 import { useQuery } from '@urql/vue'
-import { GET_MODEL_DATA } from '@/services/speckle/queries'
-import { SPECKLE_CONFIG } from '@/config/speckle.config'
+import { GET_MODEL_DATA } from '../speckle/queries'
+import { SPECKLE_CONFIG } from '../config/speckle.config'
+import type { SpeckleModelData } from '../types/speckle'
 
 export function useSpeckleData() {
-  const cache = ref(null)
+  const cache = ref<SpeckleModelData | null>(null)
   const lastFetched = ref<Date | null>(null)
 
   const { data, fetching, error, executeQuery } = useQuery({
