@@ -65,8 +65,8 @@
     --space-xs: 4px;
     --space-sm: 8px;
     --space-md: 16px;
-    --space-lg: 32px;
-    --space-xl: 64px;
+    --space-lg: 30px;
+    --space-xl: 60px;
 }
 
 body {

@@ -56,9 +56,9 @@ export const ORGANS = {
 export const VITALITY = {
   sectionTitle: 'Vitality',
   cards: {
-    metabolic: 'Metabolic Stability',
-    regeneration: 'Regeneration Cycle',
-    expansion: 'Tissue Expansion',
+    metabolism: { title: 'Metabolic Stability', value: 6, goal:8, description: "KPIs on Target"},
+    body: { title: 'Body Coordination', value: 0.85, goal:1, description: "Max Height" },
+    tissue: { title: 'Tissue Expansion', value: 0.6, goal:1, description: "Target Area" },
   },
 };
 
