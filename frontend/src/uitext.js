@@ -47,7 +47,11 @@ export const HEADER = {
   dropdown: ['Sign out'],
 };
 
-export const ORGAN_NAMES = ['Heart', 'Lungs', 'Tissue'];
+export const ORGANS = {
+  heart: {name: 'Heart', icon: 'organ-heart.svg', color: "var(--fucsia-100)"},
+  lungs: {name: 'Lungs', icon: 'organ-lungs.svg', color: "var(--yellow-100)"},
+  spine: {name: 'Spine', icon: 'organ-spine.svg', color: "var(--light-blue-100)"},
+};
 
 export const VITALITY = {
   sectionTitle: 'Vitality',
