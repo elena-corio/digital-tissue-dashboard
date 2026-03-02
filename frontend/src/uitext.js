@@ -10,29 +10,29 @@ export const NODE_CARD = {
     {
       name: 'Liveability',
       metrics: [
-        { label: 'Green Space Index', value: '+10%', type: 'success' },
-        { label: 'Daylight Factor', value: '-5%', type: 'error' }
+        { label: 'Green Space Index', value: '+5%', type: 'success' },
+        { label: 'Daylight Factor', value: '+6%', type: 'error' }
       ]
     },
     {
       name: 'Interconnection',
       metrics: [
-        { label: 'Program Diversity', value: '+12%', type: 'success' },
-        { label: 'Circulation Efficiency', value: '-8%', type: 'error' }
+        { label: 'Program Diversity', value: '-2%', type: 'success' },
+        { label: 'Circulation Efficiency', value: '+4%', type: 'error' }
       ]
     },
     {
       name: 'Adaptability',
       metrics: [
-        { label: 'Net-Floor-Area Ratio', value: '+22%', type: 'success' },
-        { label: 'Occupancy Efficiency', value: '-3%', type: 'error' }
+        { label: 'Net Floor Area Ratio', value: '+8%', type: 'success' },
+        { label: 'Usable Area Ratio', value: '+3%', type: 'error' }
       ]
     },
         {
       name: 'Sustainability',
       metrics: [
-        { label: 'Carbon Efficiency', value: '+22%', type: 'success' },
-        { label: 'Form Factor', value: '-3%', type: 'error' }
+        { label: 'Carbon Efficiency', value: '+10%', type: 'success' },
+        { label: 'Volume to Surface Ratio', value: '+2%', type: 'error' }
       ]
     }
   ]
@@ -60,7 +60,7 @@ export const ORGANS = {
 export const VITALITY = {
   sectionTitle: 'Organ Vitality',
   cards: {
-    metabolism: { title: 'Metabolic Stability', value: 6, goal:8, description: "KPIs on Target"},
+    metabolism: { title: 'Metabolic Stability', value: 7, goal:8, description: "KPIs on Target"},
     body: { title: 'Body Coordination', value: 0.85, goal:1, description: "Max Height" },
     tissue: { title: 'Tissue Expansion', value: 0.6, goal:1, description: "Target Area" },
   },

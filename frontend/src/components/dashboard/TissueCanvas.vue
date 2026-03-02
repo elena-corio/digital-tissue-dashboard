@@ -30,7 +30,7 @@
           <div class="kpi-metrics">
             <span v-for="(metric, m) in NODE_CARD.kpis[idx % NODE_CARD.kpis.length].metrics" :key="m" class="kpi-metric-row">
               <span class="metric-label">{{ metric.label }}</span>
-              <span :class="['metric-pill', metric.type]">
+              <span :class="['metric-pill', metric.value.startsWith('-') ? 'error' : 'success']">
                 {{ metric.value.replace('%','') }}
               </span>
             </span>
