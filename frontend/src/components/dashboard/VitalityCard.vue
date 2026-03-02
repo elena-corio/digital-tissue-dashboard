@@ -115,9 +115,10 @@ function percentColor(percent) {
   color: var(--navy-100);
   font-size: var(--font-size-body);
   font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-bold);
 }
 .vitality-desc {
-  color: var(--navy-50);
+  color: var(--navy-100);
   font-size: var(--font-size-body);
 }
 </style>

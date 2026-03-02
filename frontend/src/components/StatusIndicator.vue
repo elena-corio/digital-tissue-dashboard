@@ -1,14 +1,32 @@
 <template>
   <div class="status-indicator">
     <span class="status-icon">💓</span>
-    <span class="status-label">{{ uitext.PULSE.label }}</span>
-    <span class="status-value">{{ uitext.PULSE.value }}</span>
+    <span class="status-label">{{ uitext.STATUS.overview.label }}</span>
+    <span class="status-value">{{ avgPercent }}%</span>
     <span class="status-desc">- {{ uitext.PULSE.status }}</span>
+    <span class="status-info-wrapper">
+      <svg class="status-info-icon" width="18" height="18" viewBox="0 0 18 18">
+        <circle cx="9" cy="9" r="8" fill="#e3f0fc" stroke="#4697e3" stroke-width="1" />
+        <text x="9" y="13" text-anchor="middle" font-size="12" fill="#4697e3" font-family="Arial">i</text>
+      </svg>
+      <span class="status-tooltip">{{ uitext.STATUS.overview.description }}</span>
+    </span>
   </div>
 </template>
 
 <script setup>
 import * as uitext from '../uitext.js'
+
+const cards = uitext.VITALITY.cards;
+function getPercent(value, goal) {
+  if (!goal || isNaN(value) || isNaN(goal)) return 0;
+  return Math.round((value / goal) * 100);
+}
+const avgPercent = Math.round((
+  getPercent(cards.metabolism.value, cards.metabolism.goal) +
+  getPercent(cards.body.value, cards.body.goal) +
+  getPercent(cards.tissue.value, cards.tissue.goal)
+) / 3);
 </script>
 
 <style scoped>
@@ -22,6 +40,36 @@ import * as uitext from '../uitext.js'
   padding: var(--space-sm) var(--space-md);
   border: 1px solid var(--grey-100);
   margin-left: var(--space-lg);
+  position: relative;
+}
+.status-info-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+.status-info-icon {
+  cursor: pointer;
+  margin-right: 4px;
+}
+.status-tooltip {
+  display: none;
+  position: absolute;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--white, #fff);
+  color: var(--navy-100);
+  border: 1px solid var(--grey-100);
+  border-radius: var(--radius-md);
+  padding: 4px 12px;
+  font-size: var(--font-size-caption);
+  white-space: nowrap;
+  z-index: 10;
+  box-shadow: var(--shadow-soft);
+}
+.status-info-wrapper:hover .status-tooltip {
+  display: block;
 }
 
 .status-indicator:hover {
@@ -41,6 +89,6 @@ import * as uitext from '../uitext.js'
 }
 .status-desc {
   font-size: 0.95rem;
-  color: var(--navy-50);
+  color: var(--navy-100);
 }
 </style>

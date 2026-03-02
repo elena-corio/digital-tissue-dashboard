@@ -38,6 +38,10 @@ export const NODE_CARD = {
   ]
 };
 
+export const STATUS = {
+  overview: {label: 'Pulse', description: 'Organ Vitality Avg'},
+};
+
 export const HEADER = {
   title: 'digital.tissue',
   nav: ['Overview', 'Site', 'Project', 'Metrics'],
@@ -54,7 +58,7 @@ export const ORGANS = {
 };
 
 export const VITALITY = {
-  sectionTitle: 'Vitality',
+  sectionTitle: 'Organ Vitality',
   cards: {
     metabolism: { title: 'Metabolic Stability', value: 6, goal:8, description: "KPIs on Target"},
     body: { title: 'Body Coordination', value: 0.85, goal:1, description: "Max Height" },

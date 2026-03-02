@@ -157,12 +157,12 @@ onBeforeUnmount(() => {
   line-height: 1.1;
 }
 .metric-pill.success {
-  background:  color-mix(in srgb, var(--color-success) 30%, transparent);;
+  background:  color-mix(in srgb, var(--color-success) 20%, transparent);;
   color: var(--color-success);
   border-color: var(--color-success);
 }
 .metric-pill.error {
-  background:  color-mix(in srgb, var(--color-error) 30%, transparent);;
+  background:  color-mix(in srgb, var(--color-error) 20%, transparent);;
   color: var(--color-error);
   border-color: var(--color-error);
 }

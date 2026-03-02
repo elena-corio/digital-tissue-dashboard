@@ -38,11 +38,11 @@ const messageClass = isOld ? 'warning' : 'success';
   gap: var(--space-md);
 }
 .success {
-  background: color-mix(in srgb, var(--color-success) 30%, transparent);
+  background: color-mix(in srgb, var(--color-success) 20%, transparent);
   border-color: var(--color-success);
 }
 .warning {
-  background: color-mix(in srgb, var(--color-warning) 30%, transparent);
+  background: color-mix(in srgb, var(--color-warning) 20%, transparent);
   border-color: var(--color-warning);
 }
 .last-update-row {
