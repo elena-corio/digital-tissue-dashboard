@@ -65,8 +65,8 @@
     --space-xs: 4px;
     --space-sm: 8px;
     --space-md: 16px;
-    --space-lg: 32px;
-    --space-xl: 64px;
+    --space-lg: 30px;
+    --space-xl: 60px;
 }
 
 body {
@@ -131,27 +131,28 @@ h6, .h6 {
   line-height: var(--line-height-loose);
 }
 .card-title {
-  font-size: var(--font-size-h4);
+  font-size: var(--font-size-h5);
   font-weight: var(--font-weight-bold);
   line-height: var(--line-height-normal);
-  margin: 0 0 var(--space-md) 0;
+  margin: 0 0 var(--space-sm) 0;
   color: var(--navy-100);
 }
 
 /* Utility classes */
 .btn {
-  display: inline-block;
-  font-family: inherit;
-  font-size: 1rem;
-  padding: var(--space-sm) var(--space-md);
-  background: var(--white, #fff);
-  border: 1px solid var(--grey-100);
-  border-radius: var(--radius-md);
-  color: var(--navy-100);
+  background: white;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-md) var(--space-lg);
+  outline: none;
+  display: flex;
+  border: none;
+  align-items: center;
+  gap: var(--space-sm);
   cursor: pointer;
-  transition: box-shadow 0.2s, border-color 0.2s;
-  box-shadow: var(--shadow-soft);
+  transition: box-shadow 0.2s, border-color 0.2s, filter 0.2s;
 }
+
 .btn:active, .btn:focus {
   outline: none;
   border-color: var(--blue-100);

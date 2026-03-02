@@ -45,12 +45,12 @@
 
 <script setup>
 import HeaderBar from '../components/HeaderBar.vue'
-import TissueCanvas from '../components/TissueCanvas.vue'
-import OrganSelector from '../components/OrganSelector.vue'
-import VitalityCard from '../components/VitalityCard.vue'
+import TissueCanvas from '../components/dashboard/TissueCanvas.vue'
+import OrganSelector from '../components/dashboard/OrganSelector.vue'
+import VitalityCard from '../components/dashboard/VitalityCard.vue'
 import CircularGraph from '../components/CircularGraph.vue'
-import GrowthCycles from '../components/GrowthCycles.vue'
-import IssueFound from '../components/IssueFound.vue'
+import GrowthCycles from '../components/dashboard/GrowthCycles.vue'
+import IssueFound from '../components/dashboard/LastUpdate.vue'
 import TeamList from '../components/TeamList.vue'
 import StatusIndicator from '../components/StatusIndicator.vue'
 import * as uitext from '../uitext.js'

@@ -10,32 +10,36 @@ export const NODE_CARD = {
     {
       name: 'Liveability',
       metrics: [
-        { label: 'Green Space Index', value: '+10%', type: 'success' },
-        { label: 'Daylight Factor', value: '-5%', type: 'error' }
+        { label: 'Green Space Index', value: '+5%', type: 'success' },
+        { label: 'Daylight Factor', value: '+6%', type: 'error' }
       ]
     },
     {
       name: 'Interconnection',
       metrics: [
-        { label: 'Program Diversity', value: '+12%', type: 'success' },
-        { label: 'Circulation Efficiency', value: '-8%', type: 'error' }
+        { label: 'Program Diversity', value: '-2%', type: 'success' },
+        { label: 'Circulation Efficiency', value: '+4%', type: 'error' }
       ]
     },
     {
       name: 'Adaptability',
       metrics: [
-        { label: 'Net-Floor-Area Ratio', value: '+22%', type: 'success' },
-        { label: 'Occupancy Efficiency', value: '-3%', type: 'error' }
+        { label: 'Net Floor Area Ratio', value: '+8%', type: 'success' },
+        { label: 'Usable Area Ratio', value: '+3%', type: 'error' }
       ]
     },
         {
       name: 'Sustainability',
       metrics: [
-        { label: 'Carbon Efficiency', value: '+22%', type: 'success' },
-        { label: 'Form Factor', value: '-3%', type: 'error' }
+        { label: 'Carbon Efficiency', value: '+10%', type: 'success' },
+        { label: 'Volume to Surface Ratio', value: '+2%', type: 'error' }
       ]
     }
   ]
+};
+
+export const STATUS = {
+  overview: {label: 'Pulse', description: 'Organ Vitality Avg'},
 };
 
 export const HEADER = {
@@ -47,14 +51,18 @@ export const HEADER = {
   dropdown: ['Sign out'],
 };
 
-export const ORGAN_NAMES = ['Heart', 'Lungs', 'Tissue'];
+export const ORGANS = {
+  heart: {name: 'Heart', icon: 'organ-heart.svg', color: "var(--fucsia-100)"},
+  lungs: {name: 'Lungs', icon: 'organ-lungs.svg', color: "var(--yellow-100)"},
+  spine: {name: 'Spine', icon: 'organ-spine.svg', color: "var(--light-blue-100)"},
+};
 
 export const VITALITY = {
-  sectionTitle: 'Vitality',
+  sectionTitle: 'Organ Vitality',
   cards: {
-    metabolic: 'Metabolic Stability',
-    regeneration: 'Regeneration Cycle',
-    expansion: 'Tissue Expansion',
+    metabolism: { title: 'Metabolic Stability', value: 7, goal:8, description: "KPIs on Target"},
+    body: { title: 'Body Coordination', value: 0.85, goal:1, description: "Max Height" },
+    tissue: { title: 'Tissue Expansion', value: 0.6, goal:1, description: "Target Area" },
   },
 };
 
@@ -87,9 +95,11 @@ export const GROWTH_PHASES = {
   ]
 };
 
-export const ISSUES = {
-  found: 'Issue Found',
-  none: 'No issues detected',
+export const UPDATES = {
+  title: 'Regeneration Cycle',
+  lastUpdate: '3/1/2026 7:26:54 PM',
+  issueFound: 'The last update was more than 24 hours ago. Publish your latest design iteration to keep the tissue healthy.',
+  allGood: 'The latest update was published recently. Keep up the good work to maintain tissue vitality!',
 };
 
 export const PULSE = {
