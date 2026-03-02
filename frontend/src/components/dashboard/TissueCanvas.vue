@@ -8,7 +8,7 @@
         :y1="cells[conn[0]].cy"
         :x2="cells[conn[1]].cx"
         :y2="cells[conn[1]].cy"
-        stroke="var(--blue-50)" stroke-width="6" stroke-linecap="round" opacity="0.18"
+        stroke="var(--blue-50)" stroke-width="6" stroke-linecap="round" opacity="0.2"
       />
     </svg>
     <div
@@ -43,7 +43,7 @@
 
 <script setup>
 import { ref, reactive, onMounted, nextTick, onBeforeUnmount } from 'vue'
-import { NODE_CARD } from '../uitext.js'
+import { NODE_CARD } from '../../uitext.js'
 const tissueColors = [
   'var(--navy-100)',
   'var(--blue-100)',
@@ -157,14 +157,14 @@ onBeforeUnmount(() => {
   line-height: 1.1;
 }
 .metric-pill.success {
-  background: var(--success-bg, #e6f9f0);
-  color: var(--success, #1eb980);
-  border-color: var(--success, #1eb980);
+  background:  color-mix(in srgb, var(--color-success) 30%, transparent);;
+  color: var(--color-success);
+  border-color: var(--color-success);
 }
 .metric-pill.error {
-  background: var(--error-bg, #ffeaea);
-  color: var(--error, #e23c3c);
-  border-color: var(--error, #e23c3c);
+  background:  color-mix(in srgb, var(--color-error) 30%, transparent);;
+  color: var(--color-error);
+  border-color: var(--color-error);
 }
 .tissue-canvas {
   width: 100%;
@@ -221,19 +221,7 @@ onBeforeUnmount(() => {
   z-index: 2;
   pointer-events: none;
 }
-.tissue-ring {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 80%;
-  height: 80%;
-  border: 3px solid #fff;
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  /* No shadow for digital look */
-  pointer-events: none;
-  z-index: 3;
-}
+
 .tissue-hover-card {
   position: absolute;
   left: 50%;

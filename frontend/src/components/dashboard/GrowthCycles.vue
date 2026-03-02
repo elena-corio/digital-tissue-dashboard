@@ -21,7 +21,7 @@
 </template>
 <script setup>
 import { ref } from 'vue'
-import * as uitext from '../uitext.js'
+import * as uitext from '../../uitext.js'
 const selectedIdx = ref(6)
 function selectNail(idx) {
   selectedIdx.value = idx
@@ -30,7 +30,7 @@ function selectNail(idx) {
 
 <style scoped>
 .growth-cycles {
-  flex: 1.5 1 0%;
+  flex: 1 1 0%;
   min-height: auto;
 }
 .growth-nails {

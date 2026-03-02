@@ -1,7 +1,8 @@
 <template>
   <button
-    class="btn-card"
+    class="btn btn-card"
     :class="{ selected }"
+    :style="selected ? { border: `2px solid ${borderColor || 'var(--light-blue-100)'}` } : {}"
     @click="$emit('update:selected', label)"
     type="button"
   >
@@ -15,30 +16,22 @@
 <script setup>
 const props = defineProps({
   label: String,
-  selected: Boolean
+  selected: Boolean,
+  borderColor: String
 })
 </script>
 
-<style scoped>
+<style >
 .btn-card {
-  background: var(--white, #fff);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-card);
-  padding: var(--space-md) var(--space-lg);
-  border: none;
-  outline: none;
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-  cursor: pointer;
-  transition: box-shadow 0.2s, border-color 0.2s, filter 0.2s;
   filter: grayscale(1);
+  opacity: 0.6;
 }
 .btn-card.selected {
-  border: 2px solid var(--blue-100);
   box-shadow: var(--shadow-glow-blue);
   filter: none;
+  opacity:1;
 }
+
 .btn-card-icon {
   display: flex;
   align-items: center;
