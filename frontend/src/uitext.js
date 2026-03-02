@@ -87,9 +87,11 @@ export const GROWTH_PHASES = {
   ]
 };
 
-export const ISSUES = {
-  found: 'Issue Found',
-  none: 'No issues detected',
+export const UPDATES = {
+  title: 'Regeneration Cycle',
+  lastUpdate: '3/1/2026 7:26:54 PM',
+  issueFound: 'The last update was more than 24 hours ago. Publish your latest design iteration to keep the tissue healthy.',
+  allGood: 'The latest update was published recently. Keep up the good work to maintain tissue vitality!',
 };
 
 export const PULSE = {
