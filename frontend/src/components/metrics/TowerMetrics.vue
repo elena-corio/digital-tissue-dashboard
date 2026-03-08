@@ -27,7 +27,7 @@
         font-size="16"
         font-weight="bold"
         fill="#303179"
-      >{{ (cluster[selectedKPI] ?? '') }}</text>
+      >{{ typeof cluster[selectedKPI] === 'number' ? cluster[selectedKPI].toFixed(2) : '' }}</text>
       <!-- Horizontal line at benchmark Y position -->
       <line
         v-if="benchmarkY() !== null"
@@ -128,40 +128,39 @@ export default {
       // Map to radius range 35-70
       return 35 + normA * (70 - 35);
     },
-    circleY(cluster) {
-      // z-position proportional to selected metric value, accounting for circle radius
+    normalizedY(value, radius = 0) {
+      // Shared normalization for vertical position, radius-aware
       const minM = this.minMetric;
       const maxM = this.maxMetric;
-      let val = cluster[this.selectedKPI];
-      if (val === undefined) val = minM;
-      const r = this.circleR(cluster);
       const marginTop = 4;
       const marginBottom = 24;
-      const minY = r + marginTop;
-      const maxY = this.svgH - r - marginBottom;
-      // If all values are equal, center vertically
-      if (maxM === minM) {
-        return (minY + maxY) / 2;
-      }
-      const norm = (val - minM) / (maxM - minM);
+      const minY = radius + marginTop;
+      const maxY = this.svgH - radius - marginBottom;
+      if (maxM === minM) return (minY + maxY) / 2;
+      const norm = (value - minM) / (maxM - minM);
       return maxY - norm * (maxY - minY);
     },
+    circleY(cluster) {
+      // Use shared normalization for vertical position, radius-aware
+      const val = cluster[this.selectedKPI];
+      const r = this.circleR(cluster);
+      return this.normalizedY(val, r);
+    },
     benchmarkY() {
-      // Get benchmark value for selected KPI
+      // Use radius of circle matching benchmark value, else average radius
       const metric = METRICS[this.selectedKPI];
       if (!metric) return null;
-      // Use same normalization as circleY
-      const minM = this.minMetric;
-      const maxM = this.maxMetric;
       const benchmark = metric.benchmark;
-      const r = 0; // line, not circle
-      const marginTop = 8;
-      const marginBottom = 24;
-      const minY = r + marginTop;
-      const maxY = this.svgH - r - marginBottom;
-      if (maxM === minM) return (minY + maxY) / 2;
-      const norm = (benchmark - minM) / (maxM - minM);
-      return maxY - norm * (maxY - minY);
+      // Find radius of circle with value == benchmark
+      const match = this.clusters.find(c => Math.abs((c[this.selectedKPI] ?? 0) - benchmark) < 1e-6);
+      let radius = 0;
+      if (match) {
+        radius = this.circleR(match);
+      } else {
+        const radii = this.clusters.map(c => this.circleR(c));
+        radius = radii.length ? radii.reduce((a, b) => a + b, 0) / radii.length : 0;
+      }
+      return this.normalizedY(benchmark, radius);
     },
     safeBenchmarkValue() {
       const metric = METRICS[this.selectedKPI];

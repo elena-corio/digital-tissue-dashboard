@@ -33,29 +33,29 @@ export const KPIS = {
     {
       name: 'Liveability',
       metrics: [
-        { name: 'greenSpaceDistance', label: 'Green Space Distance', value: 'health' },
-        { name: 'daylightPotential', label: 'Daylight Potential', value: 'risk' }
+        { name: 'greenSpaceDistance', label: 'Green Space Distance', value: 'health', unit: 'm' },
+        { name: 'daylightPotential', label: 'Daylight Potential', value: 'risk', unit: '' }
       ]
     },
     {
       name: 'Interconnection',
       metrics: [
-        { name: 'programDiversity', label: 'Program Diversity', value: 'health'},
+        { name: 'programDiversity', label: 'Program Diversity', value: 'health', unit: '' },
         { name: 'circulationEfficiency', label: 'Circulation Efficiency', value: 'risk' }
       ]
     },
     {
       name: 'Adaptability',
       metrics: [
-        { name: 'netFloorAreaRatio', label: 'Net Floor Area Ratio', value: 'health' },
-        { name: 'usableAreaRatio', label: 'Usable Area Ratio', value: 'risk' }
+        { name: 'netFloorAreaRatio', label: 'Net Floor Area Ratio', value: 'health', unit: '' },
+        { name: 'usableAreaRatio', label: 'Usable Area Ratio', value: 'risk', unit: '' }
       ]
     },
         {
       name: 'Sustainability',
       metrics: [
-        { name: 'carbonIntensity', label: 'Carbon Intensity', value: 'health' },
-        { name: 'volumeToSurface', label: 'Volume to Surface', value: 'risk' }
+        { name: 'carbonIntensity', label: 'Carbon Intensity', value: 'health', unit: 'kgCO2/m2' },
+        { name: 'volumeToSurface', label: 'Volume to Surface', value: 'risk', unit: 'm3/m2' }
       ]
     }
   ]
