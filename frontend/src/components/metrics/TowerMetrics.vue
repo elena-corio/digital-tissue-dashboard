@@ -12,6 +12,39 @@
         :height="svgHeight"
         style="display: block; margin-top: 1.5rem;"
       >
+        <circle
+          v-for="(cluster, idx) in clusters"
+          :key="cluster.name"
+          :cx="circleX(idx)"
+          :cy="circleY(cluster)"
+          :r="circleR(cluster)"
+          :style="{ fill: circleColor(cluster), transformOrigin: `${circleX(idx)}px ${circleY(cluster)}px` }"
+          opacity="0.5"
+          class="breathe-circle"
+          @mouseenter="hoveredIdx = idx"
+          @mouseleave="hoveredIdx = null"
+        />
+        <!-- Small center circle for each cluster -->
+        <circle
+          v-for="(cluster, idx) in clusters"
+          :key="'center-' + cluster.name"
+          :cx="circleX(idx)"
+          :cy="circleY(cluster)"
+          r="6"
+          fill="#fff"
+        />
+        <!-- Benchmark label inside the diagram, just above the line -->
+        <text
+          v-if="benchmarkY() !== null"
+          :x="benchmarkLineEndX - 4"
+          :y="benchmarkY() - 8"
+          text-anchor="end"
+          font-size="11"
+          font-weight="normal"
+          fill="#303179"
+        >
+           benchmark = {{ typeof safeBenchmarkValue() === 'number' ? safeBenchmarkValue().toFixed(2) : safeBenchmarkValue() }}<tspan v-if="kpiUnit()">&nbsp;{{ kpiUnit() }}</tspan>
+        </text>
         <!-- Benchmark line (robust, always visible) -->
         <line
           v-if="benchmarkY() !== null"
@@ -24,57 +57,36 @@
           stroke-dasharray="6,4"
           opacity="1"
         />
+        <!-- Small center circle for each cluster -->
         <circle
           v-for="(cluster, idx) in clusters"
-          :key="cluster.name"
+          :key="'center-' + cluster.name"
           :cx="circleX(idx)"
           :cy="circleY(cluster)"
-          :r="circleR(cluster)"
-          :style="{ fill: circleColor(cluster), transformOrigin: `${circleX(idx)}px ${circleY(cluster)}px` }"
-          opacity="0.5"
-          class="breathe-circle"
+          r="7"
+          fill="#fff"
+          stroke-width="2"
         />
-        <!-- KPI value inside circle -->
+        <!-- Benchmark value text removed -->
+      </svg>
+      <!-- Show tower name and value only on hover, centered inside the hovered circle -->
+      <svg v-if="hoveredIdx !== null" class="tower-names-svg" :style="{ position: 'absolute', left: 0, top: 0, width: '100%', height: '100%', pointerEvents: 'none' }">
         <text
-          v-for="(cluster, idx) in clusters"
-          :key="'kpi-' + cluster.name"
-          :x="circleX(idx)"
-          :y="circleY(cluster)"
+          :x="circleX(hoveredIdx)"
+          :y="circleY(clusters[hoveredIdx])"
           text-anchor="middle"
-          alignment-baseline="middle"
-          font-size="16"
+          dominant-baseline="middle"
+          font-size="15"
           font-weight="bold"
           fill="#303179"
-        >{{ typeof cluster[selectedKPI] === 'number' ? cluster[selectedKPI].toFixed(2) : '' }}</text>
-        <!-- Benchmark value text -->
-        <text
-          v-if="benchmarkY() !== null"
-          :x="benchmarkLineEndX + 8"
-          :y="benchmarkY() - 6"
-          text-anchor="start"
-          font-size="13"
-          fill="#303179"
-          font-weight="bold"
         >
-          {{ typeof safeBenchmarkValue() === 'number' ? safeBenchmarkValue().toFixed(2) : safeBenchmarkValue() }}
-          <tspan :x="benchmarkLineEndX + 8" dy="16" font-size="12">{{ kpiUnit() }}</tspan>
+          <tspan :x="circleX(hoveredIdx)" :y="circleY(clusters[hoveredIdx]) - 8">{{ 'Tower ' + (hoveredIdx + 1) }}</tspan>
+          <tspan :x="circleX(hoveredIdx)" dy="1.5em" font-size="13" font-weight="normal">
+            {{ typeof clusters[hoveredIdx][selectedKPI] === 'number' ? clusters[hoveredIdx][selectedKPI].toFixed(2) : '' }}
+            <tspan v-if="kpiUnit()">{{ kpiUnit() }}</tspan>
+          </tspan>
         </text>
       </svg>
-      <div class="tower-names-row" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none;">
-        <div
-          v-for="(cluster, idx) in clusters"
-          :key="'tower-' + cluster.name"
-          :style="{
-            position: 'absolute',
-            left: `${circleX(idx)}px`,
-            top: `${circleY(cluster) + circleR(cluster) + 16}px`,
-            width: '80px',
-            textAlign: 'center',
-            transform: 'translateX(-40px)',
-            pointerEvents: 'auto'
-          }"
-        >{{ 'Tower ' + (idx + 1) }}</div>
-      </div>
     </div>
   </div>
 </template>
@@ -96,6 +108,7 @@ export default {
     const svgHeight = ref(240);
     const svgRef = ref(null);
     const margin = ref(0);
+    const hoveredIdx = ref(null);
     function updateContainerWidth() {
       if (containerRef.value) {
         containerWidth.value = containerRef.value.clientWidth;
@@ -111,7 +124,7 @@ export default {
     onBeforeUnmount(() => {
       window.removeEventListener('resize', updateContainerWidth);
     });
-    return { containerWidth, containerRef, svgHeight, svgRef, margin };
+    return { containerWidth, containerRef, svgHeight, svgRef, margin, hoveredIdx };
   },
   data() {
     return {
@@ -152,13 +165,13 @@ export default {
       return Math.max(...this.clusters.map(c => c.grossFloorArea ?? 1));
     },
     benchmarkLineStartX() {
-      // Start at left margin of container
-      const margin = Math.max(this.margin, this.containerWidth * 0.15);
+      // Start at left margin of container (smaller margin for longer line)
+      const margin = Math.max(this.margin, this.containerWidth * 0.05);
       return margin;
     },
     benchmarkLineEndX() {
-      // End at right margin of container
-      const margin = Math.max(this.margin, this.containerWidth * 0.15);
+      // End at right margin of container (smaller margin for longer line)
+      const margin = Math.max(this.margin, this.containerWidth * 0.05);
       return this.containerWidth - margin;
     }
   },
