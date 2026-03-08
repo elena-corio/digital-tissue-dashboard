@@ -3,7 +3,8 @@
     :title="uiText.TABS.metrics.title"
     :subtitle="uiText.TABS.metrics.subtitle"
     :statusIcon="uiText.TABS.metrics.statusIcon"
-    :statusText="uiText.TABS.metrics.statusText"
+    :statusLabel="uiText.TABS.metrics.statusLabel"
+    :statusDescription="uiText.TABS.metrics.statusDescription"
   >
     <div class="metrics-placeholder">Metrics content placeholder</div>
   </Workspace>

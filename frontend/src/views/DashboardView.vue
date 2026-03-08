@@ -3,7 +3,8 @@
     :title="uiText.TABS.overview.title"
     :subtitle="uiText.TABS.overview.subtitle"
     :statusIcon="uiText.TABS.overview.statusIcon"
-    :statusText="uiText.TABS.overview.statusText"
+    :statusLabel="uiText.TABS.overview.statusLabel"
+    :statusDescription="uiText.TABS.overview.statusDescription"
   >
     <div class="dashboard-main">
       <!-- Left Column -->

@@ -2,8 +2,9 @@
   <Workspace
     :title="uiText.TABS.site.title"
     :subtitle="uiText.TABS.site.subtitle"
-    :statusIcon="''"
-    :statusText="''"
+    :statusIcon="uiText.TABS.site.statusIcon"
+    :statusLabel="uiText.TABS.site.statusLabel"
+    :statusDescription="uiText.TABS.site.statusDescription"
   >
     <div class="site-placeholder">Site content placeholder</div>
   </Workspace>

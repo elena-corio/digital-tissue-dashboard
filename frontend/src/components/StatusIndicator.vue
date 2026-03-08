@@ -1,32 +1,28 @@
 <template>
   <div class="status-indicator">
-    <span class="status-icon">💓</span>
-    <span class="status-label">{{ uitext.STATUS.overview.label }}</span>
-    <span class="status-value">{{ avgPercent }}%</span>
-    <span class="status-desc">- {{ uitext.PULSE.status }}</span>
+    <span class="status-icon">{{ icon }}</span>
+    <span class="status-label">{{ label }}</span>
+    <span class="status-value">{{ value }}%</span>
     <span class="status-info-wrapper">
       <svg class="status-info-icon" width="18" height="18" viewBox="0 0 18 18">
         <circle cx="9" cy="9" r="8" fill="#e3f0fc" stroke="#4697e3" stroke-width="1" />
         <text x="9" y="13" text-anchor="middle" font-size="12" fill="#4697e3" font-family="Arial">i</text>
       </svg>
-      <span class="status-tooltip">{{ uitext.STATUS.overview.description }}</span>
+      <span class="status-tooltip">{{ description }}</span>
     </span>
   </div>
 </template>
 
 <script setup>
-import * as uitext from '../uitext.js'
-
-const cards = uitext.VITALITY.cards;
-function getPercent(value, goal) {
-  if (!goal || isNaN(value) || isNaN(goal)) return 0;
-  return Math.round((value / goal) * 100);
-}
-const avgPercent = Math.round((
-  getPercent(cards.metabolism.value, cards.metabolism.goal) +
-  getPercent(cards.body.value, cards.body.goal) +
-  getPercent(cards.tissue.value, cards.tissue.goal)
-) / 3);
+const props = defineProps({
+  label: String,
+  description: String,
+  value: Number,
+  icon: {
+    type: String,
+    default: '💓'
+  }
+});
 </script>
 
 <style scoped>

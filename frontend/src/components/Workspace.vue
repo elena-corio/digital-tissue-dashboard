@@ -9,7 +9,12 @@
         <div class="subtitle">{{ subtitle }}</div>
       </div>
       <div class="workspace-status-indicator">
-        <StatusIndicator :icon="statusIcon" :text="statusText" />
+        <StatusIndicator
+          :icon="statusIcon"
+          :label="statusLabel"
+          :description="statusDescription"
+          :value="statusValue"
+        />
       </div>
     </div>
     <div class="workspace-content">
@@ -21,6 +26,8 @@
 <script>
 import HeaderBar from './HeaderBar.vue';
 import StatusIndicator from './StatusIndicator.vue';
+
+import * as uitext from '../uitext.js';
 
 export default {
   name: 'Workspace',
@@ -41,9 +48,17 @@ export default {
       type: String,
       default: ''
     },
-    statusText: {
+    statusLabel: {
       type: String,
       default: ''
+    },
+    statusDescription: {
+      type: String,
+      default: ''
+    },
+    statusValue: {
+      type: Number,
+      default: 80
     }
   }
 };
@@ -78,5 +93,5 @@ export default {
 }
 .workspace-content {
   flex: 1;
-  padding: 2rem;}
+  }
 </style>

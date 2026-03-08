@@ -3,7 +3,8 @@
     :title="uiText.TABS.project.title"
     :subtitle="uiText.TABS.project.subtitle"
     :statusIcon="uiText.TABS.project.statusIcon"
-    :statusText="uiText.TABS.project.statusText"
+    :statusLabel="uiText.TABS.project.statusLabel"
+    :statusDescription="uiText.TABS.project.statusDescription"
   >
     <div class="project-placeholder">Project content placeholder</div>
   </Workspace>
