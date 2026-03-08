@@ -28,7 +28,7 @@ export const TABS = {
   }
 };
 export const KPIS = {
-  title: 'KPIs Overview',
+  sectionTitle: 'KPIs Overview',
   kpis: [
     {
       name: 'Liveability',
