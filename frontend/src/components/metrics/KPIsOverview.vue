@@ -15,7 +15,10 @@
              transition: 'opacity 0.2s, border-color 0.2s, border-width 0.2s',
            }"
           >
-            <div class="kpi-label">{{ uitext.KPIS.kpis[i]?.metrics[j]?.label || 'KPI' }}</div>
+            <div class="kpi-label">
+              {{ uitext.KPIS.kpis[i]?.metrics[j]?.label || 'KPI' }}
+              <span v-if="uitext.KPIS.kpis[i]?.metrics[j]?.unit" class="kpi-unit">{{ uitext.KPIS.kpis[i]?.metrics[j]?.unit }}</span>
+            </div>
           <div class="kpi-bar-wrapper">
             <div class="kpi-bar">
               <!-- Loaded value bar -->
@@ -149,6 +152,11 @@ function getBenchmarkValue(metricName) {
   font-size: var(--font-size-caption);
   font-weight: var(--font-weight-medium);
   font-weight: var(--font-weight-bold);
+}
+.kpi-unit {
+  font-size: var(--font-size-value);
+  color: var(--navy-50);
+  font-weight: normal;
 }
 .kpi-bar-wrapper {
   width: 100%;
