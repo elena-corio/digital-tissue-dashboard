@@ -21,7 +21,7 @@
             <OrganSelector class="dashboard-organs" />
           </div>
         </div>
-      </section>
+        </section>
       <!-- Right Column -->
       <section class="dashboard-right dashboard-col">
         <div class="dashboard-right-stack">
