@@ -1,5 +1,5 @@
 <template>
-  <div class="tower-metrics-placeholder card">
+  <div class="tower-metrics-title card">
     <div class="card-title">Metrics by tower</div>
     <svg
       class="tower-metrics-svg"
@@ -28,6 +28,17 @@
         font-weight="bold"
         fill="#303179"
       >{{ typeof cluster[selectedKPI] === 'number' ? cluster[selectedKPI].toFixed(2) : '' }}</text>
+      <!-- Unit below KPI value -->
+      <text
+        v-for="(cluster, idx) in clusters"
+        :key="'unit-' + cluster.name"
+        :x="circleX(idx)"
+        :y="circleY(cluster) + 18"
+        text-anchor="middle"
+        alignment-baseline="middle"
+        font-size="12"
+        fill="#303179"
+      >{{ kpiUnit() }}</text>
       <!-- Horizontal line at benchmark Y position -->
       <line
         v-if="benchmarkY() !== null"
@@ -42,13 +53,13 @@
       />
       <text
         v-if="benchmarkY() !== null"
-        x="430"
+        x="420"
         :y="benchmarkY()+3"
         text-anchor="start"
         font-size="13"
         fill="#303179"
         font-weight="bold"
-      >{{ safeBenchmarkValue() }}</text>
+      >{{ typeof safeBenchmarkValue() === 'number' ? safeBenchmarkValue().toFixed(2) : safeBenchmarkValue() }}</text>
     </svg>
     <div class="tower-names-row">
       <div
@@ -68,6 +79,7 @@
 <script>
 import projectData from '../../assets/cache/data.json'
 import { METRICS } from '../../benchmarks.js'
+import { KPIS } from '../../uitext.js'
 
 export default {
   name: 'TowerMetrics',
@@ -194,14 +206,25 @@ export default {
       } else {
         return value <= benchmark ? success : error;
       }
+    },
+    kpiUnit() {
+      // Find unit for selected KPI from uitext.js
+      const kpiName = this.selectedKPI;
+      for (const section of KPIS.kpis) {
+        for (const metric of section.metrics) {
+          if (metric.name === kpiName) {
+            return metric.unit || '';
+          }
+        }
+      }
+      return '';
     }
   }
 };
 </script>
 
 <style scoped>
-.tower-metrics-placeholder {
-  text-align: center;
+.tower-metrics-title {
   color: var(--navy-50);
   font-family: var(--font-family);
   position: relative;
