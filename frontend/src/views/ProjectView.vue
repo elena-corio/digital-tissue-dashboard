@@ -11,7 +11,7 @@
 
 <script>
 import Workspace from '../components/Workspace.vue';
-import uiText from '../uitext.js';
+import * as uiText from '../uitext.js';
 
 export default {
   name: 'ProjectView',
