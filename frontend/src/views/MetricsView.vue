@@ -11,8 +11,10 @@
       <section class="metrics-left metrics-col">
         <div class="metrics-left-stack">
           <div class="speckle-tower-wrapper">
-            <div class="speckle-viewer-card card">Speckle Viewer: {{ selectedKPI || 'None' }}</div>
-            <TowerSelector />
+              <div class="speckle-viewer-card card">Speckle Viewer: {{ selectedKPI || 'None' }}</div>
+              <div style="display: flex; justify-content: center; width: 100%; margin-top: 1rem;">
+                <TowerSelector />
+              </div>
           </div>
         </div>
       </section>
@@ -108,12 +110,11 @@ export default {
 .speckle-tower-wrapper {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
   gap: 1rem;
 }
 .speckle-viewer-card {
   width: 100%;
-  max-width: 480px;
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
