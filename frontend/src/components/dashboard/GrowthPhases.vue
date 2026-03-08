@@ -22,7 +22,7 @@
 <script setup>
 import { ref } from 'vue'
 import * as uitext from '../../uitext.js'
-const selectedIdx = ref(6)
+const selectedIdx = ref(7)
 function selectNail(idx) {
   selectedIdx.value = idx
 }
