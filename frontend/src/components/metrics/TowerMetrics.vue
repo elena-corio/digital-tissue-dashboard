@@ -3,9 +3,9 @@
     <div class="card-title">Metrics by tower</div>
     <svg
       class="tower-metrics-svg"
-      viewBox="0 0 420 260"
+      viewBox="0 0 420 240"
       preserveAspectRatio="xMidYMid meet"
-      style="width: 100%; height: 260px; display: block;"
+      style="width: 100%; height: 240px; display: block; margin-top: 1.5rem;"
     >
       <circle
         v-for="(cluster, idx) in clusters"
@@ -81,14 +81,16 @@ export default {
       return 24 + normA * (60 - 24);
     },
     circleY(cluster) {
-      // z-position proportional to selected metric value
+      // z-position proportional to selected metric value, accounting for circle radius
       const minM = this.minMetric;
       const maxM = this.maxMetric;
       let val = cluster[this.selectedKPI];
       if (val === undefined) val = minM;
-      const padding = 48;
-      const minY = padding;
-      const maxY = this.svgH - padding;
+      const r = this.circleR(cluster);
+      const marginTop = 8;
+      const marginBottom = 24;
+      const minY = r + marginTop;
+      const maxY = this.svgH - r - marginBottom;
       // If all values are equal, center vertically
       if (maxM === minM) {
         return (minY + maxY) / 2;
@@ -98,7 +100,14 @@ export default {
     },
     circleX(idx) {
       // Evenly space circles horizontally
-      return 60 + idx * 90;
+      // Evenly space circles horizontally, accounting for radius
+      const r = this.circleR(this.clusters[idx]);
+      const n = this.clusters.length;
+      const minX = r;
+      const maxX = this.svgW - r;
+      if (n === 1) return (minX + maxX) / 2;
+      // Spread centers between minX and maxX
+      return minX + idx * (maxX - minX) / (n - 1);
     }
   }
 };
