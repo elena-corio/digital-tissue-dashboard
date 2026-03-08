@@ -1,30 +1,32 @@
 <template>
-	<nav class="nav-tabs-root">
-		<div class="nav-tabs-list">
-			<button
-				v-for="tab in tabs"
-				:key="tab"
-				:class="['nav-tab', { active: tab === modelValue }]"
-				@click="$emit('update:modelValue', tab)"
-				type="button"
-				tabindex="0"
-				aria-selected="tab === modelValue"
-			>
-				{{ tab }}
-			</button>
-		</div>
-	</nav>
+  <nav class="nav-tabs-root">
+    <div class="nav-tabs-list">
+      <router-link
+        v-for="tab in tabs"
+        :key="tab.label"
+        :to="tab.route"
+        class="nav-tab"
+        :class="{ active: $route.name === tab.label }"
+      >
+        {{ tab.label }}
+      </router-link>
+    </div>
+  </nav>
 </template>
 
 <script setup>
-const props = defineProps({
-	tabs: Array,
-	modelValue: String
-})
-const emit = defineEmits(['update:modelValue'])
+import { useRoute } from 'vue-router';
+const props = defineProps({ tabs: Array });
+const $route = useRoute();
 </script>
 
 <style>
+.nav-tab {
+  text-decoration: none;
+  border: none;
+  background: transparent;
+  display: inline-block;
+}
 .nav-tabs-root {
 	display: flex;
 	justify-content: center;

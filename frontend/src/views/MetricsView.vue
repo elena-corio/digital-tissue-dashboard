@@ -1,9 +1,9 @@
 <template>
   <Workspace
-    :title="uiText.metrics.title"
-    :subtitle="uiText.metrics.subtitle"
-    :statusIcon="uiText.metrics.statusIcon"
-    :statusText="uiText.metrics.statusText"
+    :title="uiText.TABS.metrics.title"
+    :subtitle="uiText.TABS.metrics.subtitle"
+    :statusIcon="uiText.TABS.metrics.statusIcon"
+    :statusText="uiText.TABS.metrics.statusText"
   >
     <div class="metrics-placeholder">Metrics content placeholder</div>
   </Workspace>

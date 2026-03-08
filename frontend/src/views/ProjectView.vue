@@ -1,9 +1,9 @@
 <template>
   <Workspace
-    :title="uiText.project.title"
-    :subtitle="uiText.project.subtitle"
-    :statusIcon="uiText.project.statusIcon"
-    :statusText="uiText.project.statusText"
+    :title="uiText.TABS.project.title"
+    :subtitle="uiText.TABS.project.subtitle"
+    :statusIcon="uiText.TABS.project.statusIcon"
+    :statusText="uiText.TABS.project.statusText"
   >
     <div class="project-placeholder">Project content placeholder</div>
   </Workspace>

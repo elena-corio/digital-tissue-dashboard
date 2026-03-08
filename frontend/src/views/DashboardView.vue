@@ -5,8 +5,8 @@
     </div>
     <div class="dashboard-title-row">
       <div class="dashboard-title-block">
-        <h2 class="h2">{{ uitext.DASHBOARD.title }}</h2>
-        <div class="subtitle">{{ uitext.DASHBOARD.subtitle }}</div>
+        <h2 class="h2">{{ uitext.TABS.overview.title }}</h2>
+        <div class="subtitle">{{ uitext.TABS.overview.subtitle }}</div>
       </div>
       <div class="dashboard-status-indicator">
         <StatusIndicator />

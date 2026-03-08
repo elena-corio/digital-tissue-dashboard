@@ -1,6 +1,18 @@
-export const DASHBOARD = {
-  title: 'Welcome to Digital Tissue',
-  subtitle: 'A quick pulse check of your project',
+export const TABS = {
+  overview:
+{  title: 'Welcome to Digital Tissue',
+  subtitle: 'A quick pulse check of your project'},
+  site: {
+    title: 'Site Analysis',
+    subtitle: 'Key insights and metrics about your site'
+  },
+  project: {
+    title: 'Project Overview',
+    subtitle: 'Current status and recent updates of your project'},
+  metrics: {
+    title: 'Metrics Dashboard',
+    subtitle: 'Detailed performance indicators and KPIs'
+  }
 };
 // All UI text for digital.tissue dashboard
 // Export as named constants or objects
