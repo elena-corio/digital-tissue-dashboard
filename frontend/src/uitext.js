@@ -33,29 +33,29 @@ export const KPIS = {
     {
       name: 'Liveability',
       metrics: [
-        { name: 'greenSpaceDistance', label: 'Green Space Distance', value: 'health', unit: 'm' },
-        { name: 'daylightPotential', label: 'Daylight Potential', value: 'risk', unit: '' }
+        { name: 'greenSpaceDistance', label: 'Green Space Distance', value: 'health', unit: 'm' , 'action': 'The distance of residential units to green space needs to be decreased to meet the benchmark.'},
+        { name: 'daylightPotential', label: 'Daylight Potential', value: 'risk', unit: '' , 'action': 'The windows area to be increased to meet the benchmark.'}
       ]
     },
     {
       name: 'Interconnection',
       metrics: [
-        { name: 'programDiversity', label: 'Program Diversity', value: 'health', unit: '' },
-        { name: 'circulationEfficiency', label: 'Circulation Efficiency', value: 'risk' }
+        { name: 'programDiversity', label: 'Program Diversity', value: 'health', unit: '', 'action': 'The diversity of programs needs to be increased to meet the benchmark.' },
+        { name: 'circulationEfficiency', label: 'Circulation Efficiency', value: 'risk', unit: '', 'action': 'The circulation area needs to be decreased to meet the benchmark.' }
       ]
     },
     {
       name: 'Adaptability',
       metrics: [
-        { name: 'netFloorAreaRatio', label: 'Net Floor Area Ratio', value: 'health', unit: '' },
-        { name: 'usableAreaRatio', label: 'Usable Area Ratio', value: 'risk', unit: '' }
+        { name: 'netFloorAreaRatio', label: 'Net Floor Area Ratio', value: 'health', unit: '' , 'action': 'The net-floor-area ratio needs to be optimized to meet the benchmark.'},
+        { name: 'usableAreaRatio', label: 'Usable Area Ratio', value: 'risk', unit: '', 'action': 'The usable area needs to be increased to meet the benchmark.' }
       ]
     },
         {
       name: 'Sustainability',
       metrics: [
-        { name: 'carbonIntensity', label: 'Carbon Intensity', value: 'health', unit: 'kgCO2/m2' },
-        { name: 'volumeToSurface', label: 'Volume to Surface', value: 'risk', unit: 'm3/m2' }
+        { name: 'carbonIntensity', label: 'Carbon Intensity', value: 'health', unit: 'kgCO2/m2' , 'action': 'The carbon intensity needs to be reduced to meet the benchmark.'},
+        { name: 'volumeToSurface', label: 'Volume to Surface', value: 'risk', unit: 'm3/m2' , 'action': 'The volume to surface ratio needs to be optimized to meet the benchmark.'}
       ]
     }
   ]

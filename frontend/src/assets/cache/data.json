@@ -5,7 +5,7 @@
         "grossFloorArea": 850000,
         "daylightPotential": 0.18,
         "greenSpaceDistance": 250,
-        "programDiversity": 0.70,
+        "programDiversity": 0.85,
         "circulationEfficiency": 0.70,
         "usableAreaRatio": 0.75,
         "netFloorAreaRatio": 0.80,
@@ -19,7 +19,7 @@
             "greenSpaceDistance": 450,
             "programDiversity": 0.80,
             "circulationEfficiency": 0.60,
-            "usableAreaRatio": 0.65,
+            "usableAreaRatio": 0.72,
             "netFloorAreaRatio": 0.70,
             "carbonIntensity": 550,
             "volumeToSurface": 11.00
@@ -30,7 +30,7 @@
             "greenSpaceDistance": 250,
             "programDiversity": 0.90,
             "circulationEfficiency": 0.80,
-            "usableAreaRatio": 0.75,
+            "usableAreaRatio": 0.80,
             "netFloorAreaRatio": 0.75,
             "carbonIntensity": 400,
             "volumeToSurface": 13.00
@@ -42,7 +42,7 @@
             "programDiversity": 0.80,
             "circulationEfficiency": 0.70,
             "usableAreaRatio": 0.73,
-            "netFloorAreaRatio": 0.72,
+            "netFloorAreaRatio": 0.80,
             "carbonIntensity": 420,
             "volumeToSurface": 10.00
         },
@@ -52,7 +52,7 @@
             "greenSpaceDistance": 150,
             "programDiversity": 0.90,
             "circulationEfficiency": 0.75,
-            "usableAreaRatio": 0.70,
+            "usableAreaRatio": 0.75,
             "netFloorAreaRatio": 0.75,
             "carbonIntensity": 430,
             "volumeToSurface": 11.00
