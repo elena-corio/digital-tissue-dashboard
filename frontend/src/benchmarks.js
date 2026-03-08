@@ -1,12 +1,12 @@
 export const METRICS = {
-    daylightPotential:{min: 0.00, max: 1.00, benchmark: 0.25,unit: '', type: 'higher-is-better'},
-    greenSpaceDistance: {min: 0.00, max: 500.00, benchmark: 300.00, unit: 'm', type: 'lower-is-better'},
-    programDiversity: {min: 0.00, max: 1.00, benchmark: 0.75, unit: '', type: 'higher-is-better'},
-    circulationEfficiency: {min: 0.00, max: 1.00, benchmark: 0.75, unit: '', type: 'higher-is-better'},
-    usableAreaRatio: {min: 0.00, max: 1.00, benchmark: 0.75, unit: '', type: 'higher-is-better'},
-    netFloorAreaRatio: {min: 0.00, max: 1.00, benchmark: 0.85, unit: '', type: 'higher-is-better'},
-    carbonIntensity: {min: 0.00, max: 1000.00, benchmark: 500.00, unit: 'kgCO2/m2', type: 'lower-is-better'},
-    volumeToSurface: {min: 0.00, max: 15.00, benchmark: 12.50, unit: 'm3/m2', type: 'higher-is-better'},
+    daylightPotential:{left: 0.00, right: 1.00, benchmark: 0.25,unit: ''},
+    greenSpaceDistance: {left: 500.00, right: 0.00, benchmark: 300.00, unit: 'm'},
+    programDiversity: {left: 0.00, right: 1.00, benchmark: 0.75, unit: ''},
+    circulationEfficiency: {left: 0.00, right: 1.00, benchmark: 0.75, unit: ''},
+    usableAreaRatio: {left: 0.00, right: 1.00, benchmark: 0.75, unit: ''},
+    netFloorAreaRatio: {left: 0.00, right: 1.00, benchmark: 0.85, unit: ''},
+    carbonIntensity: {left: 1000.00, right: 0.00, benchmark: 500.00, unit: 'kgCO2/m2'},
+    volumeToSurface: {left: 0.00, right: 15.00, benchmark: 12.50, unit: 'm3/m2'},
 }
 
 export const VITALITY = {

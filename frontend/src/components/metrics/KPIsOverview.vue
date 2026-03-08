@@ -18,8 +18,8 @@
               >{{ getBenchmarkValue(uitext.KPIS.kpis[i]?.metrics[j]?.name) }}</span>
             </div>
             <div class="kpi-bar-values">
-              <span class="kpi-bar-min">{{ getMin(uitext.KPIS.kpis[i]?.metrics[j]?.name) }}</span>
-              <span class="kpi-bar-max">{{ getMax(uitext.KPIS.kpis[i]?.metrics[j]?.name) }}</span>
+              <span class="kpi-bar-left">{{ getLeft(uitext.KPIS.kpis[i]?.metrics[j]?.name) }}</span>
+              <span class="kpi-bar-right">{{ getRight(uitext.KPIS.kpis[i]?.metrics[j]?.name) }}</span>
             </div>
           </div>
         </div>
@@ -39,20 +39,20 @@ function formatValue(val) {
   if (val === '' || val === undefined) return '';
   return Number(val).toFixed(2);
 }
-function getMin(metricName) {
+function getLeft(metricName) {
   const metric = METRICS[metricName]
   if (!metric) return ''
-  return formatValue(metric.type === 'higher-is-better' ? metric.min : metric.max)
-}
-function getMax(metricName) {
+  return formatValue(metric.left) }
+
+function getRight(metricName) {
   const metric = METRICS[metricName]
   if (!metric) return ''
-  return formatValue(metric.type === 'higher-is-better' ? metric.max : metric.min)
+  return formatValue(metric.right)
 }
 function getDiamondPosition(metricName) {
   const metric = METRICS[metricName]
   if (!metric || metric.benchmark === undefined) return '0%'
-  const norm = normalize(metric.benchmark, metric.min, metric.max, metric.type)
+  const norm = normalize(metric.benchmark, metric.left, metric.right, metric.type)
   return `${Math.round(norm * 100)}%`
 }
 function getBenchmarkValue(metricName) {
@@ -110,7 +110,7 @@ function getBenchmarkValue(metricName) {
   width: 90%;
   height: 10px;
   border-radius: 8px;
-  background: linear-gradient(90deg, var(--color-error), var(--color-success));
+  background: var(--grey-50);
   margin: 0.5rem 0 0 0;
   position: relative;
 }
@@ -132,8 +132,8 @@ function getBenchmarkValue(metricName) {
   text-align: center;
   margin-top: 0.15rem;
 }
-.kpi-bar-min,
-.kpi-bar-max {
+.kpi-bar-left,
+.kpi-bar-right {
   font-size: var(--font-size-value);
   color: var(--navy-50);
   min-width: 32px;
