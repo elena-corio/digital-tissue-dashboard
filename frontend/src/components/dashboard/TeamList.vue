@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import * as uitext from '../uitext.js'
+import * as uitext from '../../uitext.js'
 </script>
 
 <style scoped>
