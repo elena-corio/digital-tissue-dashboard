@@ -35,8 +35,8 @@ export const NODE_CARD = {
     {
       name: 'Liveability',
       metrics: [
-        { label: 'Green Space Index', value: '+5%', type: 'success' },
-        { label: 'Daylight Factor', value: '+6%', type: 'error' }
+        { label: 'Green Space Distance', value: '+5%', type: 'success' },
+        { label: 'Daylight Potential', value: '+6%', type: 'error' }
       ]
     },
     {
@@ -56,8 +56,8 @@ export const NODE_CARD = {
         {
       name: 'Sustainability',
       metrics: [
-        { label: 'Carbon Efficiency', value: '+10%', type: 'success' },
-        { label: 'Volume to Surface Ratio', value: '+2%', type: 'error' }
+        { label: 'Carbon Intensity', value: '+10%', type: 'success' },
+        { label: 'Volume to Surface', value: '+2%', type: 'error' }
       ]
     }
   ]
@@ -126,10 +126,4 @@ export const UPDATES = {
   lastUpdate: '3/1/2026 7:26:54 PM',
   issueFound: 'The last update was more than 24 hours ago. Publish your latest design iteration to keep the tissue healthy.',
   allGood: 'The latest update was published recently. Keep up the good work to maintain tissue vitality!',
-};
-
-export const PULSE = {
-  label: 'Pulse',
-  value: 78,
-  status: 'Stable',
 };
