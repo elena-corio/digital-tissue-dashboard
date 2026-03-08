@@ -3,70 +3,76 @@
     <div class="card-title">
       {{ getKpiLabel(selectedKPI) }} by Tower
     </div>
-    <svg
-      class="tower-metrics-svg"
-      viewBox="0 0 420 240"
-      preserveAspectRatio="xMidYMid meet"
-      style="width: 100%; height: 240px; display: block; margin-top: 1.5rem;"
-    >
-      <circle
-        v-for="(cluster, idx) in clusters"
-        :key="cluster.name"
-        :cx="circleX(idx)"
-        :cy="circleY(cluster)"
-        :r="circleR(cluster)"
-        :style="{ fill: circleColor(cluster), transformOrigin: `${circleX(idx)}px ${circleY(cluster)}px` }"
-        opacity="0.5"
-        class="breathe-circle"
-      />
-      <!-- KPI value inside circle -->
-      <text
-        v-for="(cluster, idx) in clusters"
-        :key="'kpi-' + cluster.name"
-        :x="circleX(idx)"
-        :y="circleY(cluster)"
-        text-anchor="middle"
-        alignment-baseline="middle"
-        font-size="16"
-        font-weight="bold"
-        fill="#303179"
-      >{{ typeof cluster[selectedKPI] === 'number' ? cluster[selectedKPI].toFixed(2) : '' }}</text>
-      <!-- Horizontal line at benchmark Y position -->
-      <line
-        v-if="benchmarkY() !== null"
-        x1="0"
-        :y1="benchmarkY()"
-        x2="420"
-        :y2="benchmarkY()"
-        stroke="#303179"
-        stroke-width="2"
-        stroke-dasharray="6,4"
-        opacity="0.7"
-      />
-      <text
-        v-if="benchmarkY() !== null"
-        x="420"
-        :y="benchmarkY() - 6"
-        text-anchor="start"
-        font-size="13"
-        fill="#303179"
-        font-weight="bold"
+    <div ref="containerRef" class="tower-metrics-container" style="display: flex; flex-direction: column; align-items: stretch; width: 100%;">
+      <svg
+        ref="svgRef"
+        class="tower-metrics-svg"
+        :viewBox="`0 0 ${containerWidth} ${svgHeight}`"
+        :width="containerWidth"
+        :height="svgHeight"
+        style="display: block; margin-top: 1.5rem;"
       >
-        {{ typeof safeBenchmarkValue() === 'number' ? safeBenchmarkValue().toFixed(2) : safeBenchmarkValue() }}
-        <tspan x="420" dy="16" font-size="12">{{ kpiUnit() }}</tspan>
-      </text>
-    </svg>
-    <div class="tower-names-row">
-      <div
-        v-for="(cluster, idx) in clusters"
-        :key="'tower-' + cluster.name"
-        :style="{
-          flex: '1 1 0',
-          textAlign: 'center',
-          marginLeft: idx === 0 ? `${margin}px` : undefined,
-          marginRight: idx === clusters.length - 1 ? `${margin}px` : undefined
-        }"
-      >{{ 'Tower ' + (idx + 1) }}</div>
+        <!-- Benchmark line (robust, always visible) -->
+        <line
+          v-if="benchmarkY() !== null"
+          :x1="benchmarkLineStartX"
+          :x2="benchmarkLineEndX"
+          :y1="benchmarkY()"
+          :y2="benchmarkY()"
+          stroke="var(--navy-100)"
+          stroke-width="2"
+          stroke-dasharray="6,4"
+          opacity="1"
+        />
+        <circle
+          v-for="(cluster, idx) in clusters"
+          :key="cluster.name"
+          :cx="circleX(idx)"
+          :cy="circleY(cluster)"
+          :r="circleR(cluster)"
+          :style="{ fill: circleColor(cluster), transformOrigin: `${circleX(idx)}px ${circleY(cluster)}px` }"
+          opacity="0.5"
+          class="breathe-circle"
+        />
+        <!-- KPI value inside circle -->
+        <text
+          v-for="(cluster, idx) in clusters"
+          :key="'kpi-' + cluster.name"
+          :x="circleX(idx)"
+          :y="circleY(cluster)"
+          text-anchor="middle"
+          alignment-baseline="middle"
+          font-size="16"
+          font-weight="bold"
+          fill="#303179"
+        >{{ typeof cluster[selectedKPI] === 'number' ? cluster[selectedKPI].toFixed(2) : '' }}</text>
+        <!-- Benchmark value text -->
+        <text
+          v-if="benchmarkY() !== null"
+          :x="benchmarkLineEndX + 8"
+          :y="benchmarkY() - 6"
+          text-anchor="start"
+          font-size="13"
+          fill="#303179"
+          font-weight="bold"
+        >
+          {{ typeof safeBenchmarkValue() === 'number' ? safeBenchmarkValue().toFixed(2) : safeBenchmarkValue() }}
+          <tspan :x="benchmarkLineEndX + 8" dy="16" font-size="12">{{ kpiUnit() }}</tspan>
+        </text>
+      </svg>
+      <div class="tower-names-row">
+        <div
+          v-for="(cluster, idx) in clusters"
+          :key="'tower-' + cluster.name"
+          :style="{
+            position: 'absolute',
+            left: `${circleX(idx)}px`,
+            width: '80px',
+            textAlign: 'center',
+            transform: 'translateX(-40px)'
+          }"
+        >{{ 'Tower ' + (idx + 1) }}</div>
+      </div>
     </div>
   </div>
 </template>
@@ -75,16 +81,38 @@
 import projectData from '../../assets/cache/data.json'
 import { METRICS } from '../../benchmarks.js'
 import { KPIS } from '../../uitext.js'
+import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue';
 
 export default {
   name: 'TowerMetrics',
   props: {
     selectedKPI: String
   },
+  setup() {
+    const containerWidth = ref(420);
+    const containerRef = ref(null);
+    const svgHeight = ref(240);
+    const svgRef = ref(null);
+    const margin = ref(0);
+    function updateContainerWidth() {
+      if (containerRef.value) {
+        containerWidth.value = containerRef.value.clientWidth;
+      }
+      if (svgRef.value) {
+        svgHeight.value = svgRef.value.clientHeight;
+      }
+    }
+    onMounted(() => {
+      nextTick(updateContainerWidth);
+      window.addEventListener('resize', updateContainerWidth);
+    });
+    onBeforeUnmount(() => {
+      window.removeEventListener('resize', updateContainerWidth);
+    });
+    return { containerWidth, containerRef, svgHeight, svgRef, margin };
+  },
   data() {
     return {
-      svgW: 420,
-      svgH: 260,
       margin: 30,
       palette: [
         '--light-blue-100',
@@ -120,6 +148,16 @@ export default {
     },
     maxArea() {
       return Math.max(...this.clusters.map(c => c.grossFloorArea ?? 1));
+    },
+    benchmarkLineStartX() {
+      // Start at left margin of container
+      const margin = Math.max(this.margin, this.containerWidth * 0.1);
+      return margin;
+    },
+    benchmarkLineEndX() {
+      // End at right margin of container
+      const margin = Math.max(this.margin, this.containerWidth * 0.1);
+      return this.containerWidth - margin;
     }
   },
   methods: {
@@ -136,13 +174,13 @@ export default {
       return 35 + normA * (70 - 35);
     },
     normalizedY(value, radius = 0) {
-      // Shared normalization for vertical position, radius-aware
+      // Use actual SVG height for normalization
       const minM = this.minMetric;
       const maxM = this.maxMetric;
       const marginTop = 4;
       const marginBottom = 24;
       const minY = radius + marginTop;
-      const maxY = this.svgH - radius - marginBottom;
+      const maxY = this.svgHeight - radius - marginBottom;
       if (maxM === minM) return (minY + maxY) / 2;
       const norm = (value - minM) / (maxM - minM);
       return maxY - norm * (maxY - minY);
@@ -156,7 +194,7 @@ export default {
     benchmarkY() {
       // Use radius of circle matching benchmark value, else average radius
       const metric = METRICS[this.selectedKPI];
-      if (!metric) return null;
+      if (!metric) return 0; // fallback to 0 if metric is missing
       const benchmark = metric.benchmark;
       // Find radius of circle with value == benchmark
       const match = this.clusters.find(c => Math.abs((c[this.selectedKPI] ?? 0) - benchmark) < 1e-6);
@@ -167,18 +205,20 @@ export default {
         const radii = this.clusters.map(c => this.circleR(c));
         radius = radii.length ? radii.reduce((a, b) => a + b, 0) / radii.length : 0;
       }
-      return this.normalizedY(benchmark, radius);
+      // Always return a number
+      return this.normalizedY(benchmark, radius) ?? 0;
     },
     safeBenchmarkValue() {
       const metric = METRICS[this.selectedKPI];
       return metric && typeof metric.benchmark !== 'undefined' ? metric.benchmark : '';
     },
     circleX(idx) {
-      // Evenly space circle centers horizontally, independent of radius
+      // Use actual container width for responsive positioning
       const n = this.clusters.length;
-      const margin = this.margin;
+      // Further increase margin for left/right padding
+      const margin = Math.max(this.margin, this.containerWidth * 0.16);
       const minX = margin;
-      const maxX = this.svgW - margin;
+      const maxX = this.containerWidth - margin;
       if (n === 1) return (minX + maxX) / 2;
       return minX + idx * (maxX - minX) / (n - 1);
     },
@@ -240,11 +280,8 @@ export default {
   margin-top: var(--space-md);
 }
 .tower-names-row {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: flex-start;
-  height: 32px;
+  position: relative;
+  height: 24px;
   margin-top: 8px;
 }
 @keyframes breathe {
@@ -255,5 +292,9 @@ export default {
 .breathe-circle {
   animation: breathe 2.5s infinite ease-in-out;
   transform-origin: center;
+}
+.tower-metrics-container {
+  position: relative;
+  width: 100%;
 }
 </style>

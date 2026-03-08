@@ -145,9 +145,14 @@ export default {
   overflow: hidden;
   margin-bottom: var(--space-lg);
 }
-.metrics-detail-left,
-.metrics-detail-right {
+.metrics-detail-left {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.metrics-detail-right {
+  flex: 2;
   display: flex;
   flex-direction: column;
   gap: 1rem;

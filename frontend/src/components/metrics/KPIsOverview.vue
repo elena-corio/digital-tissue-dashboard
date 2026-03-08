@@ -31,10 +31,6 @@
                 class="kpi-diamond"
                 :style="{ left: getDiamondPosition(uitext.KPIS.kpis[i]?.metrics[j]?.name) }"
               >◆</span>
-              <span
-                class="kpi-bar-benchmark"
-                :style="{ left: getDiamondPosition(uitext.KPIS.kpis[i]?.metrics[j]?.name) }"
-              >{{ getBenchmarkValue(uitext.KPIS.kpis[i]?.metrics[j]?.name) }}</span>
             </div>
             <div class="kpi-bar-values">
               <span class="kpi-bar-left">{{ getLeft(uitext.KPIS.kpis[i]?.metrics[j]?.name) }}</span>
@@ -209,7 +205,8 @@ function getBenchmarkValue(metricName) {
   text-align: center;
 }
 .kpi-bar-values {
-  width: 240px;
+  width: 100%;
+  max-width: 240px;
   display: flex;
   justify-content: space-between;
 }
