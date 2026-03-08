@@ -19,14 +19,16 @@
       <!-- Right Column -->
       <section class="metrics-right metrics-col">
         <div class="metrics-right-stack">
-          <KPIsOverview />
-          <div class="metrics-metrics-wrapper">
-            <div class="metrics-metrics-left">
-              <TowerMetrics />
-            </div>
-            <div class="metrics-metrics-right">
+          <div class="metrics-kpis-wrapper">
+            <KPIsOverview />
+          </div>
+          <div class="metrics-detail-wrapper">
+            <div class="metrics-detail-left">
               <LevelMetrics />
               <ActionRequired />
+            </div>
+            <div class="metrics-detail-right">
+              <TowerMetrics />
             </div>
           </div>
         </div>
@@ -119,7 +121,13 @@ export default {
   min-height: 0;
   gap: 1rem;
 }
-.metrics-metrics-wrapper {
+.metrics-kpis-wrapper {
+  display: flex;
+   flex: 0 0 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+.metrics-detail-wrapper {
   display: flex;
   flex: 1 1 0%;
   gap: var(--space-md);
@@ -127,8 +135,8 @@ export default {
   overflow: hidden;
   margin-bottom: var(--space-lg);
 }
-.metrics-metrics-left,
-.metrics-metrics-right {
+.metrics-detail-left,
+.metrics-detail-right {
   flex: 1;
   display: flex;
   flex-direction: column;
