@@ -1,12 +1,16 @@
 <template>
-  <div class="workspace-container">
-    <HeaderBar />
+ <div class="workspace-root">
     <div class="workspace-header">
-      <div class="workspace-title">
-        <h1>{{ title }}</h1>
-        <h2 v-if="subtitle">{{ subtitle }}</h2>
+      <HeaderBar />
+    </div>
+    <div class="workspace-title-row">
+      <div class="workspace-title-block">
+        <h2 class="h2">{{ title }}</h2>
+        <div class="subtitle">{{ subtitle }}</div>
       </div>
-      <StatusIndicator :icon="statusIcon" :text="statusText" />
+      <div class="workspace-status-indicator">
+        <StatusIndicator :icon="statusIcon" :text="statusText" />
+      </div>
     </div>
     <div class="workspace-content">
       <slot />
@@ -46,28 +50,33 @@ export default {
 </script>
 
 <style scoped>
-.workspace-container {
+.workspace-root {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  background: var(--grey-50);
 }
-.workspace-header {
+.workspace-title-block {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: var(--space-xs);
+}
+.workspace-title-row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
   justify-content: space-between;
-  padding: 1rem;
-}
-.workspace-title h1 {
-  margin: 0;
-  font-size: 2rem;
-}
-.workspace-title h2 {
-  margin: 0;
-  font-size: 1.2rem;
-  color: #888;
+  margin-top: var(--space-md);
+  gap: var(--space-lg);
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+    padding-left: var(--space-lg);
+    padding-right: var(--space-lg);
 }
 .workspace-content {
   flex: 1;
-  padding: 2rem;
-}
+  padding: 2rem;}
 </style>

@@ -1,17 +1,10 @@
 <template>
-  <div class="dashboard-root">
-    <div class="dashboard-header">
-      <HeaderBar />
-    </div>
-    <div class="dashboard-title-row">
-      <div class="dashboard-title-block">
-        <h2 class="h2">{{ uitext.TABS.overview.title }}</h2>
-        <div class="subtitle">{{ uitext.TABS.overview.subtitle }}</div>
-      </div>
-      <div class="dashboard-status-indicator">
-        <StatusIndicator />
-      </div>
-    </div>
+  <Workspace
+    :title="uiText.TABS.overview.title"
+    :subtitle="uiText.TABS.overview.subtitle"
+    :statusIcon="uiText.TABS.overview.statusIcon"
+    :statusText="uiText.TABS.overview.statusText"
+  >
     <div class="dashboard-main">
       <!-- Left Column -->
       <section class="dashboard-left dashboard-col">
@@ -40,48 +33,38 @@
         </div>
       </section>
     </div>
-  </div>
+  </Workspace>
 </template>
 
-<script setup>
-import HeaderBar from '../components/HeaderBar.vue'
+<script>
+import Workspace from '../components/Workspace.vue';
 import TissueCanvas from '../components/dashboard/TissueCanvas.vue'
 import OrganSelector from '../components/dashboard/OrganSelector.vue'
 import VitalityCard from '../components/dashboard/VitalityCard.vue'
 import GrowthCycles from '../components/dashboard/GrowthCycles.vue'
 import IssueFound from '../components/dashboard/LastUpdate.vue'
 import TeamList from '../components/TeamList.vue'
-import StatusIndicator from '../components/StatusIndicator.vue'
-import * as uitext from '../uitext.js'
+import * as uiText from '../uitext.js';
+
+export default {
+  name: 'DashboardView',
+  components: {
+    Workspace,
+    TissueCanvas,
+    OrganSelector,
+    VitalityCard,
+    GrowthCycles,
+    IssueFound,
+    TeamList
+  },
+  data() {
+    return { uiText };
+  }
+};
 </script>
 
 <style scoped>
-.dashboard-root {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  background: var(--grey-50);
-}
-.dashboard-title-block {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  gap: var(--space-xs);
-}
-.dashboard-title-row {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: space-between;
-  margin-top: var(--space-md);
-  gap: var(--space-lg);
-  margin-left: auto;
-  margin-right: auto;
-  width: 100%;
-    padding-left: var(--space-lg);
-    padding-right: var(--space-lg);
-}
+
 
 .dashboard-main {
   display: flex;
