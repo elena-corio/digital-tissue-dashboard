@@ -5,7 +5,7 @@
         <span class="digital">digital</span>.<span class="tissue">tissue</span>
       </h3>
     </div>
-    <NavTabs :tabs="uitext.HEADER.nav" v-model="activeTab" />
+    <NavTabs :tabs="navTabs" />
     <div class="header-right">
       <div class="avatar-circle">
         {{ uitext.HEADER.avatarPlaceholder }}
@@ -23,10 +23,15 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
 import * as uitext from '../uitext.js'
 import NavTabs from './NavTabs.vue'
-const activeTab = ref(uitext.HEADER.nav[0])
+
+const navTabs = [
+  { label: 'Overview', route: '/' },
+  { label: 'Site', route: '/site' },
+  { label: 'Project', route: '/project' },
+  { label: 'Metrics', route: '/metrics' }
+];
 </script>
 
 <style scoped>

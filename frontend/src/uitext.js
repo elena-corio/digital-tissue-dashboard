@@ -1,6 +1,31 @@
-export const DASHBOARD = {
-  title: 'Welcome to Digital Tissue',
+export const TABS = {
+  overview:
+{  title: 'Welcome to Digital Tissue',
   subtitle: 'A quick pulse check of your project',
+  statusLabel: 'Pulse Check',
+  statusDescription: 'Organ Vitality Avg',
+  statusIcon: '💓'},
+  site: {
+    title: 'Site Analysis',
+    subtitle: 'Key insights and metrics about your site',
+    statusLabel: 'Body Balance',
+    statusDescription: 'Floor Area Ratio',
+    statusIcon: '🧘' // balance
+  },
+  project: {
+    title: 'Project Overview',
+    subtitle: 'Current status and recent updates of your project',
+    statusLabel: 'Tissue Expansion',
+    statusDescription: 'Gross Floor Area',
+    statusIcon: '🧬' // expansion
+  },
+  metrics: {
+    title: 'Metrics Dashboard',
+    subtitle: 'Detailed performance indicators and KPIs',
+    statusLabel: 'Metabolic Health',
+    statusDescription: 'KPIs on Target',
+    statusIcon: '🦠' // stability
+  }
 };
 // All UI text for digital.tissue dashboard
 // Export as named constants or objects
@@ -60,9 +85,10 @@ export const ORGANS = {
 export const VITALITY = {
   sectionTitle: 'Organ Vitality',
   cards: {
-    metabolism: { title: 'Metabolic Stability', value: 7, goal:8, description: "KPIs on Target"},
-    body: { title: 'Body Coordination', value: 0.85, goal:1, description: "Max Height" },
-    tissue: { title: 'Tissue Expansion', value: 0.6, goal:1, description: "Target Area" },
+    body: { title: 'Body Balance', value: 0.85, goal:1, description: "Floor Area Ratio" },
+    tissue: { title: 'Tissue Expansion', value: 0.6, goal:1, description: "Target Floor Area" },
+    metabolism: { title: 'Metabolic Health', value: 7, goal:8, description: "KPIs on Target"},
+    
   },
 };
 
