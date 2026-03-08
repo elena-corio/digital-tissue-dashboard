@@ -22,11 +22,11 @@
           <div class="dashboard-vitality-wrapper">
             <VitalityCard />
           </div>
-          <div class="dashboard-team-growth-wrapper">
-            <div class="dashboard-team-growth-left">
+          <div class="dashboard-detail-wrapper">
+            <div class="dashboard-detail-left">
               <TeamList />
             </div>
-            <div class="dashboard-team-growth-right">
+            <div class="dashboard-detail-right">
               <GrowthPhases />
               <IssueFound />
             </div>
@@ -111,7 +111,7 @@ export default {
   flex-direction: column;
   min-height: 0;
 }
-.dashboard-team-growth-wrapper {
+.dashboard-detail-wrapper {
   display: flex;
   flex: 1 1 0%;
   gap: var(--space-md);
@@ -119,13 +119,13 @@ export default {
   overflow: hidden;
    margin-bottom: var(--space-lg);
 }
-.dashboard-team-growth-left {
+.dashboard-detail-left {
   flex: 1 1 0%;
   display: flex;
   flex-direction: column;
   min-height: 0;
 }
-.dashboard-team-growth-right {
+.dashboard-detail-right {
   flex: 1 1 0%;
   display: flex;
   flex-direction: column;
