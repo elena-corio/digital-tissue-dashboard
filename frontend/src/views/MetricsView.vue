@@ -133,9 +133,11 @@ export default {
 }
 .metrics-kpis-wrapper {
   display: flex;
-   flex: 0 0 auto;
+  flex: 0 0 auto;
   flex-direction: column;
   min-height: 0;
+  max-height: 30%;
+  overflow: auto;
 }
 .metrics-detail-wrapper {
   display: flex;
@@ -152,7 +154,7 @@ export default {
   gap: 1rem;
 }
 .metrics-detail-right {
-  flex: 2;
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 1rem;

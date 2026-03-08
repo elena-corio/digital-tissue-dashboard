@@ -153,12 +153,12 @@ export default {
     },
     benchmarkLineStartX() {
       // Start at left margin of container
-      const margin = Math.max(this.margin, this.containerWidth * 0.1);
+      const margin = Math.max(this.margin, this.containerWidth * 0.15);
       return margin;
     },
     benchmarkLineEndX() {
       // End at right margin of container
-      const margin = Math.max(this.margin, this.containerWidth * 0.1);
+      const margin = Math.max(this.margin, this.containerWidth * 0.15);
       return this.containerWidth - margin;
     }
   },
@@ -172,8 +172,8 @@ export default {
       const maxSqrt = Math.sqrt(maxA);
       const sqrtA = Math.sqrt(cluster.grossFloorArea);
       const normA = (sqrtA - minSqrt) / (maxSqrt - minSqrt);
-      // Map to radius range 35-70
-      return 35 + normA * (70 - 35);
+      // Map to radius range 40-60
+      return 40 + normA * (60 - 40);
     },
     normalizedY(value, radius = 0) {
       // Use actual SVG height for normalization
@@ -279,7 +279,6 @@ export default {
 .tower-metrics-svg {
   width: 100%;
   height: auto;
-  margin-top: var(--space-md);
 }
 .tower-names-row {
   position: relative;
