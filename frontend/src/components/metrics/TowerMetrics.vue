@@ -42,9 +42,9 @@
       />
       <text
         v-if="benchmarkY() !== null"
-        x="410"
-        :y="benchmarkY() - 8"
-        text-anchor="end"
+        x="430"
+        :y="benchmarkY()+3"
+        text-anchor="start"
         font-size="13"
         fill="#303179"
         font-weight="bold"
@@ -93,13 +93,20 @@ export default {
       return Object.entries(projectData.clusters).map(([name, values]) => ({ name, ...values }))
     },
     minMetric() {
-      // Find min value for selected metric
+      // Find min value for selected metric, including benchmark
       if (!this.selectedKPI) return 0;
-      return Math.min(...this.clusters.map(c => c[this.selectedKPI] ?? 0));
+      const metric = METRICS[this.selectedKPI];
+      const values = this.clusters.map(c => c[this.selectedKPI] ?? 0);
+      if (metric && typeof metric.benchmark !== 'undefined') values.push(metric.benchmark);
+      return Math.min(...values);
     },
     maxMetric() {
+      // Find max value for selected metric, including benchmark
       if (!this.selectedKPI) return 1;
-      return Math.max(...this.clusters.map(c => c[this.selectedKPI] ?? 1));
+      const metric = METRICS[this.selectedKPI];
+      const values = this.clusters.map(c => c[this.selectedKPI] ?? 1);
+      if (metric && typeof metric.benchmark !== 'undefined') values.push(metric.benchmark);
+      return Math.max(...values);
     },
     minArea() {
       return Math.min(...this.clusters.map(c => c.grossFloorArea ?? 0));
