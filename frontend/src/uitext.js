@@ -85,8 +85,8 @@ export const ORGANS = {
 export const VITALITY = {
   sectionTitle: 'Organ Vitality',
   cards: {
-    tissue: { title: 'Tissue Expansion', value: 0.6, goal:1, description: "Target Floor Area" },
     body: { title: 'Body Balance', value: 0.85, goal:1, description: "Floor Area Ratio" },
+    tissue: { title: 'Tissue Expansion', value: 0.6, goal:1, description: "Target Floor Area" },
     metabolism: { title: 'Metabolic Health', value: 7, goal:8, description: "KPIs on Target"},
     
   },

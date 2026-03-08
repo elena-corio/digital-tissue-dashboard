@@ -2,8 +2,10 @@
   <div class="card vitality-card-parent">
     <div class="card-title">{{ uitext.VITALITY.sectionTitle }}</div>
     <div class="vitality-children-wrapper">
-      <div class="card vitality-card-child" v-for="card in vitalityCards" :key="card.title">
+      <div class="card vitality-card-child" v-for="(card, idx) in vitalityCards" :key="card.title">
+        <router-link :to="cardRoutes[idx]" class="arrow-btn">
           <ArrowButton />
+        </router-link>
         <span class="vitality-label">{{ card.title }}</span>
         <div class="vitality-child-content">
           <div class="vitality-info-inline">
@@ -18,10 +20,10 @@
 
 <script setup>
 import * as uitext from '../../uitext.js'
-import CircularGraph from '../CircularGraph.vue'
 import ArrowButton from '../ArrowButton.vue'
 
 const vitalityCards = Object.values(uitext.VITALITY.cards)
+const cardRoutes = ['/site', '/project', '/metrics'] // order matches cards
 
 function getPercent(value, goal) {
   if (!goal || isNaN(value) || isNaN(goal)) return 0;
