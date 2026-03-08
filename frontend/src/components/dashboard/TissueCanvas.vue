@@ -25,12 +25,12 @@
         <div class="nucleus-halo"></div>
       </template>
       <div v-if="cell.showCard" class="tissue-hover-card">
-        <div class="kpi-name">{{ NODE_CARD.kpis[idx % NODE_CARD.kpis.length].name }}</div>
+        <div class="kpi-name">{{ KPIS.kpis[idx % KPIS.kpis.length].name }}</div>
         <div class="kpi-card">
           <div class="kpi-metrics">
-            <span v-for="(metric, m) in NODE_CARD.kpis[idx % NODE_CARD.kpis.length].metrics" :key="m" class="kpi-metric-row">
+            <span v-for="(metric, m) in KPIS.kpis[idx % KPIS.kpis.length].metrics" :key="m" class="kpi-metric-row">
               <span class="metric-label">{{ metric.label }}</span>
-              <span :class="['metric-pill', metric.value.startsWith('-') ? 'error' : 'success']">
+              <span :class="['metric-pill', metric.value === 'risk' ? 'error' : 'success']">
                 {{ metric.value.replace('%','') }}
               </span>
             </span>
@@ -43,7 +43,7 @@
 
 <script setup>
 import { ref, reactive, onMounted, nextTick, onBeforeUnmount } from 'vue'
-import { NODE_CARD } from '../../uitext.js'
+import { KPIS } from '../../uitext.js'
 const tissueColors = [
   'var(--navy-100)',
   'var(--blue-100)',
