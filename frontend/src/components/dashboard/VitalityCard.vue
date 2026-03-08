@@ -71,6 +71,7 @@ function percentColor(percent) {
   width: 100%;
 }
 .vitality-card-child {
+  border-radius: var(--radius-md);
   flex: 1 1 0;
   min-width: 0;
   min-height: 140px;
@@ -81,13 +82,7 @@ function percentColor(percent) {
   justify-content: flex-start;
   position: relative;
 }
-.vitality-label {
-  color: var(--navy-50);
-  font-size: var(--font-size-h5);
-  font-weight: var(--font-weight-medium);
-  align-self: flex-start;
-  margin-bottom: 0.25rem;
-}
+
 .vitality-child-content {
   display: flex;
   flex-direction: row;

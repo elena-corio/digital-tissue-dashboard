@@ -5,7 +5,14 @@
       <div v-for="(col, i) in columns" :key="i" class="kpi-column">
         <div class="kpi-column-title">{{ uitext.KPIS.kpis[i]?.name }}</div>
         <div v-for="(kpi, j) in col" :key="kpi.label" class="kpi-card">
-          {{ uitext.KPIS.kpis[i]?.metrics[j]?.label || 'KPI' }}
+          <div class="kpi-label">{{ uitext.KPIS.kpis[i]?.metrics[j]?.label || 'KPI' }}</div>
+          <div class="kpi-bar-wrapper">
+            <div class="kpi-bar"></div>
+            <div class="kpi-bar-values">
+              <span class="kpi-bar-min">{{ getMin(uitext.KPIS.kpis[i]?.metrics[j]?.name) }}</span>
+              <span class="kpi-bar-max">{{ getMax(uitext.KPIS.kpis[i]?.metrics[j]?.name) }}</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -14,8 +21,24 @@
 
 <script setup>
 import * as uitext from '../../uitext.js'
+import { METRICS } from '../../benchmarks.js'
 
 const columns = uitext.KPIS.kpis.map(kpi => kpi.metrics)
+
+function formatValue(val) {
+  if (val === '' || val === undefined) return '';
+  return Number(val).toFixed(2);
+}
+function getMin(metricName) {
+  const metric = METRICS[metricName]
+  if (!metric) return ''
+  return formatValue(metric.type === 'higher-is-better' ? metric.min : metric.max)
+}
+function getMax(metricName) {
+  const metric = METRICS[metricName]
+  if (!metric) return ''
+  return formatValue(metric.type === 'higher-is-better' ? metric.max : metric.min)
+}
 </script>
 
 <style scoped>
@@ -49,5 +72,42 @@ const columns = uitext.KPIS.kpis.map(kpi => kpi.metrics)
   padding: 1rem;
   text-align: center;
   color: #666;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+.kpi-label {
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-medium);
+  margin-bottom: 0.25rem;
+}
+.kpi-bar-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+}
+.kpi-bar {
+  width: 100%;
+  height: 10px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, var(--color-error), var(--color-success));
+  margin: 0.5rem 0 0 0;
+}
+.kpi-bar-min,
+.kpi-bar-max {
+  font-size: var(--font-size-caption);
+  color: var(--navy-50);
+  min-width: 40px;
+  text-align: center;
+  margin-top: 0.25rem;
+}
+.kpi-bar-values {
+  width: 240px;
+  display: flex;
+  justify-content: space-between;
 }
 </style>
