@@ -1,6 +1,8 @@
 <template>
   <div class="tower-metrics-title card">
-    <div class="card-title">Metrics by tower</div>
+    <div class="card-title">
+      {{ getKpiLabel(selectedKPI) }} by Tower
+    </div>
     <svg
       class="tower-metrics-svg"
       viewBox="0 0 420 240"
@@ -29,17 +31,6 @@
         font-weight="bold"
         fill="#303179"
       >{{ typeof cluster[selectedKPI] === 'number' ? cluster[selectedKPI].toFixed(2) : '' }}</text>
-      <!-- Unit below KPI value -->
-      <text
-        v-for="(cluster, idx) in clusters"
-        :key="'unit-' + cluster.name"
-        :x="circleX(idx)"
-        :y="circleY(cluster) + 18"
-        text-anchor="middle"
-        alignment-baseline="middle"
-        font-size="12"
-        fill="#303179"
-      >{{ kpiUnit() }}</text>
       <!-- Horizontal line at benchmark Y position -->
       <line
         v-if="benchmarkY() !== null"
@@ -55,12 +46,15 @@
       <text
         v-if="benchmarkY() !== null"
         x="420"
-        :y="benchmarkY()+3"
+        :y="benchmarkY() - 6"
         text-anchor="start"
         font-size="13"
         fill="#303179"
         font-weight="bold"
-      >{{ typeof safeBenchmarkValue() === 'number' ? safeBenchmarkValue().toFixed(2) : safeBenchmarkValue() }}</text>
+      >
+        {{ typeof safeBenchmarkValue() === 'number' ? safeBenchmarkValue().toFixed(2) : safeBenchmarkValue() }}
+        <tspan x="420" dy="16" font-size="12">{{ kpiUnit() }}</tspan>
+      </text>
     </svg>
     <div class="tower-names-row">
       <div
@@ -219,6 +213,16 @@ export default {
         }
       }
       return '';
+    },
+    getKpiLabel(name) {
+      for (const section of KPIS.kpis) {
+        for (const metric of section.metrics) {
+          if (metric.name === name) {
+            return metric.label;
+          }
+        }
+      }
+      return name;
     }
   }
 };
