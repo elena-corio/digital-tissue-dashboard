@@ -13,8 +13,9 @@
         :cx="circleX(idx)"
         :cy="circleY(cluster)"
         :r="circleR(cluster)"
-        :style="{ fill: circleColor(cluster) }"
+        :style="{ fill: circleColor(cluster), transformOrigin: `${circleX(idx)}px ${circleY(cluster)}px` }"
         opacity="0.5"
+        class="breathe-circle"
       />
       <!-- KPI value inside circle -->
       <text
@@ -241,5 +242,14 @@ export default {
   align-items: flex-start;
   height: 32px;
   margin-top: 8px;
+}
+@keyframes breathe {
+  0% { transform: scale(0.98); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(0.98); }
+}
+.breathe-circle {
+  animation: breathe 2.5s infinite ease-in-out;
+  transform-origin: center;
 }
 </style>
