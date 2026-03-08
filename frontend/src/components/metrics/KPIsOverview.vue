@@ -108,11 +108,7 @@ function getDiamondPosition(metricName) {
   const clamped = Math.max(0, Math.min(norm, 1));
   return `${Math.round(clamped * 100)}%`
 }
-function getBenchmarkValue(metricName) {
-  const metric = METRICS[metricName]
-  if (!metric || metric.benchmark === undefined) return ''
-  return formatValue(metric.benchmark)
-}
+
 </script>
 
 <style scoped>
