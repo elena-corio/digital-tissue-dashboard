@@ -1,11 +1,14 @@
 // Utility to normalize a value between min and max, handling directionality
 // Returns a value between 0 and 1
-export function normalize(value, min, max, type = 'higher-is-better') {
-  if (min === undefined || max === undefined || value === undefined) return 0;
-  if (type === 'higher-is-better') {
-    return (value - min) / (max - min);
+// Normalize a value between left and right, handling directionality
+// Returns a value between 0 and 1
+export function normalize(value, left, right) {
+  if (left === undefined || right === undefined || value === undefined) return 0;
+  // If left < right, normal case
+  if (left < right) {
+    return (value - left) / (right - left);
   } else {
-    // lower-is-better: invert
-    return (max - value) / (max - min);
+    // If left > right, invert
+    return (left - value) / (left - right);
   }
 }

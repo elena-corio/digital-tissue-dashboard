@@ -8,6 +8,12 @@
           <div class="kpi-label">{{ uitext.KPIS.kpis[i]?.metrics[j]?.label || 'KPI' }}</div>
           <div class="kpi-bar-wrapper">
             <div class="kpi-bar">
+              <!-- Loaded value bar -->
+              <span
+                class="kpi-loaded-bar"
+                :style="getLoadedBarStyle(uitext.KPIS.kpis[i]?.metrics[j]?.name)"
+              ></span>
+              <!-- Benchmark diamond and value -->
               <span
                 class="kpi-diamond"
                 :style="{ left: getDiamondPosition(uitext.KPIS.kpis[i]?.metrics[j]?.name) }"
@@ -29,6 +35,31 @@
 </template>
 
 <script setup>
+import projectData from '../../assets/cache/data.json'
+
+// ...existing code...
+
+// Returns style for the loaded bar from left to normalized actual value
+function getLoadedBarStyle(metricName) {
+  const metric = METRICS[metricName]
+  const value = projectData.project[metricName]
+  if (!metric || value === undefined) return {}
+  const normActual = normalize(value, metric.left, metric.right)
+  const normBenchmark = metric.benchmark !== undefined ? normalize(metric.benchmark, metric.left, metric.right) : 0.5
+  // Clamp between 0 and 1
+  const clamped = Math.max(0, Math.min(normActual, 1));
+  const color = clamped >= normBenchmark ? 'var(--color-success)' : 'var(--color-error)';
+  return {
+    position: 'absolute',
+    left: '0%',
+    width: `${Math.round(clamped * 100)}%`,
+    height: '10px',
+    background: color,
+    borderRadius: '8px',
+    top: '0',
+    zIndex: 1,
+  }
+}
 import * as uitext from '../../uitext.js'
 import { METRICS } from '../../benchmarks.js'
 import { normalize } from '../../utils/normalize.js'
@@ -52,8 +83,9 @@ function getRight(metricName) {
 function getDiamondPosition(metricName) {
   const metric = METRICS[metricName]
   if (!metric || metric.benchmark === undefined) return '0%'
-  const norm = normalize(metric.benchmark, metric.left, metric.right, metric.type)
-  return `${Math.round(norm * 100)}%`
+  const norm = normalize(metric.benchmark, metric.left, metric.right)
+  const clamped = Math.max(0, Math.min(norm, 1));
+  return `${Math.round(clamped * 100)}%`
 }
 function getBenchmarkValue(metricName) {
   const metric = METRICS[metricName]
@@ -113,6 +145,15 @@ function getBenchmarkValue(metricName) {
   background: var(--grey-50);
   margin: 0.5rem 0 0 0;
   position: relative;
+  overflow: visible;
+}
+.kpi-loaded-bar {
+  position: absolute;
+  height: 10px;
+  border-radius: 8px;
+  top: 0;
+  left: 0;
+  z-index: 1;
 }
 .kpi-diamond {
   position: absolute;
