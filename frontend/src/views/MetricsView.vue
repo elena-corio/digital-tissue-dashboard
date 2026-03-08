@@ -20,7 +20,7 @@
       <section class="metrics-right metrics-col">
         <div class="metrics-right-stack">
           <div class="metrics-kpis-wrapper">
-            <KPIsOverview @selectKPI="onSelectKPI" />
+            <KPIsOverview @selectKPI="onSelectKPI" :selectedKPI="selectedKPI" />
           </div>
           <div class="metrics-detail-wrapper">
             <div class="metrics-detail-left">

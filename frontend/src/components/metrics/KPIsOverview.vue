@@ -9,7 +9,11 @@
            :key="kpi.label"
            class="card kpi-card"
            @click="selectKPI(kpi.name)"
-           :style="{ opacity: isSelected(kpi.name) ? 1 : 0.8, cursor: 'pointer', transition: 'opacity 0.2s' }"
+           :style="{
+             opacity: isSelected(kpi.name) ? 1 : 0.4,
+             cursor: 'pointer',
+             transition: 'opacity 0.2s, border-color 0.2s, border-width 0.2s',
+           }"
           >
             <div class="kpi-label">{{ uitext.KPIS.kpis[i]?.metrics[j]?.label || 'KPI' }}</div>
           <div class="kpi-bar-wrapper">
@@ -130,21 +134,19 @@ function getBenchmarkValue(metricName) {
   flex: 1;
 }
 .kpi-column-title {
-  color: var(--navy-100);
-  font-size: var(--font-size-body);
+  color: var(--navy-50);
+  font-size: var(--font-size-caption);
 }
 .kpi-card {
   border-radius: var(--radius-md);
   padding: 1rem;
-  text-align: center;
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 0.5rem;
 }
 .kpi-label {
   color: var(--navy-100);
-  font-size: var(--font-size-body);
+  font-size: var(--font-size-caption);
   font-weight: var(--font-weight-medium);
   font-weight: var(--font-weight-bold);
 }
