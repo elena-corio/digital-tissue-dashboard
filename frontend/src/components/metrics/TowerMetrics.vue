@@ -13,7 +13,7 @@
         :cx="circleX(idx)"
         :cy="circleY(cluster)"
         :r="circleR(cluster)"
-        :style="{ fill: `var(${palette[idx % palette.length]})` }"
+        :style="{ fill: circleColor(cluster) }"
         opacity="0.5"
       />
       <!-- KPI value inside circle -->
@@ -40,6 +40,15 @@
         stroke-dasharray="6,4"
         opacity="0.7"
       />
+      <text
+        v-if="benchmarkY() !== null"
+        x="410"
+        :y="benchmarkY() - 8"
+        text-anchor="end"
+        font-size="13"
+        fill="#303179"
+        font-weight="bold"
+      >{{ safeBenchmarkValue() }}</text>
     </svg>
     <div class="tower-names-row">
       <div
@@ -147,6 +156,10 @@ export default {
       const norm = (benchmark - minM) / (maxM - minM);
       return maxY - norm * (maxY - minY);
     },
+    safeBenchmarkValue() {
+      const metric = METRICS[this.selectedKPI];
+      return metric && typeof metric.benchmark !== 'undefined' ? metric.benchmark : '';
+    },
     circleX(idx) {
       // Evenly space circle centers horizontally, independent of radius
       const n = this.clusters.length;
@@ -155,6 +168,26 @@ export default {
       const maxX = this.svgW - margin;
       if (n === 1) return (minX + maxX) / 2;
       return minX + idx * (maxX - minX) / (n - 1);
+    },
+    circleColor(cluster) {
+      const metric = METRICS[this.selectedKPI];
+      if (!metric) return `var(--lila-100)`;
+      const benchmark = metric.benchmark;
+      const value = cluster[this.selectedKPI];
+      // Determine if higher or lower is better
+      const higherIsBetter = metric.right > metric.left;
+      // Success color
+      const success = 'var(--color-success)';
+      // Error color
+      const error = 'var(--color-error)';
+      if (value === undefined) return error;
+      // For higher is better: above benchmark = success, below = error
+      // For lower is better: below benchmark = success, above = error
+      if (higherIsBetter) {
+        return value >= benchmark ? success : error;
+      } else {
+        return value <= benchmark ? success : error;
+      }
     }
   }
 };
