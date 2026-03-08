@@ -70,6 +70,14 @@
     --space-xl: 60px;
 }
 
+html, body {
+  margin: 0;           /* Remove browser default margins */
+  padding: 0;          /* Remove browser default padding */
+  width: 100%;         /* Fill full viewport width */
+  height: 100%;        /* Fill full viewport height */
+  overflow: hidden;    /* Hide scrollbars and clip overflow */
+}
+
 body {
   font-family: 'Inter', sans-serif;
   margin: 0;

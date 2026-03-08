@@ -3,7 +3,7 @@
     <div class="card-title">
       {{ getKpiLabel(selectedKPI) }} by Tower
     </div>
-    <div ref="containerRef" class="tower-metrics-container" style="display: flex; flex-direction: column; align-items: stretch; width: 100%;">
+    <div ref="containerRef" class="tower-metrics-container" style="display: flex; flex-direction: column; align-items: stretch; width: 100%; height: 100%; min-height: 0; max-height: 320px;">
       <svg
         ref="svgRef"
         class="tower-metrics-svg"
@@ -60,16 +60,18 @@
           <tspan :x="benchmarkLineEndX + 8" dy="16" font-size="12">{{ kpiUnit() }}</tspan>
         </text>
       </svg>
-      <div class="tower-names-row">
+      <div class="tower-names-row" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none;">
         <div
           v-for="(cluster, idx) in clusters"
           :key="'tower-' + cluster.name"
           :style="{
             position: 'absolute',
             left: `${circleX(idx)}px`,
+            top: `${circleY(cluster) + circleR(cluster) + 16}px`,
             width: '80px',
             textAlign: 'center',
-            transform: 'translateX(-40px)'
+            transform: 'translateX(-40px)',
+            pointerEvents: 'auto'
           }"
         >{{ 'Tower ' + (idx + 1) }}</div>
       </div>
