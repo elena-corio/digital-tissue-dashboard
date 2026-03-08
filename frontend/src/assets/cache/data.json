@@ -14,7 +14,7 @@
     },
     "clusters": {
         "cluster01": {
-            "grossFloorArea": 300000,
+            "grossFloorArea": 250000,
             "daylightPotential": 0.16,
             "greenSpaceDistance": 450,
             "programDiversity": 0.80,
@@ -25,7 +25,7 @@
             "volumeToSurface": 11.00
         },
          "cluster02": {
-            "grossFloorArea": 250000,
+            "grossFloorArea": 220000,
             "daylightPotential": 0.22,
             "greenSpaceDistance": 250,
             "programDiversity": 0.90,
@@ -36,7 +36,7 @@
             "volumeToSurface": 13.00
         },
         "cluster03": {
-            "grossFloorArea": 180000,
+            "grossFloorArea": 200000,
             "daylightPotential": 0.20,
             "greenSpaceDistance": 300,
             "programDiversity": 0.80,
@@ -47,7 +47,7 @@
             "volumeToSurface": 10.00
         },
         "cluster04": {
-            "grossFloorArea": 120000,
+            "grossFloorArea": 180000,
             "daylightPotential": 0.21,
             "greenSpaceDistance": 150,
             "programDiversity": 0.90,

@@ -56,12 +56,12 @@ export default {
     LevelMetrics,
     ActionRequired,
   },
-  // Default to first KPI in uitext
-  selectedKPI: uiText.KPIS.kpis[0]?.metrics[0]?.name || null,
   data() {
+    // Default to first KPI metric
+    const firstKPI = uiText.KPIS.kpis[0]?.metrics[0]?.name || null;
     return {
       uiText,
-      selectedKPI: this.selectedKPI
+      selectedKPI: firstKPI
     };
   },
   methods: {
