@@ -16,17 +16,31 @@
         :style="{ fill: `var(${palette[idx % palette.length]})` }"
         opacity="0.5"
       />
+      <!-- KPI value inside circle -->
       <text
         v-for="(cluster, idx) in clusters"
-        :key="'label-' + cluster.name"
+        :key="'kpi-' + cluster.name"
         :x="circleX(idx)"
         :y="circleY(cluster)"
         text-anchor="middle"
         alignment-baseline="middle"
-        font-size="14"
+        font-size="16"
+        font-weight="bold"
         fill="#303179"
-      >{{ cluster.name }}</text>
+      >{{ (cluster[selectedKPI] ?? '') }}</text>
     </svg>
+    <div class="tower-names-row">
+      <div
+        v-for="(cluster, idx) in clusters"
+        :key="'tower-' + cluster.name"
+        :style="{
+          flex: '1 1 0',
+          textAlign: 'center',
+          marginLeft: idx === 0 ? `${margin}px` : undefined,
+          marginRight: idx === clusters.length - 1 ? `${margin}px` : undefined
+        }"
+      >{{ 'Tower ' + (idx + 1) }}</div>
+    </div>
   </div>
 </template>
 
@@ -42,6 +56,7 @@ export default {
     return {
       svgW: 420,
       svgH: 260,
+      margin: 30,
       palette: [
         '--light-blue-100',
         '--blue-100',
@@ -73,12 +88,16 @@ export default {
   },
   methods: {
     circleR(cluster) {
-      // Area proportional to grossFloorArea, radius = sqrt(area/pi)
+      // Area proportional to grossFloorArea: radius = k * sqrt(grossFloorArea)
       const minA = this.minArea;
       const maxA = this.maxArea;
-      const normA = (cluster.grossFloorArea - minA) / (maxA - minA);
-      // Map to radius range 24-60
-      return 24 + normA * (60 - 24);
+      if (maxA === minA) return 52;
+      const minSqrt = Math.sqrt(minA);
+      const maxSqrt = Math.sqrt(maxA);
+      const sqrtA = Math.sqrt(cluster.grossFloorArea);
+      const normA = (sqrtA - minSqrt) / (maxSqrt - minSqrt);
+      // Map to radius range 35-70
+      return 35 + normA * (70 - 35);
     },
     circleY(cluster) {
       // z-position proportional to selected metric value, accounting for circle radius
@@ -87,7 +106,7 @@ export default {
       let val = cluster[this.selectedKPI];
       if (val === undefined) val = minM;
       const r = this.circleR(cluster);
-      const marginTop = 8;
+      const marginTop = 4;
       const marginBottom = 24;
       const minY = r + marginTop;
       const maxY = this.svgH - r - marginBottom;
@@ -99,14 +118,12 @@ export default {
       return maxY - norm * (maxY - minY);
     },
     circleX(idx) {
-      // Evenly space circles horizontally
-      // Evenly space circles horizontally, accounting for radius
-      const r = this.circleR(this.clusters[idx]);
+      // Evenly space circle centers horizontally, independent of radius
       const n = this.clusters.length;
-      const minX = r;
-      const maxX = this.svgW - r;
+      const margin = this.margin;
+      const minX = margin;
+      const maxX = this.svgW - margin;
       if (n === 1) return (minX + maxX) / 2;
-      // Spread centers between minX and maxX
       return minX + idx * (maxX - minX) / (n - 1);
     }
   }
@@ -118,10 +135,19 @@ export default {
   text-align: center;
   color: var(--navy-50);
   font-family: var(--font-family);
+  position: relative;
 }
 .tower-metrics-svg {
   width: 100%;
   height: auto;
   margin-top: var(--space-md);
+}
+.tower-names-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  height: 32px;
+  margin-top: 8px;
 }
 </style>
