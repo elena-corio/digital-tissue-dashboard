@@ -4,8 +4,14 @@
     <div class="kpis-grid-inner">
       <div v-for="(col, i) in columns" :key="i" class="kpi-column">
         <div class="kpi-column-title">{{ uitext.KPIS.kpis[i]?.name }}</div>
-        <div v-for="(kpi, j) in col" :key="kpi.label" class="card kpi-card">
-          <div class="kpi-label">{{ uitext.KPIS.kpis[i]?.metrics[j]?.label || 'KPI' }}</div>
+          <div
+           v-for="(kpi, j) in col"
+           :key="kpi.label"
+           class="card kpi-card"
+           @click="selectKPI(kpi.name)"
+           :style="{ opacity: isSelected(kpi.name) ? 1 : 0.8, cursor: 'pointer', transition: 'opacity 0.2s' }"
+          >
+            <div class="kpi-label">{{ uitext.KPIS.kpis[i]?.metrics[j]?.label || 'KPI' }}</div>
           <div class="kpi-bar-wrapper">
             <div class="kpi-bar">
               <!-- Loaded value bar -->
@@ -36,8 +42,20 @@
 
 <script setup>
 import projectData from '../../assets/cache/data.json'
+import { defineEmits } from 'vue'
+const emit = defineEmits(['selectKPI'])
 
-// ...existing code...
+function selectKPI(name) {
+  emit('selectKPI', name)
+}
+
+
+// Props for selected KPI
+const props = defineProps({ selectedKPI: String })
+
+function isSelected(name) {
+  return props.selectedKPI === name
+}
 
 // Returns style for the loaded bar from left to normalized actual value
 function getLoadedBarStyle(metricName) {

@@ -1,10 +1,13 @@
 <template>
-  <div class="level-metrics-placeholder card">Level Metrics (placeholder)</div>
+  <div class="level-metrics-placeholder card">Level Metrics: {{ selectedKPI || 'None' }}</div>
 </template>
 
 <script>
 export default {
   name: 'LevelMetrics',
+  props: {
+    selectedKPI: String
+  }
 };
 </script>
 

@@ -11,7 +11,7 @@
       <section class="metrics-left metrics-col">
         <div class="metrics-left-stack">
           <div class="speckle-tower-wrapper">
-            <div class="speckle-viewer-card card">Speckle Viewer (placeholder)</div>
+            <div class="speckle-viewer-card card">Speckle Viewer: {{ selectedKPI || 'None' }}</div>
             <TowerSelector />
           </div>
         </div>
@@ -20,15 +20,15 @@
       <section class="metrics-right metrics-col">
         <div class="metrics-right-stack">
           <div class="metrics-kpis-wrapper">
-            <KPIsOverview />
+            <KPIsOverview @selectKPI="onSelectKPI" />
           </div>
           <div class="metrics-detail-wrapper">
             <div class="metrics-detail-left">
-              <LevelMetrics />
-              <ActionRequired />
+              <LevelMetrics :selectedKPI="selectedKPI" />
+              <ActionRequired :selectedKPI="selectedKPI" />
             </div>
             <div class="metrics-detail-right">
-              <TowerMetrics />
+              <TowerMetrics :selectedKPI="selectedKPI" />
             </div>
           </div>
         </div>
@@ -56,9 +56,19 @@ export default {
     LevelMetrics,
     ActionRequired,
   },
+  // Default to first KPI in uitext
+  selectedKPI: uiText.KPIS.kpis[0]?.metrics[0]?.name || null,
   data() {
-    return { uiText };
+    return {
+      uiText,
+      selectedKPI: this.selectedKPI
+    };
   },
+  methods: {
+    onSelectKPI(name) {
+      this.selectedKPI = name;
+    }
+  }
 };
 </script>
 

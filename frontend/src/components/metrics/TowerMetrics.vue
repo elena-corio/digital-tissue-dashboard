@@ -1,10 +1,13 @@
 <template>
-  <div class="tower-metrics-placeholder card">Tower Metrics (placeholder)</div>
+  <div class="tower-metrics-placeholder card">Tower Metrics: {{ selectedKPI || 'None' }}</div>
 </template>
 
 <script>
 export default {
   name: 'TowerMetrics',
+  props: {
+    selectedKPI: String
+  }
 };
 </script>
 
