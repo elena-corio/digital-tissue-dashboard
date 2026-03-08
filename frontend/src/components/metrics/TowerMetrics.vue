@@ -28,6 +28,18 @@
         font-weight="bold"
         fill="#303179"
       >{{ (cluster[selectedKPI] ?? '') }}</text>
+      <!-- Horizontal line at benchmark Y position -->
+      <line
+        v-if="benchmarkY() !== null"
+        x1="0"
+        :y1="benchmarkY()"
+        x2="420"
+        :y2="benchmarkY()"
+        stroke="#303179"
+        stroke-width="2"
+        stroke-dasharray="6,4"
+        opacity="0.7"
+      />
     </svg>
     <div class="tower-names-row">
       <div
@@ -46,6 +58,7 @@
 
 <script>
 import projectData from '../../assets/cache/data.json'
+import { METRICS } from '../../benchmarks.js'
 
 export default {
   name: 'TowerMetrics',
@@ -115,6 +128,23 @@ export default {
         return (minY + maxY) / 2;
       }
       const norm = (val - minM) / (maxM - minM);
+      return maxY - norm * (maxY - minY);
+    },
+    benchmarkY() {
+      // Get benchmark value for selected KPI
+      const metric = METRICS[this.selectedKPI];
+      if (!metric) return null;
+      // Use same normalization as circleY
+      const minM = this.minMetric;
+      const maxM = this.maxMetric;
+      const benchmark = metric.benchmark;
+      const r = 0; // line, not circle
+      const marginTop = 8;
+      const marginBottom = 24;
+      const minY = r + marginTop;
+      const maxY = this.svgH - r - marginBottom;
+      if (maxM === minM) return (minY + maxY) / 2;
+      const norm = (benchmark - minM) / (maxM - minM);
       return maxY - norm * (maxY - minY);
     },
     circleX(idx) {
