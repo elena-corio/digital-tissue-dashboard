@@ -11,11 +11,24 @@
       <section class="metrics-left metrics-col">
         <div class="metrics-left-stack">
           <div class="speckle-tower-wrapper">
+            <!-- Global Score + Action Required Row -->
+            <div class="metrics-top-row">
+              <div class="metrics-global-score-card card">
+                <div class="card-title">Global Score</div>
+                <div class="global-score-value">
+                  {{ globalScore }}
+                </div>
+              </div>
+              <div class="metrics-action-required-card card">
+                <ActionRequired :selectedKPI="selectedKPI" />
+              </div>
+            </div>
+            <!-- Viewer Card -->
             <div class="metrics-explorer-card card">
               <div class="card-title"><span v-if="selectedKPI">{{ getKpiLabel(selectedKPI) }} Viewer </span></div>
               <div class="speckle-viewer-card viewer-container aspect">Speckle Viewer: {{ selectedKPI || 'None' }}</div>
             </div>
-            <div>
+            <div class="metrics-toggles-center">
               <TowerSelector />
             </div>
           </div>
@@ -65,7 +78,8 @@ export default {
     const firstKPI = uiText.KPIS.kpis[0]?.metrics[0]?.name || null;
     return {
       uiText,
-      selectedKPI: firstKPI
+      selectedKPI: firstKPI,
+      globalScore: 8.0 // Placeholder, update with actual calculation if needed
     };
   },
   methods: {
@@ -87,6 +101,26 @@ export default {
 </script>
 
 <style scoped>
+.metrics-top-row {
+  display: flex;
+  flex-direction: row;
+  gap: var(--space-md);
+  width: 100%;
+}
+.metrics-global-score-card {
+  flex: 1 1 0%;
+  width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+.metrics-action-required-card {
+  flex: 1 1 0%;
+  width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
  .viewer-container.aspect {
    aspect-ratio: 16 / 9;
    width: 100%;
@@ -95,7 +129,7 @@ export default {
 .metrics-main {
   display: flex;
   flex: 1 1 auto;
-  gap: var(--space-lg);
+  gap: var(--space-md);
   margin-top: var(--space-lg);
   align-items: stretch;
   min-height: 0;
@@ -122,24 +156,48 @@ export default {
   flex-direction: column;
   flex: 1 1 0%;
   min-height: 0;
-  gap: 1rem;
 }
-.speckle-tower-wrapper {
+
+.metrics-global-score-card {
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 1rem;
+  align-items: stretch;
+}
+.global-score-value {
+  font-size: var(--font-size-h3);
+  font-weight: bold;
+  color: #2a7a2a;
+  text-align: center;
+}
+.metrics-action-required-card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+.speckle-tower-wrapper {
+  /* Center toggles container */
+  .metrics-toggles-center {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-md);
 }
 .metrics-explorer-card {
   width: 100%;
-  margin-bottom: 1.5rem;
   display: flex;
   flex-direction: column;
   align-items: stretch;
 }
 .metrics-explorer-card .card-title {
-  margin-bottom: 1rem;
+  margin-bottom: var(--space-sm);
 }
 .speckle-viewer-card {
   width: 100%;
@@ -150,7 +208,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.2rem;
+  font-size: var(--font-size-body);
   color: #888;
 }
 .speckle-viewer-card.viewer-container.aspect {
@@ -183,12 +241,12 @@ export default {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: var(--space-md);
 }
 .metrics-detail-right {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: var(--space-md);
 }
 </style>

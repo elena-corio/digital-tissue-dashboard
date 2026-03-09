@@ -4,10 +4,10 @@
       <!-- Area fill -->
       <polygon :points="areaPoints" fill="#b3bad8" opacity="0.5" />
       <!-- Line -->
-      <polyline :points="linePoints" fill="none" stroke="#e9268c" stroke-width="3" />
+      <polyline :points="linePoints" fill="none" stroke="#3b479f" stroke-width="3" />
       <!-- Circles -->
       <g v-for="(pt, i) in points" :key="i">
-        <circle :cx="pt.x" :cy="pt.y" r="6" fill="#e9268c" @mouseenter="hoveredIdx = i" @mouseleave="hoveredIdx = null" />
+        <circle :cx="pt.x" :cy="pt.y" r="6" fill="#3b479f" @mouseenter="hoveredIdx = i" @mouseleave="hoveredIdx = null" />
       </g>
       <!-- X axis labels: adaptive position below diagram -->
       <g v-for="(pt, i) in points" :key="'year-' + i">
