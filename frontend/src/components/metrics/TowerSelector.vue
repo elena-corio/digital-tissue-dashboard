@@ -24,8 +24,9 @@ export default {
   background: #f5f5f5;
   border: 1px solid #ddd;
   border-radius: 4px;
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
+  padding: 1rem 1.2rem;
+  font-size: 1.15rem;
+  height: 3.2rem;
   cursor: pointer;
 }
 </style>

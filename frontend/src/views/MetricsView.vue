@@ -11,10 +11,13 @@
       <section class="metrics-left metrics-col">
         <div class="metrics-left-stack">
           <div class="speckle-tower-wrapper">
-              <div class="speckle-viewer-card card viewer-container aspect">Speckle Viewer: {{ selectedKPI || 'None' }}</div>
-              <div style="display: flex; justify-content: center; width: 100%; margin-top: 1rem;">
-                <TowerSelector />
-              </div>
+            <div class="metrics-explorer-card card">
+              <div class="card-title"><span v-if="selectedKPI">{{ getKpiLabel(selectedKPI) }} Viewer </span></div>
+              <div class="speckle-viewer-card viewer-container aspect">Speckle Viewer: {{ selectedKPI || 'None' }}</div>
+            </div>
+            <div>
+              <TowerSelector />
+            </div>
           </div>
         </div>
       </section>
@@ -68,6 +71,16 @@ export default {
   methods: {
     onSelectKPI(name) {
       this.selectedKPI = name;
+    },
+    getKpiLabel(name) {
+      for (const section of uiText.KPIS.kpis) {
+        for (const metric of section.metrics) {
+          if (metric.name === name) {
+            return metric.label;
+          }
+        }
+      }
+      return name;
     }
   }
 };
@@ -112,10 +125,21 @@ export default {
   gap: 1rem;
 }
 .speckle-tower-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+.metrics-explorer-card {
+  width: 100%;
+  margin-bottom: 1.5rem;
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 1rem;
+}
+.metrics-explorer-card .card-title {
+  margin-bottom: 1rem;
 }
 .speckle-viewer-card {
   width: 100%;
@@ -128,6 +152,9 @@ export default {
   justify-content: center;
   font-size: 1.2rem;
   color: #888;
+}
+.speckle-viewer-card.viewer-container.aspect {
+  width: 100%;
 }
 .metrics-right-stack {
   display: flex;
