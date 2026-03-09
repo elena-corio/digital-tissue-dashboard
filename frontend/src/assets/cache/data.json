@@ -12,6 +12,52 @@
         "carbonIntensity": 450,
         "volumeToSurface": 12.00
     },
+    "versions": {
+        "version01": {
+            "grossFloorArea": 800000,
+            "daylightPotential": 0.15,
+            "greenSpaceDistance": 300,
+            "programDiversity": 0.75,
+            "circulationEfficiency": 0.65,
+            "usableAreaRatio": 0.70,
+            "netFloorAreaRatio": 0.75,
+            "carbonIntensity": 500,
+            "volumeToSurface": 12.50
+        },
+        "version02": {
+            "grossFloorArea": 850000,
+            "daylightPotential": 0.18,
+            "greenSpaceDistance": 250,
+            "programDiversity": 0.85,
+            "circulationEfficiency": 0.70,
+            "usableAreaRatio": 0.75,
+            "netFloorAreaRatio": 0.80,
+            "carbonIntensity": 450,
+            "volumeToSurface": 12.00
+        },
+        "version03": {
+            "grossFloorArea": 900000,
+            "daylightPotential": 0.20,
+            "greenSpaceDistance": 200,
+            "programDiversity": 0.90,
+            "circulationEfficiency": 0.75,
+            "usableAreaRatio": 0.78,
+            "netFloorAreaRatio": 0.85,
+            "carbonIntensity": 400,
+            "volumeToSurface": 11.50
+        },
+        "version04": {
+            "grossFloorArea": 900000,
+            "daylightPotential": 0.20,
+            "greenSpaceDistance": 200,
+            "programDiversity": 0.90,
+            "circulationEfficiency": 0.75,
+            "usableAreaRatio": 0.78,
+            "netFloorAreaRatio": 0.85,
+            "carbonIntensity": 400,
+            "volumeToSurface": 11.50
+        }
+    },
     "clusters": {
         "cluster01": {
             "grossFloorArea": 250000,

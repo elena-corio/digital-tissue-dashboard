@@ -11,7 +11,7 @@
       <section class="metrics-left metrics-col">
         <div class="metrics-left-stack">
           <div class="speckle-tower-wrapper">
-              <div class="speckle-viewer-card card">Speckle Viewer: {{ selectedKPI || 'None' }}</div>
+              <div class="speckle-viewer-card card viewer-container aspect">Speckle Viewer: {{ selectedKPI || 'None' }}</div>
               <div style="display: flex; justify-content: center; width: 100%; margin-top: 1rem;">
                 <TowerSelector />
               </div>
@@ -26,8 +26,7 @@
           </div>
           <div class="metrics-detail-wrapper">
             <div class="metrics-detail-left">
-              <LevelMetrics :selectedKPI="selectedKPI" />
-              <ActionRequired :selectedKPI="selectedKPI" />
+              <VersionMetrics :selectedKPI="selectedKPI" />
             </div>
             <div class="metrics-detail-right">
               <TowerMetrics :selectedKPI="selectedKPI" />
@@ -44,7 +43,7 @@ import Workspace from '../components/Workspace.vue';
 import TowerSelector from '../components/metrics/TowerSelector.vue';
 import KPIsOverview from '../components/metrics/KPIsOverview.vue';
 import TowerMetrics from '../components/metrics/TowerMetrics.vue';
-import LevelMetrics from '../components/metrics/LevelMetrics.vue';
+import VersionMetrics from '../components/metrics/VersionMetrics.vue';
 import ActionRequired from '../components/metrics/ActionRequired.vue';
 import * as uiText from '../uitext.js';
 
@@ -55,7 +54,7 @@ export default {
     TowerSelector,
     KPIsOverview,
     TowerMetrics,
-    LevelMetrics,
+    VersionMetrics,
     ActionRequired,
   },
   data() {
@@ -75,6 +74,11 @@ export default {
 </script>
 
 <style scoped>
+ .viewer-container.aspect {
+   aspect-ratio: 16 / 9;
+   width: 100%;
+   min-height: 120px;
+ }
 .metrics-main {
   display: flex;
   flex: 1 1 auto;
@@ -91,13 +95,13 @@ export default {
 .metrics-left.metrics-col {
   display: flex;
   flex-direction: column;
-  flex: 2 2 0%;
+  flex: 1 1 0%;
   min-height: 0;
 }
 .metrics-right.metrics-col {
   display: flex;
   flex-direction: column;
-  flex: 3 3 0%;
+  flex: 1.5 1.5 0%;
   min-height: 0;
 }
 .metrics-left-stack {
