@@ -13,12 +13,7 @@
           <div class="speckle-tower-wrapper">
             <!-- Global Score + Action Required Row -->
             <div class="metrics-top-row">
-              <div class="metrics-global-score-card card">
-                <div class="card-title">Global Score</div>
-                <div class="global-score-value">
-                  {{ globalScore }}
-                </div>
-              </div>
+              <GlobalScore :selectedKPI="selectedKPI" />
               <div class="metrics-action-required-card card">
                 <ActionRequired :selectedKPI="selectedKPI" />
               </div>
@@ -61,18 +56,20 @@ import KPIsOverview from '../components/metrics/KPIsOverview.vue';
 import TowerMetrics from '../components/metrics/TowerMetrics.vue';
 import VersionMetrics from '../components/metrics/VersionMetrics.vue';
 import ActionRequired from '../components/metrics/ActionRequired.vue';
+import GlobalScore from '../components/metrics/GlobalScore.vue';
 import * as uiText from '../uitext.js';
 
 export default {
   name: 'MetricsView',
-  components: {
-    Workspace,
-    TowerSelector,
-    KPIsOverview,
-    TowerMetrics,
-    VersionMetrics,
-    ActionRequired,
-  },
+components: {
+  Workspace,
+  TowerSelector,
+  KPIsOverview,
+  TowerMetrics,
+  VersionMetrics,
+  ActionRequired,
+  GlobalScore,
+},
   data() {
     // Default to first KPI metric
     const firstKPI = uiText.KPIS.kpis[0]?.metrics[0]?.name || null;
@@ -107,13 +104,7 @@ export default {
   gap: var(--space-md);
   width: 100%;
 }
-.metrics-global-score-card {
-  flex: 1 1 0%;
-  width: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-}
+
 .metrics-action-required-card {
   flex: 1 1 0%;
   width: 0;
@@ -163,12 +154,6 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-}
-.global-score-value {
-  font-size: var(--font-size-h3);
-  font-weight: bold;
-  color: #2a7a2a;
-  text-align: center;
 }
 .metrics-action-required-card {
   width: 100%;
