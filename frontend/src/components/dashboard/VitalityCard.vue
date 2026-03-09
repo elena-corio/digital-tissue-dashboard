@@ -97,7 +97,7 @@ function percentColor(percent) {
   color: var(--color-success);
 }
 .warning {
-  color: var(--color-warning);
+  color: var(--color-error);
 }
 .error {
   color: var(--color-error);

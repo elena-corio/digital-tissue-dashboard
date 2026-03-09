@@ -1,24 +1,33 @@
 <template>
-  <svg :width="svgW" :height="svgH" :viewBox="`0 0 ${svgW} ${svgH}`" class="version-history-svg">
-    <!-- Area fill -->
-    <polygon :points="areaPoints" fill="#b3bad8" opacity="0.5" />
-    <!-- Line -->
-    <polyline :points="linePoints" fill="none" stroke="#e9268c" stroke-width="3" />
-    <!-- Circles and labels -->
-    <g v-for="(pt, i) in points" :key="i">
-      <circle :cx="pt.x" :cy="pt.y" r="6" fill="#e9268c" @mouseenter="hoveredIdx = i" @mouseleave="hoveredIdx = null" />
-      <template v-if="hoveredIdx === i">
-        <rect :x="pt.x - 28" :y="pt.y - 32" width="56" height="22" rx="6" fill="#fff" />
-        <text :x="pt.x" :y="pt.y - 18" text-anchor="middle" font-size="15" font-weight="bold" fill="#303179">
-          {{ pt.label }}
-        </text>
-      </template>
-    </g>
-    <!-- X axis labels: adaptive position below diagram -->
-    <g v-for="(pt, i) in points" :key="'year-' + i">
-      <text :x="pt.x" :y="svgH - 4" text-anchor="middle" font-size="13" fill="#303179">{{ pt.year }}</text>
-    </g>
-  </svg>
+  <div style="position: relative; width: 100%; height: 100%;">
+    <svg :width="svgW" :height="svgH" :viewBox="`0 0 ${svgW} ${svgH}`" class="version-history-svg">
+      <!-- Area fill -->
+      <polygon :points="areaPoints" fill="#b3bad8" opacity="0.5" />
+      <!-- Line -->
+      <polyline :points="linePoints" fill="none" stroke="#e9268c" stroke-width="3" />
+      <!-- Circles -->
+      <g v-for="(pt, i) in points" :key="i">
+        <circle :cx="pt.x" :cy="pt.y" r="6" fill="#e9268c" @mouseenter="hoveredIdx = i" @mouseleave="hoveredIdx = null" />
+      </g>
+      <!-- X axis labels: adaptive position below diagram -->
+      <g v-for="(pt, i) in points" :key="'year-' + i">
+        <text :x="pt.x" :y="svgH - 4" text-anchor="middle" font-size="13" fill="#303179">{{ pt.year }}</text>
+      </g>
+    </svg>
+    <!-- Hover label in separate SVG, matching TowerMetrics.vue style -->
+    <svg v-if="hoveredIdx !== null" :width="svgW" :height="svgH" :viewBox="`0 0 ${svgW} ${svgH}`" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none;">
+      <text
+        :x="points[hoveredIdx].x"
+        :y="points[hoveredIdx].y - 20"
+        text-anchor="middle"
+        font-size="15"
+        font-weight="bold"
+        fill="#303179"
+      >
+        {{ points[hoveredIdx].label }}<tspan v-if="kpiUnit"> {{ kpiUnit }}</tspan>
+      </text>
+    </svg>
+  </div>
 </template>
 
 <script>
@@ -48,6 +57,17 @@ export default {
     };
   },
   computed: {
+    kpiUnit() {
+      // Find unit for selected KPI from uitext.js
+      for (const section of uitext.KPIS.kpis) {
+        for (const metric of section.metrics) {
+          if (metric.name === this.selectedKPI) {
+            return metric.unit || '';
+          }
+        }
+      }
+      return '';
+    },
     values() {
       // Get values for selectedKPI from each version
       return this.versionKeys.map(v => projectData.versions[v][this.selectedKPI]);
@@ -67,8 +87,10 @@ export default {
       }
       if (globalMin === null) globalMin = Math.min(...this.values);
       if (globalMax === null) globalMax = Math.max(...this.values);
+      const rightMargin = 46;
+      const xStep = (this.svgW - 40 - rightMargin) / (this.years.length - 1);
       return this.values.map((val, i) => {
-        const x = 40 + i * 110;
+        const x = 40 + i * xStep;
         let y = minY - ((val - globalMin) / (globalMax - globalMin || 1)) * (minY - maxY);
         // Ensure label fits: add padding for label height
         y = Math.max(maxY + 22, Math.min(minY - 22, y));

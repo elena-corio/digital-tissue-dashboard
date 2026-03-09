@@ -42,8 +42,8 @@ const messageClass = isOld ? 'warning' : 'success';
   border-color: var(--color-success);
 }
 .warning {
-  background: color-mix(in srgb, var(--color-warning) 20%, transparent);
-  border-color: var(--color-warning);
+  background: color-mix(in srgb, var(--color-error) 20%, transparent);
+  border-color: var(--color-error);
 }
 .last-update-row {
   display: flex;

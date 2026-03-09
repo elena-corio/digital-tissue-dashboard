@@ -67,24 +67,31 @@
           fill="#fff"
           stroke-width="2"
         />
-        <!-- Benchmark value text removed -->
+        <!-- Tower tags at bottom of diagram -->
+        <text
+          v-for="(cluster, idx) in clusters"
+          :key="'tag-' + idx"
+          :x="circleX(idx)"
+          :y="svgHeight - 10"
+          text-anchor="middle"
+          font-size="13"
+          font-weight="normal"
+          fill="#303179"
+        >
+          {{ 't' + String(idx + 1).padStart(2, '0') }}
+        </text>
       </svg>
       <!-- Show tower name and value only on hover, centered inside the hovered circle -->
       <svg v-if="hoveredIdx !== null" class="tower-names-svg" :style="{ position: 'absolute', left: 0, top: 0, width: '100%', height: '100%', pointerEvents: 'none' }">
         <text
           :x="circleX(hoveredIdx)"
-          :y="circleY(clusters[hoveredIdx])"
+          :y="circleY(clusters[hoveredIdx]) - 5"
           text-anchor="middle"
-          dominant-baseline="middle"
           font-size="15"
           font-weight="bold"
           fill="#303179"
         >
-          <tspan :x="circleX(hoveredIdx)" :y="circleY(clusters[hoveredIdx]) - 8">{{ 'Tower ' + (hoveredIdx + 1) }}</tspan>
-          <tspan :x="circleX(hoveredIdx)" dy="1.5em" font-size="13" font-weight="normal">
-            {{ typeof clusters[hoveredIdx][selectedKPI] === 'number' ? clusters[hoveredIdx][selectedKPI].toFixed(2) : '' }}
-            <tspan v-if="kpiUnit()">{{ kpiUnit() }}</tspan>
-          </tspan>
+          {{ typeof clusters[hoveredIdx][selectedKPI] === 'number' ? clusters[hoveredIdx][selectedKPI].toFixed(2) : '' }}<tspan v-if="kpiUnit()"> {{ kpiUnit() }}</tspan>
         </text>
       </svg>
     </div>
