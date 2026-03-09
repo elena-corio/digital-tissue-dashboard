@@ -1,20 +1,22 @@
 <template>
-  <svg :width="svgW" :height="svgH" viewBox="0 0 400 140" class="version-history-svg">
+  <svg :width="svgW" :height="svgH" :viewBox="`0 0 ${svgW} ${svgH}`" class="version-history-svg">
     <!-- Area fill -->
     <polygon :points="areaPoints" fill="#b3bad8" opacity="0.5" />
     <!-- Line -->
     <polyline :points="linePoints" fill="none" stroke="#e9268c" stroke-width="3" />
     <!-- Circles and labels -->
     <g v-for="(pt, i) in points" :key="i">
-      <circle :cx="pt.x" :cy="pt.y" r="10" fill="#e9268c" />
-      <rect :x="pt.x - 28" :y="pt.y - 32" width="56" height="22" rx="6" fill="#fff" />
-      <text :x="pt.x" :y="pt.y - 18" text-anchor="middle" font-size="15" font-weight="bold" fill="#303179">
-        {{ pt.label }}
-      </text>
+      <circle :cx="pt.x" :cy="pt.y" r="6" fill="#e9268c" @mouseenter="hoveredIdx = i" @mouseleave="hoveredIdx = null" />
+      <template v-if="hoveredIdx === i">
+        <rect :x="pt.x - 28" :y="pt.y - 32" width="56" height="22" rx="6" fill="#fff" />
+        <text :x="pt.x" :y="pt.y - 18" text-anchor="middle" font-size="15" font-weight="bold" fill="#303179">
+          {{ pt.label }}
+        </text>
+      </template>
     </g>
-    <!-- X axis labels -->
+    <!-- X axis labels: adaptive position below diagram -->
     <g v-for="(pt, i) in points" :key="'year-' + i">
-      <text :x="pt.x" y="130" text-anchor="middle" font-size="13" fill="#303179">{{ pt.year }}</text>
+      <text :x="pt.x" :y="svgH - 4" text-anchor="middle" font-size="13" fill="#303179">{{ pt.year }}</text>
     </g>
   </svg>
 </template>
@@ -31,9 +33,18 @@ export default {
   data() {
     return {
       svgW: 400,
-      svgH: 140,
+      svgH: 200,
       years: ['v-3', 'v-2', 'v-1', 'latest'],
       versionKeys: ['version01', 'version02', 'version03', 'version04']
+    };
+  },
+  data() {
+    return {
+      svgW: 400,
+      svgH: 200,
+      years: ['v-3', 'v-2', 'v-1', 'latest'],
+      versionKeys: ['version01', 'version02', 'version03', 'version04'],
+      hoveredIdx: null
     };
   },
   computed: {
@@ -43,7 +54,7 @@ export default {
     },
     points() {
       // Map values to SVG coordinates
-      const minY = 110, maxY = 30; // invert so higher value = higher y
+      const minY = 120, maxY = 30; // move diagram higher
       // Use global min/max for all KPIs (not just local values)
       let globalMin = null, globalMax = null;
       for (const section of uitext.KPIS.kpis) {
@@ -59,6 +70,8 @@ export default {
       return this.values.map((val, i) => {
         const x = 40 + i * 110;
         let y = minY - ((val - globalMin) / (globalMax - globalMin || 1)) * (minY - maxY);
+        // Ensure label fits: add padding for label height
+        y = Math.max(maxY + 22, Math.min(minY - 22, y));
         let label = typeof val === 'number' ? val.toFixed(2) : val;
         return { x, y, label: label, year: this.years[i] };
       });

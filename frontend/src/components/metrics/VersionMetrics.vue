@@ -1,10 +1,11 @@
 <template>
-  <div class="version-metrics-title card">
+  <div class="version-metrics-title card version-metrics-container">
     <div class="card-title">
       {{ kpiLabel }} History
     </div>
-    <VersionHistoryDiagram :selectedKPI="selectedKPI" />
-  
+    <div style="margin-top: 1.5rem; width: 100%;">
+      <VersionHistoryDiagram :selectedKPI="selectedKPI" />
+    </div>
   </div>
 </template>
 
@@ -40,5 +41,14 @@ export default {
    color: var(--navy-50);
    font-family: var(--font-family);
    position: relative;
+ }
+ .version-metrics-container {
+   display: flex;
+   flex-direction: column;
+   align-items: stretch;
+   width: 100%;
+   min-height: 320px;
+   height: 100%;
+   box-sizing: border-box;
  }
 </style>
