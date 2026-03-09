@@ -14,13 +14,11 @@
             <!-- Global Score + Action Required Row -->
             <div class="metrics-top-row">
               <GlobalScore :selectedKPI="selectedKPI" />
-              <div class="metrics-action-required-card card">
-                <ActionRequired :selectedKPI="selectedKPI" />
-              </div>
+              <ActionRequired :selectedKPI="selectedKPI" />
             </div>
             <!-- Viewer Card -->
             <div class="metrics-explorer-card card">
-              <div class="card-title"><span v-if="selectedKPI">{{ getKpiLabel(selectedKPI) }} Viewer </span></div>
+              <div class="card-title"><span v-if="selectedKPI">3D Viewer </span></div>
               <div class="speckle-viewer-card viewer-container aspect">Speckle Viewer: {{ selectedKPI || 'None' }}</div>
             </div>
             <div class="metrics-toggles-center">
@@ -103,6 +101,10 @@ components: {
   flex-direction: row;
   gap: var(--space-md);
   width: 100%;
+}
+.metrics-top-row > * {
+  flex: 1 1 0%;
+  min-width: 0;
 }
 
 .metrics-action-required-card {

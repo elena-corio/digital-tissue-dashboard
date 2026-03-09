@@ -7,7 +7,7 @@
         <span class="metrics-score-value">{{ getMetricValue(selectedKPI) }}</span>
       </li>
       <li class="metrics-score-item">
-        <span class="metrics-score-label">{{ getPrefix(selectedKPI) }} Benchmark</span>
+        <span class="metrics-score-label">Benchmark</span>
         <span class="metrics-score-value">{{ getBenchmark(selectedKPI) }}</span>
       </li>
     </ul>
