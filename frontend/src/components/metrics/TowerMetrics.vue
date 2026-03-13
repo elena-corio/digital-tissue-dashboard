@@ -33,17 +33,21 @@
           r="6"
           fill="#fff"
         />
-
-        <!-- Small center circle for each cluster -->
-        <circle
-          v-for="(cluster, idx) in clusters"
-          :key="'center-' + cluster.name"
-          :cx="circleX(idx)"
-          :cy="circleY(cluster)"
-          r="7"
-          fill="#fff"
-          stroke-width="2"
-        />
+        <!-- Y-axis extremes: right (good) at top, left (bad) at bottom -->
+        <text
+          v-if="selectedMetric"
+          x="4"
+          y="14"
+          text-anchor="start"
+          class="axis-label"
+        >{{ typeof selectedMetric.right === 'number' ? selectedMetric.right.toFixed(2) : selectedMetric.right }}<tspan v-if="kpiUnit()">&nbsp;{{ kpiUnit() }}</tspan></text>
+        <text
+          v-if="selectedMetric"
+          x="4"
+          :y="svgHeight - 28"
+          text-anchor="start"
+          class="axis-label"
+        >{{ typeof selectedMetric.left === 'number' ? selectedMetric.left.toFixed(2) : selectedMetric.left }}<tspan v-if="kpiUnit()">&nbsp;{{ kpiUnit() }}</tspan></text>
         <!-- Tower tags at bottom of diagram -->
         <text
           v-for="(cluster, idx) in clusters"
@@ -51,9 +55,7 @@
           :x="circleX(idx)"
           :y="svgHeight - 10"
           text-anchor="middle"
-          font-size="13"
-          font-weight="normal"
-          fill="#303179"
+          class="chart-tag"
         >
           {{ 't' + String(idx + 1).padStart(2, '0') }}
         </text>
@@ -74,9 +76,7 @@
           :x="circleX(hoveredIdx)"
           :y="circleY(clusters[hoveredIdx]) - 5"
           text-anchor="middle"
-          font-size="15"
-          font-weight="bold"
-          fill="#303179"
+          class="hover-label"
         >
           {{ typeof clusters[hoveredIdx][selectedMetric?.name] === 'number' ? clusters[hoveredIdx][selectedMetric?.name].toFixed(2) : '' }}<tspan v-if="kpiUnit()"> {{ kpiUnit() }}</tspan>
         </text>
@@ -264,5 +264,19 @@ export default {
   position: relative;
   width: 100%;
   margin-top: 1.5rem;
+}
+.axis-label {
+  font-size: var(--font-size-value);
+  fill: var(--navy-100);
+}
+.chart-tag {
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-regular);
+  fill: var(--navy-100);
+}
+.hover-label {
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-bold);
+  fill: var(--navy-100);
 }
 </style>

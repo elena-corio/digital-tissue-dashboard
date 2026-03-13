@@ -11,14 +11,12 @@
       opacity="1"
     />
     <text
-      :x="width - 4"
+      x="4"
       :y="benchmarkY - 8"
-      text-anchor="end"
-      font-size="11"
-      font-weight="normal"
-      fill="#303179"
+      text-anchor="start"
+      class="benchmark-label"
     >
-      benchmark = {{ benchmarkValue }}<tspan v-if="unit">&nbsp;{{ unit }}</tspan>
+      {{ typeof benchmarkValue === 'number' ? benchmarkValue.toFixed(2) : benchmarkValue }}<tspan v-if="unit">&nbsp;{{ unit }}</tspan>
     </text>
   </svg>
 </template>
@@ -59,5 +57,10 @@ export default {
 <style scoped>
 svg {
   display: block;
+}
+.benchmark-label {
+  font-size: var(--font-size-value);
+  font-weight: var(--font-weight-regular);
+  fill: var(--navy-100);
 }
 </style>
