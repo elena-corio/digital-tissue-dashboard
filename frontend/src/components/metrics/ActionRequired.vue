@@ -57,8 +57,7 @@ export default {
 
 <style scoped>
 .action-required-placeholder {
-  text-align: center;
-  color: #666;
+  color: var(--navy-100);
   box-sizing: border-box;
   border-width: 2px;
   border-style: solid;
