@@ -14,9 +14,7 @@ import {
   SpeckleLoader, 
   UrlHelper, 
   CameraController, 
-  SelectionExtension, 
-  MeasurementsExtension, 
-  SectionTool, 
+  SelectionExtension,
   FilteringExtension
 } from '@speckle/viewer';
 
@@ -25,7 +23,8 @@ const props = defineProps({
   height: { type: String, default: '600px' },  // Container height
   showStats: { type: Boolean, default: false }, // Show FPS/performance stats
   verbose: { type: Boolean, default: false },    // Console logging
-  authToken: { type: String, default: '' }       // Speckle personal access token
+  authToken: { type: String, default: '' },      // Speckle personal access token
+  filterKey: { type: String, default: null }     // Property key to color by
 });
 
 const emit = defineEmits(['viewer-ready', 'model-loaded', 'error']);
@@ -34,6 +33,7 @@ const viewerContainer = ref(null);  // Reference to the DOM element
 const loading = ref(true);          // Loading state
 const error = ref(null);            // Error message
 let viewer = null;                  // Speckle Viewer instance (not reactive)
+let filtering = null;               // FilteringExtension instance
 
 const initViewer = async () => {
   try {
@@ -60,13 +60,8 @@ const initViewer = async () => {
     const selection = viewer.createExtension(SelectionExtension);
     selection.enabled = true;
 
-    // Create (but do not enable) advanced extensions for later UI control
-    const measurements = viewer.createExtension(MeasurementsExtension);
-    measurements.enabled = false;
-    const sectionTool = viewer.createExtension(SectionTool);
-    sectionTool.enabled = false;
-    const filtering = viewer.createExtension(FilteringExtension);
-    filtering.enabled = false;
+    filtering = viewer.createExtension(FilteringExtension);
+    filtering.enabled = true;
 
     emit('viewer-ready', viewer); // Tell parent viewer is ready
 
@@ -105,6 +100,7 @@ const loadModel = async (url) => {
 
     emit('model-loaded', url);
     loading.value = false;
+    await applyColorFilter(props.filterKey);
   } catch (err) {
     error.value = `Failed to load model: ${err.message}`;
     loading.value = false;
@@ -120,6 +116,30 @@ watch(() => props.modelUrls, (newUrls) => {
       loadModel(url);
     }
   }
+});
+
+// Watch for filterKey changes - apply color filter
+const applyColorFilter = async (key) => {
+  console.log('[SpeckleViewer] applyColorFilter called with key:', key, 'viewer:', !!viewer, 'filtering:', !!filtering);
+  if (!viewer || !filtering) return;
+  if (!key) {
+    filtering.removeColorFilter();
+    return;
+  }
+  const properties = await viewer.getObjectProperties();
+  console.log('[SpeckleViewer] available property keys:', properties.map(p => p.key));
+  const prop = properties.find(p => p.key === key);
+  if (prop) {
+    console.log('[SpeckleViewer] applying color filter for:', prop);
+    filtering.setColorFilter(prop);
+  } else {
+    console.warn(`[SpeckleViewer] Property key "${key}" not found in model.`);
+    filtering.removeColorFilter();
+  }
+};
+
+watch(() => props.filterKey, async (key) => {
+  await applyColorFilter(key);
 });
 
 // When component mounts - initialize viewer

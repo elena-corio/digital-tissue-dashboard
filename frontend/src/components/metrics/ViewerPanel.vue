@@ -6,6 +6,7 @@
       :model-urls="modelLinks"
       :key="modelLinks"
       :auth-token="props.authToken"
+      :filter-key="props.filterKey"
       :show-stats="false"
       :verbose="false"
       @viewer-ready="onViewerReady"
@@ -33,6 +34,10 @@ const props = defineProps({
   authToken: {
     type: String,
     default: ''
+  },
+  filterKey: {
+    type: String,
+    default: null
   }
 });
 

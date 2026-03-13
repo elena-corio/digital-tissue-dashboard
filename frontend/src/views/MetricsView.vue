@@ -23,6 +23,7 @@
                 v-model:modelIds="inputModelId"
                 :projectId="projectId"
                 :authToken="speckleToken"
+                :filterKey="selectedFilterKey"
               />
             </div>
             <div class="metrics-toggles-center">
@@ -86,6 +87,16 @@ components: {
       speckleToken,
       globalScore: 8.0 // Placeholder, update with actual calculation if needed
     };
+  },
+  computed: {
+    selectedFilterKey() {
+      for (const section of uiText.KPIS.kpis) {
+        for (const metric of section.metrics) {
+          if (metric.name === this.selectedKPI) return metric.filter ? `properties.${metric.filter}` : null;
+        }
+      }
+      return null;
+    }
   },
   methods: {
     onSelectKPI(name) {
