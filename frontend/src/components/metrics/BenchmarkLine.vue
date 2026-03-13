@@ -61,6 +61,6 @@ svg {
 .benchmark-label {
   font-size: var(--font-size-value);
   font-weight: var(--font-weight-regular);
-  fill: var(--navy-100);
+  fill: var(--navy-50);
 }
 </style>

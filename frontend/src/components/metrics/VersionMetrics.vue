@@ -3,9 +3,7 @@
     <div class="card-title">
       {{ selectedMetric?.label }} History
     </div>
-    <div style="width: 100%; flex: 1 1 0%; min-height: 0; display: flex; flex-direction: column;">
-      <VersionHistoryDiagram :selectedMetric="selectedMetric" />
-    </div>
+    <VersionHistoryDiagram :selectedMetric="selectedMetric" />
   </div>
 </template>
 

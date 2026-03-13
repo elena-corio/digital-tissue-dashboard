@@ -188,17 +188,22 @@ export default {
       return this.normalizedY(val, r);
     },
     benchmarkY() {
-      if (!this.selectedMetric) return 0;
+      if (!this.selectedMetric || typeof this.selectedMetric.benchmark === 'undefined') return 0;
       const benchmark = this.selectedMetric.benchmark;
-      const match = this.clusters.find(c => Math.abs((c[this.selectedMetric.name] ?? 0) - benchmark) < 1e-6);
-      let radius = 0;
-      if (match) {
-        radius = this.circleR(match);
-      } else {
-        const radii = this.clusters.map(c => this.circleR(c));
-        radius = radii.length ? radii.reduce((a, b) => a + b, 0) / radii.length : 0;
-      }
-      return this.normalizedY(benchmark, radius) ?? 0;
+      const leftBound = this.selectedMetric.left ?? 0;
+      const rightBound = this.selectedMetric.right ?? 1;
+      const inverted = leftBound > rightBound;
+      const rangeMin = Math.min(leftBound, rightBound);
+      const rangeMax = Math.max(leftBound, rightBound);
+      const marginTop = 4;
+      const marginBottom = 24;
+      const yTop = marginTop;
+      const yBottom = this.svgHeight - marginBottom;
+      if (rangeMax === rangeMin) return (yTop + yBottom) / 2;
+      const norm = inverted
+        ? (rangeMax - benchmark) / (rangeMax - rangeMin)
+        : (benchmark - rangeMin) / (rangeMax - rangeMin);
+      return yBottom - norm * (yBottom - yTop);
     },
     safeBenchmarkValue() {
       return this.selectedMetric && typeof this.selectedMetric.benchmark !== 'undefined' ? this.selectedMetric.benchmark : '';
@@ -300,7 +305,7 @@ export default {
 }
 .axis-label {
   font-size: var(--font-size-value);
-  fill: var(--navy-100);
+  fill: var(--navy-50);
 }
 .chart-tag {
   font-size: var(--font-size-caption);

@@ -245,12 +245,14 @@ components: {
 }
 .metrics-detail-left {
   flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   gap: var(--space-md);
 }
 .metrics-detail-right {
   flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   gap: var(--space-md);

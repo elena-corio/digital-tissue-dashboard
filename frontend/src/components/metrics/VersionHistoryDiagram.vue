@@ -1,5 +1,5 @@
 <template>
-  <div ref="containerRef" style="position: relative; width: 100%; height: 100%;" @mousemove="onMouseMove">
+  <div ref="containerRef" style="position: relative; width: 100%; flex: 1 1 0%; min-height: 0; display: flex; flex-direction: column;" @mousemove="onMouseMove">
     <svg :width="svgW" :height="svgH" :viewBox="`0 0 ${svgW} ${svgH}`" class="version-history-svg">
       <!-- Area fill -->
       <polygon :points="areaPoints" fill="#b3bad8" opacity="0.5" />
@@ -71,7 +71,7 @@ export default {
   },
   data() {
     return {
-      years: ['v-3', 'v-2', 'v-1', 'latest'],
+      years: ['Version -3', 'VVersion -2', 'Version -1', 'Latest'],
       versionKeys: ['version01', 'version02', 'version03', 'version04'],
       hoveredIdx: null
     };
@@ -165,7 +165,8 @@ export default {
 <style scoped>
 .version-history-svg {
   width: 100%;
-  height: auto;
+  flex: 1 1 0%;
+  min-height: 0;
   display: block;
   background: none;
 }
