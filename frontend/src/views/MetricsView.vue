@@ -193,7 +193,6 @@ components: {
   gap: var(--space-md);
   flex: 1 1 0%;
   min-height: 0;
-  margin-bottom: var(--space-lg);
 }
 .metrics-explorer-card {
   width: 100%;
@@ -243,7 +242,6 @@ components: {
   gap: var(--space-md);
   min-height: 0;
   overflow: hidden;
-  margin-bottom: var(--space-lg);
 }
 .metrics-detail-left {
   flex: 1;

@@ -3,7 +3,7 @@
     <div class="card-title">
       {{ selectedMetric?.label }} by Tower
     </div>
-    <div ref="containerRef" class="tower-metrics-container" style="display: flex; flex-direction: column; align-items: stretch; width: 100%; height: 100%; min-height: 0; max-height: 320px;"
+    <div ref="containerRef" class="tower-metrics-container" style="display: flex; flex-direction: column; align-items: stretch; width: 100%; flex: 1 1 0%; min-height: 0;"
       @mousemove="onMouseMove"
     >
       <svg
@@ -109,9 +109,7 @@ export default {
     function updateContainerWidth() {
       if (containerRef.value) {
         containerWidth.value = containerRef.value.clientWidth;
-      }
-      if (svgRef.value) {
-        svgHeight.value = svgRef.value.clientHeight;
+        svgHeight.value = containerRef.value.clientHeight || 240;
       }
     }
     onMounted(() => {
@@ -253,10 +251,18 @@ export default {
   color: var(--navy-50);
   font-family: var(--font-family);
   position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0%;
+  min-height: 0;
+  box-sizing: border-box;
+  gap: 0;
 }
 .tower-metrics-svg {
   width: 100%;
-  height: auto;
+  flex: 1 1 0%;
+  min-height: 0;
+  display: block;
 }
 .tower-names-row {
   position: relative;
@@ -276,7 +282,6 @@ export default {
 .tower-metrics-container {
   position: relative;
   width: 100%;
-  margin-top: 1.5rem;
 }
 .tower-tooltip {
   position: absolute;
