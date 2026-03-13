@@ -127,6 +127,8 @@ defineExpose({ viewerRef });
   align-items: stretch;
   justify-content: stretch;
   border-radius: var(--radius-md);
+  padding: 0;
+  margin: 0;
 }
 
 .object-info-tag {
