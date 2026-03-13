@@ -136,18 +136,6 @@ export default {
       // Convert clusters object to array with name
       return Object.entries(projectData.clusters).map(([name, values]) => ({ name, ...values }))
     },
-    minMetric() {
-      if (!this.selectedMetric) return 0;
-      const values = this.clusters.map(c => c[this.selectedMetric.name] ?? 0);
-      if (typeof this.selectedMetric.benchmark !== 'undefined') values.push(this.selectedMetric.benchmark);
-      return Math.min(...values);
-    },
-    maxMetric() {
-      if (!this.selectedMetric) return 1;
-      const values = this.clusters.map(c => c[this.selectedMetric.name] ?? 1);
-      if (typeof this.selectedMetric.benchmark !== 'undefined') values.push(this.selectedMetric.benchmark);
-      return Math.max(...values);
-    },
     minArea() {
       return Math.min(...this.clusters.map(c => c.grossFloorArea ?? 0));
     },
@@ -169,15 +157,28 @@ export default {
       return 40 + normA * (60 - 40);
     },
     normalizedY(value, radius = 0) {
-      // Use actual SVG height for normalization
-      const minM = this.minMetric;
-      const maxM = this.maxMetric;
+      const leftBound = this.selectedMetric?.left ?? 0;
+      const rightBound = this.selectedMetric?.right ?? 1;
+      // direction: left = bad (bottom), right = good (top)
+      const inverted = leftBound > rightBound;
+
+      // Extend range to include all data values + benchmark so nothing goes off-screen
+      const dataVals = this.clusters.map(c => c[this.selectedMetric?.name] ?? 0);
+      if (typeof this.selectedMetric?.benchmark !== 'undefined') dataVals.push(this.selectedMetric.benchmark);
+      dataVals.push(leftBound, rightBound);
+      const rangeMin = Math.min(...dataVals);
+      const rangeMax = Math.max(...dataVals);
+
       const marginTop = 4;
       const marginBottom = 24;
       const minY = radius + marginTop;
       const maxY = this.svgHeight - radius - marginBottom;
-      if (maxM === minM) return (minY + maxY) / 2;
-      const norm = (value - minM) / (maxM - minM);
+      if (rangeMax === rangeMin) return (minY + maxY) / 2;
+
+      // norm 0 = bad (bottom), norm 1 = good (top)
+      const norm = inverted
+        ? (rangeMax - value) / (rangeMax - rangeMin)
+        : (value - rangeMin) / (rangeMax - rangeMin);
       return maxY - norm * (maxY - minY);
     },
     circleY(cluster) {
