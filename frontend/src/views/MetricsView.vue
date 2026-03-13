@@ -23,7 +23,7 @@
                 v-model:modelIds="inputModelId"
                 :projectId="projectId"
                 :authToken="speckleToken"
-                :filterKey="selectedFilterKey"
+                :filterConfig="selectedFilterConfig"
               />
             </div>
             <div class="metrics-toggles-center">
@@ -63,6 +63,7 @@ import GlobalScore from '../components/metrics/GlobalScore.vue';
 import ViewerPanel from '../components/metrics/ViewerPanel.vue';
 import { speckleModels, speckleToken } from '../config/speckleModel.js';
 import * as uiText from '../uitext.js';
+import { METRICS } from '../benchmarks.js';
 
 export default {
   name: 'MetricsView',
@@ -89,10 +90,18 @@ components: {
     };
   },
   computed: {
-    selectedFilterKey() {
+    selectedFilterConfig() {
       for (const section of uiText.KPIS.kpis) {
         for (const metric of section.metrics) {
-          if (metric.name === this.selectedKPI) return metric.filter ? `properties.${metric.filter}` : null;
+          if (metric.name === this.selectedKPI && metric.filter) {
+            const benchmark = METRICS[metric.name];
+            return {
+              key: `properties.${metric.filter}`,
+              left: benchmark?.left,
+              right: benchmark?.right,
+              benchmark: benchmark?.benchmark
+            };
+          }
         }
       }
       return null;

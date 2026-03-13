@@ -4,13 +4,13 @@
     "project":{
         "grossFloorArea": 850000,
         "daylightPotential": 0.18,
-        "greenSpaceDistance": 250,
-        "programDiversity": 0.85,
-        "circulationEfficiency": 0.70,
+        "greenSpaceDistance": 100,
+        "programDiversity": 0.65,
+        "circulationEfficiency": 0.80,
         "usableAreaRatio": 0.75,
         "netFloorAreaRatio": 0.80,
         "carbonIntensity": 450,
-        "volumeToSurface": 12.00
+        "volumeToSurface": 13.00
     },
     "versions": {
         "version01": {
