@@ -1,16 +1,16 @@
 <template>
   <div class="tower-metrics-title card">
-    <div class="card-title">
-      {{ getKpiLabel(selectedKPI) }} by Tower
-    </div>
-    <div ref="containerRef" class="tower-metrics-container" style="display: flex; flex-direction: column; align-items: stretch; width: 100%; height: 100%; min-height: 0; max-height: 320px;">
-      <svg
+    <div class="card-title">{{ selectedMetric?.label }} by Tower</div>
+    <div ref="containerRef" class="tower-metrics-container"
+      @mousemove="onMouseMove"
+    >
+    <svg
         ref="svgRef"
         class="tower-metrics-svg"
         :viewBox="`0 0 ${containerWidth} ${svgHeight}`"
         :width="containerWidth"
         :height="svgHeight"
-        style="display: block; margin-top: 1.5rem;"
+        style="display: block;"
       >
         <circle
           v-for="(cluster, idx) in clusters"
@@ -33,40 +33,21 @@
           r="6"
           fill="#fff"
         />
-        <!-- Benchmark label inside the diagram, just above the line -->
+        <!-- Y-axis extremes: right (good) at top, left (bad) at bottom -->
         <text
-          v-if="benchmarkY() !== null"
-          :x="benchmarkLineEndX - 4"
-          :y="benchmarkY() - 8"
-          text-anchor="end"
-          font-size="11"
-          font-weight="normal"
-          fill="#303179"
-        >
-           benchmark = {{ typeof safeBenchmarkValue() === 'number' ? safeBenchmarkValue().toFixed(2) : safeBenchmarkValue() }}<tspan v-if="kpiUnit()">&nbsp;{{ kpiUnit() }}</tspan>
-        </text>
-        <!-- Benchmark line (robust, always visible) -->
-        <line
-          v-if="benchmarkY() !== null"
-          :x1="benchmarkLineStartX"
-          :x2="benchmarkLineEndX"
-          :y1="benchmarkY()"
-          :y2="benchmarkY()"
-          stroke="var(--navy-100)"
-          stroke-width="2"
-          stroke-dasharray="6,4"
-          opacity="1"
-        />
-        <!-- Small center circle for each cluster -->
-        <circle
-          v-for="(cluster, idx) in clusters"
-          :key="'center-' + cluster.name"
-          :cx="circleX(idx)"
-          :cy="circleY(cluster)"
-          r="7"
-          fill="#fff"
-          stroke-width="2"
-        />
+          v-if="selectedMetric"
+          x="4"
+          y="14"
+          text-anchor="start"
+          class="axis-label"
+        >{{ typeof selectedMetric.right === 'number' ? selectedMetric.right.toFixed(2) : selectedMetric.right }}<tspan v-if="kpiUnit()">&nbsp;{{ kpiUnit() }}</tspan></text>
+        <text
+          v-if="selectedMetric"
+          x="4"
+          :y="svgHeight - 28"
+          text-anchor="start"
+          class="axis-label"
+        >{{ typeof selectedMetric.left === 'number' ? selectedMetric.left.toFixed(2) : selectedMetric.left }}<tspan v-if="kpiUnit()">&nbsp;{{ kpiUnit() }}</tspan></text>
         <!-- Tower tags at bottom of diagram -->
         <text
           v-for="(cluster, idx) in clusters"
@@ -74,64 +55,55 @@
           :x="circleX(idx)"
           :y="svgHeight - 10"
           text-anchor="middle"
-          font-size="13"
-          font-weight="normal"
-          fill="#303179"
+          class="chart-tag"
         >
-          {{ 't' + String(idx + 1).padStart(2, '0') }}
+          {{ 'Tower ' + String(idx + 1).padStart(2, '0') }}
         </text>
       </svg>
-      <!-- Show tower name and value only on hover, centered inside the hovered circle -->
-      <svg v-if="hoveredIdx !== null" class="tower-names-svg" :style="{ position: 'absolute', left: 0, top: 0, width: '100%', height: '100%', pointerEvents: 'none' }">
-        <text
-          :x="circleX(hoveredIdx)"
-          :y="circleY(clusters[hoveredIdx]) - 5"
-          text-anchor="middle"
-          font-size="15"
-          font-weight="bold"
-          fill="#303179"
-        >
-          {{ typeof clusters[hoveredIdx][selectedKPI] === 'number' ? clusters[hoveredIdx][selectedKPI].toFixed(2) : '' }}<tspan v-if="kpiUnit()"> {{ kpiUnit() }}</tspan>
-        </text>
-      </svg>
+      <!-- Benchmark line overlay -->
+      <BenchmarkLine
+        v-if="selectedMetric"
+        :benchmarkValue="safeBenchmarkValue()"
+        :unit="kpiUnit()"
+        :width="containerWidth"
+        :height="svgHeight"
+        :y="benchmarkY()"
+        :style="{ position: 'absolute', left: 0, top: 0, width: '100%', height: '100%', pointerEvents: 'none' }"
+      />
+      <!-- Hover tooltip card -->
+      <div
+        v-if="hoveredIdx !== null && selectedMetric"
+        ref="tooltipRef"
+        class="tower-tooltip"
+        :style="{ left: tooltipX + 'px', top: tooltipY + 'px' }"
+      >
+        <span class="tower-tooltip-value">{{ typeof clusters[hoveredIdx][selectedMetric.name] === 'number' ? clusters[hoveredIdx][selectedMetric.name].toFixed(2) : clusters[hoveredIdx][selectedMetric.name] }}</span>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import projectData from '../../assets/cache/data.json'
-import { METRICS } from '../../benchmarks.js'
-import { KPIS } from '../../uitext.js'
-import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue';
+import { ref } from 'vue';
+import BenchmarkLine from './BenchmarkLine.vue';
+import { useChartSize } from '../../utils/useChartSize.js';
 
 export default {
   name: 'TowerMetrics',
+  components: { BenchmarkLine },
   props: {
-    selectedKPI: String
+    selectedMetric: Object
   },
   setup() {
-    const containerWidth = ref(420);
-    const containerRef = ref(null);
-    const svgHeight = ref(240);
+    const { containerRef, chartWidth: containerWidth, chartHeight: svgHeight } = useChartSize(420, 240);
     const svgRef = ref(null);
     const margin = ref(0);
     const hoveredIdx = ref(null);
-    function updateContainerWidth() {
-      if (containerRef.value) {
-        containerWidth.value = containerRef.value.clientWidth;
-      }
-      if (svgRef.value) {
-        svgHeight.value = svgRef.value.clientHeight;
-      }
-    }
-    onMounted(() => {
-      nextTick(updateContainerWidth);
-      window.addEventListener('resize', updateContainerWidth);
-    });
-    onBeforeUnmount(() => {
-      window.removeEventListener('resize', updateContainerWidth);
-    });
-    return { containerWidth, containerRef, svgHeight, svgRef, margin, hoveredIdx };
+    const tooltipX = ref(0);
+    const tooltipY = ref(0);
+    const tooltipRef = ref(null);
+    return { containerWidth, containerRef, svgHeight, svgRef, margin, hoveredIdx, tooltipX, tooltipY, tooltipRef };
   },
   data() {
     return {
@@ -149,38 +121,12 @@ export default {
       // Convert clusters object to array with name
       return Object.entries(projectData.clusters).map(([name, values]) => ({ name, ...values }))
     },
-    minMetric() {
-      // Find min value for selected metric, including benchmark
-      if (!this.selectedKPI) return 0;
-      const metric = METRICS[this.selectedKPI];
-      const values = this.clusters.map(c => c[this.selectedKPI] ?? 0);
-      if (metric && typeof metric.benchmark !== 'undefined') values.push(metric.benchmark);
-      return Math.min(...values);
-    },
-    maxMetric() {
-      // Find max value for selected metric, including benchmark
-      if (!this.selectedKPI) return 1;
-      const metric = METRICS[this.selectedKPI];
-      const values = this.clusters.map(c => c[this.selectedKPI] ?? 1);
-      if (metric && typeof metric.benchmark !== 'undefined') values.push(metric.benchmark);
-      return Math.max(...values);
-    },
     minArea() {
       return Math.min(...this.clusters.map(c => c.grossFloorArea ?? 0));
     },
     maxArea() {
       return Math.max(...this.clusters.map(c => c.grossFloorArea ?? 1));
     },
-    benchmarkLineStartX() {
-      // Start at left margin of container (smaller margin for longer line)
-      const margin = Math.max(this.margin, this.containerWidth * 0.05);
-      return margin;
-    },
-    benchmarkLineEndX() {
-      // End at right margin of container (smaller margin for longer line)
-      const margin = Math.max(this.margin, this.containerWidth * 0.05);
-      return this.containerWidth - margin;
-    }
   },
   methods: {
     circleR(cluster) {
@@ -196,43 +142,55 @@ export default {
       return 40 + normA * (60 - 40);
     },
     normalizedY(value, radius = 0) {
-      // Use actual SVG height for normalization
-      const minM = this.minMetric;
-      const maxM = this.maxMetric;
+      const leftBound = this.selectedMetric?.left ?? 0;
+      const rightBound = this.selectedMetric?.right ?? 1;
+      // direction: left = bad (bottom), right = good (top)
+      const inverted = leftBound > rightBound;
+
+      // Extend range to include all data values + benchmark so nothing goes off-screen
+      const dataVals = this.clusters.map(c => c[this.selectedMetric?.name] ?? 0);
+      if (typeof this.selectedMetric?.benchmark !== 'undefined') dataVals.push(this.selectedMetric.benchmark);
+      dataVals.push(leftBound, rightBound);
+      const rangeMin = Math.min(...dataVals);
+      const rangeMax = Math.max(...dataVals);
+
       const marginTop = 4;
       const marginBottom = 24;
       const minY = radius + marginTop;
       const maxY = this.svgHeight - radius - marginBottom;
-      if (maxM === minM) return (minY + maxY) / 2;
-      const norm = (value - minM) / (maxM - minM);
+      if (rangeMax === rangeMin) return (minY + maxY) / 2;
+
+      // norm 0 = bad (bottom), norm 1 = good (top)
+      const norm = inverted
+        ? (rangeMax - value) / (rangeMax - rangeMin)
+        : (value - rangeMin) / (rangeMax - rangeMin);
       return maxY - norm * (maxY - minY);
     },
     circleY(cluster) {
-      // Use shared normalization for vertical position, radius-aware
-      const val = cluster[this.selectedKPI];
+      const val = cluster[this.selectedMetric?.name];
       const r = this.circleR(cluster);
       return this.normalizedY(val, r);
     },
     benchmarkY() {
-      // Use radius of circle matching benchmark value, else average radius
-      const metric = METRICS[this.selectedKPI];
-      if (!metric) return 0; // fallback to 0 if metric is missing
-      const benchmark = metric.benchmark;
-      // Find radius of circle with value == benchmark
-      const match = this.clusters.find(c => Math.abs((c[this.selectedKPI] ?? 0) - benchmark) < 1e-6);
-      let radius = 0;
-      if (match) {
-        radius = this.circleR(match);
-      } else {
-        const radii = this.clusters.map(c => this.circleR(c));
-        radius = radii.length ? radii.reduce((a, b) => a + b, 0) / radii.length : 0;
-      }
-      // Always return a number
-      return this.normalizedY(benchmark, radius) ?? 0;
+      if (!this.selectedMetric || typeof this.selectedMetric.benchmark === 'undefined') return 0;
+      const benchmark = this.selectedMetric.benchmark;
+      const leftBound = this.selectedMetric.left ?? 0;
+      const rightBound = this.selectedMetric.right ?? 1;
+      const inverted = leftBound > rightBound;
+      const rangeMin = Math.min(leftBound, rightBound);
+      const rangeMax = Math.max(leftBound, rightBound);
+      const marginTop = 4;
+      const marginBottom = 24;
+      const yTop = marginTop;
+      const yBottom = this.svgHeight - marginBottom;
+      if (rangeMax === rangeMin) return (yTop + yBottom) / 2;
+      const norm = inverted
+        ? (rangeMax - benchmark) / (rangeMax - rangeMin)
+        : (benchmark - rangeMin) / (rangeMax - rangeMin);
+      return yBottom - norm * (yBottom - yTop);
     },
     safeBenchmarkValue() {
-      const metric = METRICS[this.selectedKPI];
-      return metric && typeof metric.benchmark !== 'undefined' ? metric.benchmark : '';
+      return this.selectedMetric && typeof this.selectedMetric.benchmark !== 'undefined' ? this.selectedMetric.benchmark : '';
     },
     circleX(idx) {
       // Use actual container width for responsive positioning
@@ -245,19 +203,13 @@ export default {
       return minX + idx * (maxX - minX) / (n - 1);
     },
     circleColor(cluster) {
-      const metric = METRICS[this.selectedKPI];
-      if (!metric) return `var(--lila-100)`;
-      const benchmark = metric.benchmark;
-      const value = cluster[this.selectedKPI];
-      // Determine if higher or lower is better
-      const higherIsBetter = metric.right > metric.left;
-      // Success color
+      if (!this.selectedMetric) return `var(--lila-100)`;
+      const benchmark = this.selectedMetric.benchmark;
+      const value = cluster[this.selectedMetric.name];
+      const higherIsBetter = this.selectedMetric.right > this.selectedMetric.left;
       const success = 'var(--color-success)';
-      // Error color
       const error = 'var(--color-error)';
       if (value === undefined) return error;
-      // For higher is better: above benchmark = success, below = error
-      // For lower is better: below benchmark = success, above = error
       if (higherIsBetter) {
         return value >= benchmark ? success : error;
       } else {
@@ -265,26 +217,19 @@ export default {
       }
     },
     kpiUnit() {
-      // Find unit for selected KPI from uitext.js
-      const kpiName = this.selectedKPI;
-      for (const section of KPIS.kpis) {
-        for (const metric of section.metrics) {
-          if (metric.name === kpiName) {
-            return metric.unit || '';
-          }
-        }
-      }
-      return '';
+      return this.selectedMetric?.unit || '';
     },
-    getKpiLabel(name) {
-      for (const section of KPIS.kpis) {
-        for (const metric of section.metrics) {
-          if (metric.name === name) {
-            return metric.label;
-          }
-        }
-      }
-      return name;
+    getKpiLabel() {
+      return this.selectedMetric?.label || '';
+    },
+    onMouseMove(e) {
+      const rect = this.containerRef.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const tooltipW = this.tooltipRef?.offsetWidth || 60;
+      const tooltipH = this.tooltipRef?.offsetHeight || 36;
+      this.tooltipX = x + 12 + tooltipW > rect.width ? x - tooltipW - 12 : x + 12;
+      this.tooltipY = y + 12 + tooltipH > rect.height ? y - tooltipH - 12 : y + 12;
     }
   }
 };
@@ -292,13 +237,21 @@ export default {
 
 <style scoped>
 .tower-metrics-title {
-  color: var(--navy-50);
-  font-family: var(--font-family);
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0%;
+  min-height: 0;
+  box-sizing: border-box;
+  gap: 0;
+}
+.tower-metrics-title .card-title {
+  margin-bottom: 0;
 }
 .tower-metrics-svg {
   width: 100%;
-  height: auto;
+  flex: 1 1 0%;
+  min-height: 0;
+  display: block;
 }
 .tower-names-row {
   position: relative;
@@ -313,9 +266,39 @@ export default {
 .breathe-circle {
   animation: breathe 2.5s infinite ease-in-out;
   transform-origin: center;
+  cursor: pointer;
 }
 .tower-metrics-container {
   position: relative;
   width: 100%;
+  flex: 1 1 0%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+.tower-tooltip {
+  position: absolute;
+  pointer-events: none;
+  background: var(--card-bg, #fff);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-xs) var(--space-sm);
+  width: fit-content;
+}
+.tower-tooltip-value {
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-bold);
+  color: var(--navy-100);
+  white-space: nowrap;
+}
+.axis-label {
+  font-size: var(--font-size-value);
+  fill: var(--navy-50);
+}
+.chart-tag {
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-regular);
+  fill: var(--navy-100);
 }
 </style>

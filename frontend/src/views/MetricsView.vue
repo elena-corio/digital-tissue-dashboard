@@ -13,8 +13,8 @@
           <div class="speckle-tower-wrapper">
             <!-- Global Score + Action Required Row -->
             <div class="metrics-top-row">
-              <GlobalScore :selectedKPI="selectedKPI" />
-              <ActionRequired :selectedKPI="selectedKPI" />
+              <GlobalScore :selectedMetric="selectedMetric" />
+              <ActionRequired :selectedMetric="selectedMetric" />
             </div>
             <!-- Viewer Card -->
             <div class="metrics-explorer-card card">
@@ -25,9 +25,6 @@
                 :authToken="speckleToken"
                 :filterConfig="selectedFilterConfig"
               />
-            </div>
-            <div class="metrics-toggles-center">
-              <TowerSelector />
             </div>
           </div>
         </div>
@@ -40,10 +37,10 @@
           </div>
           <div class="metrics-detail-wrapper">
             <div class="metrics-detail-left">
-              <VersionMetrics :selectedKPI="selectedKPI" />
+              <VersionMetrics :selectedMetric="selectedMetric" />
             </div>
             <div class="metrics-detail-right">
-              <TowerMetrics :selectedKPI="selectedKPI" />
+              <TowerMetrics :selectedMetric="selectedMetric" />
             </div>
           </div>
         </div>
@@ -54,7 +51,6 @@
 
 <script>
 import Workspace from '../components/Workspace.vue';
-import TowerSelector from '../components/metrics/TowerSelector.vue';
 import KPIsOverview from '../components/metrics/KPIsOverview.vue';
 import TowerMetrics from '../components/metrics/TowerMetrics.vue';
 import VersionMetrics from '../components/metrics/VersionMetrics.vue';
@@ -69,7 +65,6 @@ export default {
   name: 'MetricsView',
 components: {
   Workspace,
-  TowerSelector,
   KPIsOverview,
   TowerMetrics,
   VersionMetrics,
@@ -90,38 +85,33 @@ components: {
     };
   },
   computed: {
-    selectedFilterConfig() {
+    selectedMetric() {
       for (const section of uiText.KPIS.kpis) {
         for (const metric of section.metrics) {
-          if (metric.name === this.selectedKPI && metric.filter) {
-            const benchmark = METRICS[metric.name];
-            return {
-              key: `properties.${metric.filter}`,
-              label: metric.label,
-              unit: metric.unit,
-              left: benchmark?.left,
-              right: benchmark?.right,
-              benchmark: benchmark?.benchmark
-            };
+          if (metric.name === this.selectedKPI) {
+            const bm = METRICS[metric.name] || {};
+            return { ...metric, left: bm.left, right: bm.right, benchmark: bm.benchmark };
           }
         }
       }
       return null;
+    },
+    selectedFilterConfig() {
+      const m = this.selectedMetric;
+      if (!m || !m.filter) return null;
+      return {
+        key: `properties.${m.filter}`,
+        label: m.label,
+        unit: m.unit,
+        left: m.left,
+        right: m.right,
+        benchmark: m.benchmark
+      };
     }
   },
   methods: {
     onSelectKPI(name) {
       this.selectedKPI = name;
-    },
-    getKpiLabel(name) {
-      for (const section of uiText.KPIS.kpis) {
-        for (const metric of section.metrics) {
-          if (metric.name === name) {
-            return metric.label;
-          }
-        }
-      }
-      return name;
     }
   }
 };
@@ -133,6 +123,7 @@ components: {
   flex-direction: row;
   gap: var(--space-md);
   width: 100%;
+  flex: 0 0 auto;
 }
 .metrics-top-row > * {
   flex: 1 1 0%;
@@ -195,24 +186,22 @@ components: {
   align-items: stretch;
 }
 .speckle-tower-wrapper {
-  /* Center toggles container */
-  .metrics-toggles-center {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: stretch;
   gap: var(--space-md);
+  flex: 1 1 0%;
+  min-height: 0;
 }
 .metrics-explorer-card {
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: stretch;
+  flex: 1 1 0%;
+  min-height: 0;
+  overflow: hidden;
 }
 .metrics-explorer-card .card-title {
   margin-bottom: var(--space-sm);
@@ -253,16 +242,17 @@ components: {
   gap: var(--space-md);
   min-height: 0;
   overflow: hidden;
-  margin-bottom: var(--space-lg);
 }
 .metrics-detail-left {
   flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   gap: var(--space-md);
 }
 .metrics-detail-right {
   flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   gap: var(--space-md);
