@@ -22,7 +22,7 @@
               <ViewerPanel
                 v-model:modelIds="inputModelId"
                 :projectId="projectId"
-                :authToken="speckleToken"
+                :authToken="speckleConfig.token"
                 :filterConfig="selectedFilterConfig"
               />
             </div>
@@ -57,7 +57,7 @@ import VersionMetrics from '../components/metrics/VersionMetrics.vue';
 import ActionRequired from '../components/metrics/ActionRequired.vue';
 import GlobalScore from '../components/metrics/GlobalScore.vue';
 import ViewerPanel from '../components/metrics/ViewerPanel.vue';
-import { speckleModels, speckleToken } from '../config/speckleModel.js';
+import { speckleModels, speckleConfig } from '../config/speckleConfig.js';
 import * as uiText from '../uitext.js';
 import { METRICS } from '../benchmarks.js';
 
@@ -80,7 +80,7 @@ components: {
       selectedKPI: firstKPI,
       projectId: speckleModels.metrics.projectId,
       inputModelId: [speckleModels.metrics.modelId],
-      speckleToken,
+      speckleToken: speckleConfig.token,
       globalScore: 8.0 // Placeholder, update with actual calculation if needed
     };
   },
