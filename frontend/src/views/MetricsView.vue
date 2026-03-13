@@ -26,9 +26,6 @@
                 :filterConfig="selectedFilterConfig"
               />
             </div>
-            <div class="metrics-toggles-center">
-              <TowerSelector />
-            </div>
           </div>
         </div>
       </section>
@@ -54,7 +51,6 @@
 
 <script>
 import Workspace from '../components/Workspace.vue';
-import TowerSelector from '../components/metrics/TowerSelector.vue';
 import KPIsOverview from '../components/metrics/KPIsOverview.vue';
 import TowerMetrics from '../components/metrics/TowerMetrics.vue';
 import VersionMetrics from '../components/metrics/VersionMetrics.vue';
@@ -69,7 +65,6 @@ export default {
   name: 'MetricsView',
 components: {
   Workspace,
-  TowerSelector,
   KPIsOverview,
   TowerMetrics,
   VersionMetrics,
@@ -133,6 +128,7 @@ components: {
   flex-direction: row;
   gap: var(--space-md);
   width: 100%;
+  flex: 0 0 auto;
 }
 .metrics-top-row > * {
   flex: 1 1 0%;
@@ -195,24 +191,23 @@ components: {
   align-items: stretch;
 }
 .speckle-tower-wrapper {
-  /* Center toggles container */
-  .metrics-toggles-center {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: stretch;
   gap: var(--space-md);
+  flex: 1 1 0%;
+  min-height: 0;
+  margin-bottom: var(--space-lg);
 }
 .metrics-explorer-card {
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: stretch;
+  flex: 1 1 0%;
+  min-height: 0;
+  overflow: hidden;
 }
 .metrics-explorer-card .card-title {
   margin-bottom: var(--space-sm);

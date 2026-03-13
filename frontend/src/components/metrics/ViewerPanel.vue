@@ -1,4 +1,5 @@
 <template>
+  <div class="viewer-panel-root">
   <div class="viewer-container aspect" @mousemove="onMouseMove">
     <SpeckleViewer 
       ref="viewerRef"
@@ -22,6 +23,7 @@
       <span class="object-info-tag-label">{{ filterLabel }}</span>
       <span class="object-info-tag-value">{{ selectedProperties[props.filterConfig.key.replace('properties.', '')] ?? '—' }} {{ props.filterConfig.unit }}</span>
     </div>
+  </div>
   </div>
 </template>
 
@@ -92,13 +94,20 @@ defineExpose({ viewerRef });
 </script>
 
 <style scoped>
-.viewer-container.aspect {
-  aspect-ratio: 16 / 9;
-  width: 100%;
-  min-width: 0;
+.viewer-panel-root {
+  flex: 1 1 0%;
   min-height: 0;
-  max-width: 100vw;
-  max-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.viewer-container.aspect {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  max-height: 100%;
+  min-width: 0;
   position: relative;
   background: transparent;
   box-sizing: border-box;
@@ -106,7 +115,7 @@ defineExpose({ viewerRef });
   display: flex;
   align-items: stretch;
   justify-content: stretch;
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-card);
   border-radius: var(--radius-md);
 }
 

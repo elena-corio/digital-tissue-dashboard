@@ -3,7 +3,7 @@
     <div class="card-title">
       {{ kpiLabel }} History
     </div>
-    <div style="margin-top: 1.5rem; width: 100%;">
+    <div style="margin-top: 1.5rem; width: 100%; flex: 1 1 0%; min-height: 0; display: flex; flex-direction: column;">
       <VersionHistoryDiagram :selectedKPI="selectedKPI" />
     </div>
   </div>
@@ -47,8 +47,8 @@ export default {
    flex-direction: column;
    align-items: stretch;
    width: 100%;
-   min-height: 320px;
-   height: 100%;
+   min-height: 0;
+   flex: 1 1 0%;
    box-sizing: border-box;
  }
 </style>
