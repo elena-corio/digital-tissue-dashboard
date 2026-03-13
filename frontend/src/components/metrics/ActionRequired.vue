@@ -2,53 +2,30 @@
   <div :class="['card', 'action-required-placeholder', statusClass]">
     <div class="card-title">{{ statusClass === 'success' ? 'On track' : 'Action Required' }}</div>
     <div v-if="statusClass === 'success'">
-      The {{ getLabel(selectedKPI) }} meets the benchmark. Keep up the good work.
+      The {{ selectedMetric?.label }} meets the benchmark. Keep up the good work.
     </div>
     <div v-else>
-      The {{ getLabel(selectedKPI) }} does not meet the benchmark. {{ getAction(selectedKPI) }}
+      The {{ selectedMetric?.label }} does not meet the benchmark. {{ selectedMetric?.action || '' }}
     </div>
   </div>
 </template>
 
 <script>
-import { KPIS } from '../../uitext.js';
-import { METRICS } from '../../benchmarks.js';
 import cacheData from '../../assets/cache/data.json';
 export default {
-    methods: {
-      getLabel(name) {
-        for (const section of KPIS.kpis) {
-          for (const metric of section.metrics) {
-            if (metric.name === name) return metric.label;
-          }
-        }
-        return name;
-      },
-      getAction(name) {
-        for (const section of KPIS.kpis) {
-          for (const metric of section.metrics) {
-            if (metric.name === name) return metric.action || '';
-          }
-        }
-        return '';
-      }
-    },
   name: 'ActionRequired',
   props: {
-    selectedKPI: String
+    selectedMetric: Object
   },
   computed: {
     statusClass() {
-      if (!this.selectedKPI) return '';
-      const metric = METRICS[this.selectedKPI];
-      const value = cacheData.project[this.selectedKPI];
-      if (!metric || value === undefined) return '';
-      // If left < right, success if value >= benchmark, else error
-      // If left > right, success if value <= benchmark, else error
-      if (metric.left < metric.right) {
-        return value >= metric.benchmark ? 'success' : 'warning';
+      if (!this.selectedMetric) return '';
+      const value = cacheData.project[this.selectedMetric.name];
+      if (value === undefined) return '';
+      if (this.selectedMetric.left < this.selectedMetric.right) {
+        return value >= this.selectedMetric.benchmark ? 'success' : 'warning';
       } else {
-        return value <= metric.benchmark ? 'success' : 'warning';
+        return value <= this.selectedMetric.benchmark ? 'success' : 'warning';
       }
     }
   }

@@ -13,8 +13,8 @@
           <div class="speckle-tower-wrapper">
             <!-- Global Score + Action Required Row -->
             <div class="metrics-top-row">
-              <GlobalScore :selectedKPI="selectedKPI" />
-              <ActionRequired :selectedKPI="selectedKPI" />
+              <GlobalScore :selectedMetric="selectedMetric" />
+              <ActionRequired :selectedMetric="selectedMetric" />
             </div>
             <!-- Viewer Card -->
             <div class="metrics-explorer-card card">
@@ -37,10 +37,10 @@
           </div>
           <div class="metrics-detail-wrapper">
             <div class="metrics-detail-left">
-              <VersionMetrics :selectedKPI="selectedKPI" />
+              <VersionMetrics :selectedMetric="selectedMetric" />
             </div>
             <div class="metrics-detail-right">
-              <TowerMetrics :selectedKPI="selectedKPI" />
+              <TowerMetrics :selectedMetric="selectedMetric" />
             </div>
           </div>
         </div>
@@ -85,38 +85,33 @@ components: {
     };
   },
   computed: {
-    selectedFilterConfig() {
+    selectedMetric() {
       for (const section of uiText.KPIS.kpis) {
         for (const metric of section.metrics) {
-          if (metric.name === this.selectedKPI && metric.filter) {
-            const benchmark = METRICS[metric.name];
-            return {
-              key: `properties.${metric.filter}`,
-              label: metric.label,
-              unit: metric.unit,
-              left: benchmark?.left,
-              right: benchmark?.right,
-              benchmark: benchmark?.benchmark
-            };
+          if (metric.name === this.selectedKPI) {
+            const bm = METRICS[metric.name] || {};
+            return { ...metric, left: bm.left, right: bm.right, benchmark: bm.benchmark };
           }
         }
       }
       return null;
+    },
+    selectedFilterConfig() {
+      const m = this.selectedMetric;
+      if (!m || !m.filter) return null;
+      return {
+        key: `properties.${m.filter}`,
+        label: m.label,
+        unit: m.unit,
+        left: m.left,
+        right: m.right,
+        benchmark: m.benchmark
+      };
     }
   },
   methods: {
     onSelectKPI(name) {
       this.selectedKPI = name;
-    },
-    getKpiLabel(name) {
-      for (const section of uiText.KPIS.kpis) {
-        for (const metric of section.metrics) {
-          if (metric.name === name) {
-            return metric.label;
-          }
-        }
-      }
-      return name;
     }
   }
 };

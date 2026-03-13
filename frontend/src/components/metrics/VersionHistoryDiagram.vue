@@ -32,12 +32,11 @@
 
 <script>
 import projectData from '../../assets/cache/data.json';
-import * as uitext from '../../uitext.js';
 
 export default {
   name: 'VersionHistoryDiagram',
   props: {
-    selectedKPI: String
+    selectedMetric: Object
   },
   data() {
     return {
@@ -50,35 +49,18 @@ export default {
   },
   computed: {
     kpiUnit() {
-      // Find unit for selected KPI from uitext.js
-      for (const section of uitext.KPIS.kpis) {
-        for (const metric of section.metrics) {
-          if (metric.name === this.selectedKPI) {
-            return metric.unit || '';
-          }
-        }
-      }
-      return '';
+      return this.selectedMetric?.unit || '';
     },
     values() {
-      // Get values for selectedKPI from each version
-      return this.versionKeys.map(v => projectData.versions[v][this.selectedKPI]);
+      return this.versionKeys.map(v => projectData.versions[v][this.selectedMetric?.name]);
     },
     points() {
       // Map values to SVG coordinates
       const minY = 120, maxY = 30; // move diagram higher
       // Use global min/max for all KPIs (not just local values)
       let globalMin = null, globalMax = null;
-      for (const section of uitext.KPIS.kpis) {
-        for (const metric of section.metrics) {
-          if (metric.name === this.selectedKPI) {
-            globalMin = typeof metric.left === 'number' ? metric.left : Math.min(...this.values);
-            globalMax = typeof metric.right === 'number' ? metric.right : Math.max(...this.values);
-          }
-        }
-      }
-      if (globalMin === null) globalMin = Math.min(...this.values);
-      if (globalMax === null) globalMax = Math.max(...this.values);
+      globalMin = typeof this.selectedMetric?.left === 'number' ? this.selectedMetric.left : Math.min(...this.values);
+      globalMax = typeof this.selectedMetric?.right === 'number' ? this.selectedMetric.right : Math.max(...this.values);
       const rightMargin = 46;
       const xStep = (this.svgW - 40 - rightMargin) / (this.years.length - 1);
       return this.values.map((val, i) => {

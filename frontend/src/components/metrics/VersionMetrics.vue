@@ -1,16 +1,15 @@
 <template>
   <div class="version-metrics-title card version-metrics-container">
     <div class="card-title">
-      {{ kpiLabel }} History
+      {{ selectedMetric?.label }} History
     </div>
     <div style="margin-top: 1.5rem; width: 100%; flex: 1 1 0%; min-height: 0; display: flex; flex-direction: column;">
-      <VersionHistoryDiagram :selectedKPI="selectedKPI" />
+      <VersionHistoryDiagram :selectedMetric="selectedMetric" />
     </div>
   </div>
 </template>
 
 <script>
-import * as uitext from '../../uitext.js';
 import VersionHistoryDiagram from './VersionHistoryDiagram.vue';
 
 export default {
@@ -19,19 +18,7 @@ export default {
     VersionHistoryDiagram
   },
   props: {
-    selectedKPI: String
-  },
-  computed: {
-    kpiLabel() {
-      for (const section of uitext.KPIS.kpis) {
-        for (const metric of section.metrics) {
-          if (metric.name === this.selectedKPI) {
-            return metric.label;
-          }
-        }
-      }
-      return this.selectedKPI;
-    }
+    selectedMetric: Object
   }
 };
 </script>

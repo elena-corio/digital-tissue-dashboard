@@ -1,73 +1,45 @@
 <template>
   <div class="metrics-global-score-card card">
-    <div class="card-title">{{ getKpiLabel(selectedKPI) }}</div>
+    <div class="card-title">{{ selectedMetric?.label }}</div>
     <ul class="metrics-score-list">
       <li class="metrics-score-item">
         <span class="metrics-score-label">Global Value</span>
-        <span class="metrics-score-value">{{ getMetricValue(selectedKPI) }}</span>
+        <span class="metrics-score-value">{{ metricValue }}</span>
       </li>
       <li class="metrics-score-item">
         <span class="metrics-score-label">Benchmark</span>
-        <span class="metrics-score-value">{{ getBenchmark(selectedKPI) }}</span>
+        <span class="metrics-score-value">{{ benchmarkValue }}</span>
       </li>
     </ul>
   </div>
 </template>
 
 <script>
-import { KPIS } from '../../uitext.js';
-import { METRICS } from '../../benchmarks.js';
 import cacheData from '../../assets/cache/data.json';
 
 export default {
   name: 'GlobalScore',
   props: {
-    selectedKPI: {
-      type: String,
+    selectedMetric: {
+      type: Object,
       required: true
     }
   },
-  methods: {
-    getKpiLabel(name) {
-      for (const section of KPIS.kpis) {
-        for (const metric of section.metrics) {
-          if (metric.name === name) {
-            return metric.label;
-          }
-        }
-      }
-      return name;
-    },
-    getUnit(name) {
-      for (const section of KPIS.kpis) {
-        for (const metric of section.metrics) {
-          if (metric.name === name) {
-            return metric.unit || '';
-          }
-        }
-      }
-      return '';
-    },
-    getMetricValue(name) {
-      const value = cacheData.project[name];
-      const unit = this.getUnit(name);
+  computed: {
+    metricValue() {
+      if (!this.selectedMetric) return '-';
+      const value = cacheData.project[this.selectedMetric.name];
+      const unit = this.selectedMetric.unit || '';
       if (typeof value === 'number') return value.toFixed(2) + (unit ? ' ' + unit : '');
       if (value !== undefined && value !== null) return value + (unit ? ' ' + unit : '');
-      return '-' + (unit ? ' ' + unit : '');
+      return '-';
     },
-    getPrefix(name) {
-      const metric = METRICS[name];
-      if (!metric) return '';
-      if (metric.left > metric.right) return 'Upper';
-      else if (metric.left < metric.right) return 'Lower';
-      return '';
-    },
-    getBenchmark(name) {
-      const metric = METRICS[name];
-      const unit = this.getUnit(name);
-      if (!metric) return '-';
-      if (typeof metric.benchmark === 'number') return metric.benchmark.toFixed(2) + (unit ? ' ' + unit : '');
-      return metric.benchmark ?? '-' + (unit ? ' ' + unit : '');
+    benchmarkValue() {
+      if (!this.selectedMetric) return '-';
+      const bm = this.selectedMetric.benchmark;
+      const unit = this.selectedMetric.unit || '';
+      if (typeof bm === 'number') return bm.toFixed(2) + (unit ? ' ' + unit : '');
+      return bm ?? '-';
     }
   }
 };

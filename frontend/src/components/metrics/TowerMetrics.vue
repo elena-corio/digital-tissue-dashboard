@@ -1,7 +1,7 @@
 <template>
   <div class="tower-metrics-title card">
     <div class="card-title">
-      {{ getKpiLabel(selectedKPI) }} by Tower
+      {{ selectedMetric?.label }} by Tower
     </div>
     <div ref="containerRef" class="tower-metrics-container" style="display: flex; flex-direction: column; align-items: stretch; width: 100%; height: 100%; min-height: 0; max-height: 320px;">
       <svg
@@ -91,7 +91,7 @@
           font-weight="bold"
           fill="#303179"
         >
-          {{ typeof clusters[hoveredIdx][selectedKPI] === 'number' ? clusters[hoveredIdx][selectedKPI].toFixed(2) : '' }}<tspan v-if="kpiUnit()"> {{ kpiUnit() }}</tspan>
+          {{ typeof clusters[hoveredIdx][selectedMetric?.name] === 'number' ? clusters[hoveredIdx][selectedMetric?.name].toFixed(2) : '' }}<tspan v-if="kpiUnit()"> {{ kpiUnit() }}</tspan>
         </text>
       </svg>
     </div>
@@ -100,14 +100,12 @@
 
 <script>
 import projectData from '../../assets/cache/data.json'
-import { METRICS } from '../../benchmarks.js'
-import { KPIS } from '../../uitext.js'
 import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue';
 
 export default {
   name: 'TowerMetrics',
   props: {
-    selectedKPI: String
+    selectedMetric: Object
   },
   setup() {
     const containerWidth = ref(420);
@@ -150,19 +148,15 @@ export default {
       return Object.entries(projectData.clusters).map(([name, values]) => ({ name, ...values }))
     },
     minMetric() {
-      // Find min value for selected metric, including benchmark
-      if (!this.selectedKPI) return 0;
-      const metric = METRICS[this.selectedKPI];
-      const values = this.clusters.map(c => c[this.selectedKPI] ?? 0);
-      if (metric && typeof metric.benchmark !== 'undefined') values.push(metric.benchmark);
+      if (!this.selectedMetric) return 0;
+      const values = this.clusters.map(c => c[this.selectedMetric.name] ?? 0);
+      if (typeof this.selectedMetric.benchmark !== 'undefined') values.push(this.selectedMetric.benchmark);
       return Math.min(...values);
     },
     maxMetric() {
-      // Find max value for selected metric, including benchmark
-      if (!this.selectedKPI) return 1;
-      const metric = METRICS[this.selectedKPI];
-      const values = this.clusters.map(c => c[this.selectedKPI] ?? 1);
-      if (metric && typeof metric.benchmark !== 'undefined') values.push(metric.benchmark);
+      if (!this.selectedMetric) return 1;
+      const values = this.clusters.map(c => c[this.selectedMetric.name] ?? 1);
+      if (typeof this.selectedMetric.benchmark !== 'undefined') values.push(this.selectedMetric.benchmark);
       return Math.max(...values);
     },
     minArea() {
@@ -208,18 +202,14 @@ export default {
       return maxY - norm * (maxY - minY);
     },
     circleY(cluster) {
-      // Use shared normalization for vertical position, radius-aware
-      const val = cluster[this.selectedKPI];
+      const val = cluster[this.selectedMetric?.name];
       const r = this.circleR(cluster);
       return this.normalizedY(val, r);
     },
     benchmarkY() {
-      // Use radius of circle matching benchmark value, else average radius
-      const metric = METRICS[this.selectedKPI];
-      if (!metric) return 0; // fallback to 0 if metric is missing
-      const benchmark = metric.benchmark;
-      // Find radius of circle with value == benchmark
-      const match = this.clusters.find(c => Math.abs((c[this.selectedKPI] ?? 0) - benchmark) < 1e-6);
+      if (!this.selectedMetric) return 0;
+      const benchmark = this.selectedMetric.benchmark;
+      const match = this.clusters.find(c => Math.abs((c[this.selectedMetric.name] ?? 0) - benchmark) < 1e-6);
       let radius = 0;
       if (match) {
         radius = this.circleR(match);
@@ -227,12 +217,10 @@ export default {
         const radii = this.clusters.map(c => this.circleR(c));
         radius = radii.length ? radii.reduce((a, b) => a + b, 0) / radii.length : 0;
       }
-      // Always return a number
       return this.normalizedY(benchmark, radius) ?? 0;
     },
     safeBenchmarkValue() {
-      const metric = METRICS[this.selectedKPI];
-      return metric && typeof metric.benchmark !== 'undefined' ? metric.benchmark : '';
+      return this.selectedMetric && typeof this.selectedMetric.benchmark !== 'undefined' ? this.selectedMetric.benchmark : '';
     },
     circleX(idx) {
       // Use actual container width for responsive positioning
@@ -245,19 +233,13 @@ export default {
       return minX + idx * (maxX - minX) / (n - 1);
     },
     circleColor(cluster) {
-      const metric = METRICS[this.selectedKPI];
-      if (!metric) return `var(--lila-100)`;
-      const benchmark = metric.benchmark;
-      const value = cluster[this.selectedKPI];
-      // Determine if higher or lower is better
-      const higherIsBetter = metric.right > metric.left;
-      // Success color
+      if (!this.selectedMetric) return `var(--lila-100)`;
+      const benchmark = this.selectedMetric.benchmark;
+      const value = cluster[this.selectedMetric.name];
+      const higherIsBetter = this.selectedMetric.right > this.selectedMetric.left;
       const success = 'var(--color-success)';
-      // Error color
       const error = 'var(--color-error)';
       if (value === undefined) return error;
-      // For higher is better: above benchmark = success, below = error
-      // For lower is better: below benchmark = success, above = error
       if (higherIsBetter) {
         return value >= benchmark ? success : error;
       } else {
@@ -265,26 +247,10 @@ export default {
       }
     },
     kpiUnit() {
-      // Find unit for selected KPI from uitext.js
-      const kpiName = this.selectedKPI;
-      for (const section of KPIS.kpis) {
-        for (const metric of section.metrics) {
-          if (metric.name === kpiName) {
-            return metric.unit || '';
-          }
-        }
-      }
-      return '';
+      return this.selectedMetric?.unit || '';
     },
-    getKpiLabel(name) {
-      for (const section of KPIS.kpis) {
-        for (const metric of section.metrics) {
-          if (metric.name === name) {
-            return metric.label;
-          }
-        }
-      }
-      return name;
+    getKpiLabel() {
+      return this.selectedMetric?.label || '';
     }
   }
 };
