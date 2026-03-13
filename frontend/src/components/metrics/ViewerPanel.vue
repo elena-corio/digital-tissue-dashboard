@@ -20,8 +20,19 @@
       class="object-info-tag"
       :style="{ left: mouseX + 14 + 'px', top: mouseY + 14 + 'px' }"
     >
-      <span class="object-info-tag-label">{{ filterLabel }}</span>
-      <span class="object-info-tag-value">{{ selectedProperties[props.filterConfig.key.replace('properties.', '')] ?? '—' }} {{ props.filterConfig.unit }}</span>
+      <div class="object-info-row">
+        <span class="object-info-tag-label">Tower</span>
+        <span class="object-info-tag-value">{{ selectedProperties.cluster_id ?? '—' }}</span>
+      </div>
+      <div class="object-info-row">
+        <span class="object-info-tag-label">Level</span>
+        <span class="object-info-tag-value">{{ selectedProperties.level != null ? selectedProperties.level + ' m' : '—' }}</span>
+      </div>
+      <div class="object-info-divider"></div>
+      <div class="object-info-row">
+        <span class="object-info-tag-label">{{ filterLabel }}</span>
+        <span class="object-info-tag-value">{{ selectedProperties[props.filterConfig.key.replace('properties.', '')] ?? '—' }} {{ props.filterConfig.unit }}</span>
+      </div>
     </div>
   </div>
   </div>
@@ -123,25 +134,38 @@ defineExpose({ viewerRef });
   position: absolute;
   z-index: 20;
   display: flex;
-  align-items: center;
-  gap: 8px;
+  flex-direction: column;
+  gap: var(--space-xs);
   background: #ffffff;
-  border-radius: 999px;
-  padding: 6px 16px;
-  font-size: 14px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  border-radius: var(--radius-md);
+  padding: var(--space-xs) var(--space-sm);
+  box-shadow: var(--shadow-card);
   pointer-events: none;
   white-space: nowrap;
+  min-width: 140px;
 }
-
+.object-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-xs) 0;
+  font-size: var(--font-size-body);
+  gap: var(--space-sm);
+}
+.object-info-divider {
+  height: 1px;
+  background: var(--grey-100);
+  margin: 2px 0;
+}
 .object-info-tag-label {
-  color: var(--navy-50);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
+  color: var(--navy-100);
 }
 
 .object-info-tag-value {
-  color: var(--navy-100);
-  font-weight: 700;
+  font-size: var(--font-size-caption);
+  color: var(--navy-50);
+  font-weight: var(--font-weight-regular);
 }
 
 .button-bar-fixed {

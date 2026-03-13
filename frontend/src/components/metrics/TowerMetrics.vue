@@ -3,7 +3,9 @@
     <div class="card-title">
       {{ selectedMetric?.label }} by Tower
     </div>
-    <div ref="containerRef" class="tower-metrics-container" style="display: flex; flex-direction: column; align-items: stretch; width: 100%; height: 100%; min-height: 0; max-height: 320px;">
+    <div ref="containerRef" class="tower-metrics-container" style="display: flex; flex-direction: column; align-items: stretch; width: 100%; height: 100%; min-height: 0; max-height: 320px;"
+      @mousemove="onMouseMove"
+    >
       <svg
         ref="svgRef"
         class="tower-metrics-svg"
@@ -57,7 +59,7 @@
           text-anchor="middle"
           class="chart-tag"
         >
-          {{ 't' + String(idx + 1).padStart(2, '0') }}
+          {{ 'Tower ' + String(idx + 1).padStart(2, '0') }}
         </text>
       </svg>
       <!-- Benchmark line overlay -->
@@ -70,17 +72,15 @@
         :y="benchmarkY()"
         :style="{ position: 'absolute', left: 0, top: 0, width: '100%', height: '100%', pointerEvents: 'none' }"
       />
-      <!-- Show tower name and value only on hover, centered inside the hovered circle -->
-      <svg v-if="hoveredIdx !== null" class="tower-names-svg" :style="{ position: 'absolute', left: 0, top: 0, width: '100%', height: '100%', pointerEvents: 'none' }">
-        <text
-          :x="circleX(hoveredIdx)"
-          :y="circleY(clusters[hoveredIdx]) - 5"
-          text-anchor="middle"
-          class="hover-label"
-        >
-          {{ typeof clusters[hoveredIdx][selectedMetric?.name] === 'number' ? clusters[hoveredIdx][selectedMetric?.name].toFixed(2) : '' }}<tspan v-if="kpiUnit()"> {{ kpiUnit() }}</tspan>
-        </text>
-      </svg>
+      <!-- Hover tooltip card -->
+      <div
+        v-if="hoveredIdx !== null && selectedMetric"
+        ref="tooltipRef"
+        class="tower-tooltip"
+        :style="{ left: tooltipX + 'px', top: tooltipY + 'px' }"
+      >
+        <span class="tower-tooltip-value">{{ typeof clusters[hoveredIdx][selectedMetric.name] === 'number' ? clusters[hoveredIdx][selectedMetric.name].toFixed(2) : clusters[hoveredIdx][selectedMetric.name] }}</span>
+      </div>
     </div>
   </div>
 </template>
@@ -103,6 +103,9 @@ export default {
     const svgRef = ref(null);
     const margin = ref(0);
     const hoveredIdx = ref(null);
+    const tooltipX = ref(0);
+    const tooltipY = ref(0);
+    const tooltipRef = ref(null);
     function updateContainerWidth() {
       if (containerRef.value) {
         containerWidth.value = containerRef.value.clientWidth;
@@ -118,7 +121,7 @@ export default {
     onBeforeUnmount(() => {
       window.removeEventListener('resize', updateContainerWidth);
     });
-    return { containerWidth, containerRef, svgHeight, svgRef, margin, hoveredIdx };
+    return { containerWidth, containerRef, svgHeight, svgRef, margin, hoveredIdx, tooltipX, tooltipY, tooltipRef };
   },
   data() {
     return {
@@ -231,6 +234,15 @@ export default {
     },
     getKpiLabel() {
       return this.selectedMetric?.label || '';
+    },
+    onMouseMove(e) {
+      const rect = this.containerRef.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const tooltipW = this.tooltipRef?.offsetWidth || 60;
+      const tooltipH = this.tooltipRef?.offsetHeight || 36;
+      this.tooltipX = x + 12 + tooltipW > rect.width ? x - tooltipW - 12 : x + 12;
+      this.tooltipY = y + 12 + tooltipH > rect.height ? y - tooltipH - 12 : y + 12;
     }
   }
 };
@@ -259,11 +271,27 @@ export default {
 .breathe-circle {
   animation: breathe 2.5s infinite ease-in-out;
   transform-origin: center;
+  cursor: pointer;
 }
 .tower-metrics-container {
   position: relative;
   width: 100%;
   margin-top: 1.5rem;
+}
+.tower-tooltip {
+  position: absolute;
+  pointer-events: none;
+  background: var(--card-bg, #fff);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-xs) var(--space-sm);
+  width: fit-content;
+}
+.tower-tooltip-value {
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-bold);
+  color: var(--navy-100);
+  white-space: nowrap;
 }
 .axis-label {
   font-size: var(--font-size-value);
@@ -272,11 +300,6 @@ export default {
 .chart-tag {
   font-size: var(--font-size-caption);
   font-weight: var(--font-weight-regular);
-  fill: var(--navy-100);
-}
-.hover-label {
-  font-size: var(--font-size-body);
-  font-weight: var(--font-weight-bold);
   fill: var(--navy-100);
 }
 </style>
