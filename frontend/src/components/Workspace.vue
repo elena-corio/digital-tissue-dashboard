@@ -93,5 +93,5 @@ export default {
 }
 .workspace-content {
   flex: 1;
-  }
+}
 </style>

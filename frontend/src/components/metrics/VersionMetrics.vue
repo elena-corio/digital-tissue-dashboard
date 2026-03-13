@@ -1,0 +1,54 @@
+<template>
+  <div class="version-metrics-title card version-metrics-container">
+    <div class="card-title">
+      {{ kpiLabel }} History
+    </div>
+    <div style="margin-top: 1.5rem; width: 100%;">
+      <VersionHistoryDiagram :selectedKPI="selectedKPI" />
+    </div>
+  </div>
+</template>
+
+<script>
+import * as uitext from '../../uitext.js';
+import VersionHistoryDiagram from './VersionHistoryDiagram.vue';
+
+export default {
+  name: 'VersionMetrics',
+  components: {
+    VersionHistoryDiagram
+  },
+  props: {
+    selectedKPI: String
+  },
+  computed: {
+    kpiLabel() {
+      for (const section of uitext.KPIS.kpis) {
+        for (const metric of section.metrics) {
+          if (metric.name === this.selectedKPI) {
+            return metric.label;
+          }
+        }
+      }
+      return this.selectedKPI;
+    }
+  }
+};
+</script>
+
+<style scoped>
+ .version-metrics-title {
+   color: var(--navy-50);
+   font-family: var(--font-family);
+   position: relative;
+ }
+ .version-metrics-container {
+   display: flex;
+   flex-direction: column;
+   align-items: stretch;
+   width: 100%;
+   min-height: 320px;
+   height: 100%;
+   box-sizing: border-box;
+ }
+</style>

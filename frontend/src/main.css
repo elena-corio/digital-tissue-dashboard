@@ -7,11 +7,9 @@ html, body {
   overflow: hidden;
 }
 
-#app {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+#app, .app {
+  height: 100%;
+  min-height: 0;
 }
 
 .flex-col {
@@ -39,4 +37,22 @@ html, body {
 
 .overflow-auto {
   overflow: auto;
+}
+
+html, body {
+  margin: 0;           /* Remove browser default margins */
+  padding: 0;          /* Remove browser default padding */
+  width: 100%;         /* Fill full viewport width */
+  height: 100%;        /* Fill full viewport height */
+  overflow: hidden;    /* Hide scrollbars and clip overflow */
+}
+
+/* Add robust flex sizing for app containers */
+.metrics-main,
+.metrics-right.metrics-col,
+.metrics-right-stack,
+.metrics-detail-wrapper,
+.metrics-detail-right {
+  height: 100%;
+  min-height: 0;
 }

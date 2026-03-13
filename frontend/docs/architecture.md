@@ -21,8 +21,7 @@ This document describes the architecture of the digital.tissue dashboard fronten
 - TissueCanvas
 - OrganSelector
 - VitalityCard
-- CircularGraph
-- GrowthCycles
+- GrowthPhases
 - IssueFound
 - TeamList
 - DashboardView

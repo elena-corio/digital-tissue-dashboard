@@ -22,12 +22,12 @@
           <div class="dashboard-vitality-wrapper">
             <VitalityCard />
           </div>
-          <div class="dashboard-team-growth-wrapper">
-            <div class="dashboard-team-growth-left">
+          <div class="dashboard-detail-wrapper">
+            <div class="dashboard-detail-left">
               <TeamList />
             </div>
-            <div class="dashboard-team-growth-right">
-              <GrowthCycles />
+            <div class="dashboard-detail-right">
+              <GrowthPhases />
               <IssueFound />
             </div>
           </div>
@@ -42,9 +42,9 @@ import Workspace from '../components/Workspace.vue';
 import TissueCanvas from '../components/dashboard/TissueCanvas.vue'
 import OrganSelector from '../components/dashboard/OrganSelector.vue'
 import VitalityCard from '../components/dashboard/VitalityCard.vue'
-import GrowthCycles from '../components/dashboard/GrowthCycles.vue'
+import GrowthPhases from '../components/dashboard/GrowthPhases.vue'
 import IssueFound from '../components/dashboard/LastUpdate.vue'
-import TeamList from '../components/TeamList.vue'
+import TeamList from '../components/dashboard/TeamList.vue'
 import * as uiText from '../uitext.js';
 
 export default {
@@ -54,7 +54,7 @@ export default {
     TissueCanvas,
     OrganSelector,
     VitalityCard,
-    GrowthCycles,
+    GrowthPhases,
     IssueFound,
     TeamList
   },
@@ -111,7 +111,7 @@ export default {
   flex-direction: column;
   min-height: 0;
 }
-.dashboard-team-growth-wrapper {
+.dashboard-detail-wrapper {
   display: flex;
   flex: 1 1 0%;
   gap: var(--space-md);
@@ -119,13 +119,13 @@ export default {
   overflow: hidden;
    margin-bottom: var(--space-lg);
 }
-.dashboard-team-growth-left {
+.dashboard-detail-left {
   flex: 1 1 0%;
   display: flex;
   flex-direction: column;
   min-height: 0;
 }
-.dashboard-team-growth-right {
+.dashboard-detail-right {
   flex: 1 1 0%;
   display: flex;
   flex-direction: column;

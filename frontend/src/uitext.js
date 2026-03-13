@@ -10,54 +10,52 @@ export const TABS = {
     subtitle: 'Key insights and metrics about your site',
     statusLabel: 'Body Balance',
     statusDescription: 'Floor Area Ratio',
-    statusIcon: '🧘' // balance
+    statusIcon: '🧘' 
   },
   project: {
     title: 'Project Overview',
     subtitle: 'Current status and recent updates of your project',
     statusLabel: 'Tissue Expansion',
     statusDescription: 'Gross Floor Area',
-    statusIcon: '🧬' // expansion
+    statusIcon: '🧬' 
   },
   metrics: {
     title: 'Metrics Dashboard',
     subtitle: 'Detailed performance indicators and KPIs',
     statusLabel: 'Metabolic Health',
     statusDescription: 'KPIs on Target',
-    statusIcon: '🦠' // stability
+    statusIcon: '🦠'
   }
 };
-// All UI text for digital.tissue dashboard
-// Export as named constants or objects
-export const NODE_CARD = {
-  title: 'KPI Overview',
+export const KPIS = {
+  sectionTitle: 'KPIs Overview',
   kpis: [
     {
       name: 'Liveability',
       metrics: [
-        { label: 'Green Space Index', value: '+5%', type: 'success' },
-        { label: 'Daylight Factor', value: '+6%', type: 'error' }
+        { name: 'greenSpaceDistance', label: 'Green Space Distance', filter: 'green_space_distance', value: 'health', unit: 'm' , 'action': 'Decrease distance from green spaces.'},
+        { name: 'daylightPotential', label: 'Daylight Potential', filter: 'daylight_potential', value: 'risk', unit: '' , 'action': 'Increase windows area.'}
       ]
     },
     {
       name: 'Interconnection',
       metrics: [
-        { label: 'Program Diversity', value: '-2%', type: 'success' },
-        { label: 'Circulation Efficiency', value: '+4%', type: 'error' }
+        { name: 'programDiversity', label: 'Program Diversity', filter: 'program', value: 'health', unit: '', 'action': 'Increase diversity of programs.' },
+        { name: 'circulationEfficiency', label: 'Circulation Efficiency', filter: 'circulation_efficiency', value: 'risk', unit: '', 'action': 'Decrease circulation area.' }
       ]
     },
     {
       name: 'Adaptability',
       metrics: [
-        { label: 'Net Floor Area Ratio', value: '+8%', type: 'success' },
-        { label: 'Usable Area Ratio', value: '+3%', type: 'error' }
+        { name: 'netFloorAreaRatio', label: 'Net Floor Area Ratio', filter: 'net_floor_area_ratio', value: 'health', unit: '' , 'action': 'Optimize net-floor-area ratio.'},
+        { name: 'usableAreaRatio', label: 'Usable Area Ratio', filter: 'usable_area_ratio', value: 'risk', unit: '', 'action': 'Increase usable area.' }
       ]
     },
         {
       name: 'Sustainability',
       metrics: [
-        { label: 'Carbon Efficiency', value: '+10%', type: 'success' },
-        { label: 'Volume to Surface Ratio', value: '+2%', type: 'error' }
+        { name: 'carbonIntensity', label: 'Carbon Intensity', filter: 'carbon_intensity', value: 'health', unit: 'kgCO2/m2' , 'action': 'Reduce carbon intensity.'},
+        { name: 'volumeToSurface', label: 'Volume to Surface', filter: 'volume_to_envelope', value: 'risk', unit: 'm3/m2' , 'action': 'Optimize volume to surface ratio.'}
       ]
     }
   ]
@@ -86,7 +84,7 @@ export const VITALITY = {
   sectionTitle: 'Organ Vitality',
   cards: {
     body: { title: 'Body Balance', value: 0.85, goal:1, description: "Floor Area Ratio" },
-    tissue: { title: 'Tissue Expansion', value: 0.6, goal:1, description: "Target Floor Area" },
+    tissue: { title: 'Tissue Expansion', value: 0.6, goal:1, description: "Gross Floor Area" },
     metabolism: { title: 'Metabolic Health', value: 7, goal:8, description: "KPIs on Target"},
     
   },
@@ -126,10 +124,4 @@ export const UPDATES = {
   lastUpdate: '3/1/2026 7:26:54 PM',
   issueFound: 'The last update was more than 24 hours ago. Publish your latest design iteration to keep the tissue healthy.',
   allGood: 'The latest update was published recently. Keep up the good work to maintain tissue vitality!',
-};
-
-export const PULSE = {
-  label: 'Pulse',
-  value: 78,
-  status: 'Stable',
 };
