@@ -1,6 +1,6 @@
 <template>
   <div class="viewer-panel-root">
-  <div class="viewer-container aspect" @mousemove="onMouseMove">
+  <div class="viewer-container aspect card" @mousemove="onMouseMove">
     <SpeckleViewer 
       ref="viewerRef"
       :model-urls="modelLinks"
@@ -126,7 +126,6 @@ defineExpose({ viewerRef });
   display: flex;
   align-items: stretch;
   justify-content: stretch;
-  box-shadow: var(--shadow-card);
   border-radius: var(--radius-md);
 }
 
