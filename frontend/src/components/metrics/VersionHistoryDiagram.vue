@@ -43,8 +43,9 @@
 
 <script>
 import projectData from '../../assets/cache/data.json';
-import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue';
+import { ref } from 'vue';
 import BenchmarkLine from './BenchmarkLine.vue';
+import { useChartSize } from '../../utils/useChartSize.js';
 
 export default {
   name: 'VersionHistoryDiagram',
@@ -53,20 +54,10 @@ export default {
     selectedMetric: Object
   },
   setup() {
-    const containerRef = ref(null);
-    const svgW = ref(400);
-    const svgH = ref(240);
+    const { containerRef, chartWidth: svgW, chartHeight: svgH } = useChartSize(400, 240);
     const tooltipX = ref(0);
     const tooltipY = ref(0);
     const tooltipRef = ref(null);
-    function updateSize() {
-      if (containerRef.value) {
-        svgW.value = containerRef.value.clientWidth;
-        svgH.value = containerRef.value.clientHeight || 240;
-      }
-    }
-    onMounted(() => { nextTick(updateSize); window.addEventListener('resize', updateSize); });
-    onBeforeUnmount(() => { window.removeEventListener('resize', updateSize); });
     return { containerRef, svgW, svgH, tooltipX, tooltipY, tooltipRef };
   },
   data() {

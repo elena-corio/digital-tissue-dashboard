@@ -1,12 +1,10 @@
 <template>
   <div class="tower-metrics-title card">
-    <div class="card-title">
-      {{ selectedMetric?.label }} by Tower
-    </div>
-    <div ref="containerRef" class="tower-metrics-container" style="display: flex; flex-direction: column; align-items: stretch; width: 100%; flex: 1 1 0%; min-height: 0;"
+    <div class="card-title">{{ selectedMetric?.label }} by Tower</div>
+    <div ref="containerRef" class="tower-metrics-container"
       @mousemove="onMouseMove"
     >
-      <svg
+    <svg
         ref="svgRef"
         class="tower-metrics-svg"
         :viewBox="`0 0 ${containerWidth} ${svgHeight}`"
@@ -87,8 +85,9 @@
 
 <script>
 import projectData from '../../assets/cache/data.json'
-import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue';
+import { ref } from 'vue';
 import BenchmarkLine from './BenchmarkLine.vue';
+import { useChartSize } from '../../utils/useChartSize.js';
 
 export default {
   name: 'TowerMetrics',
@@ -97,28 +96,13 @@ export default {
     selectedMetric: Object
   },
   setup() {
-    const containerWidth = ref(420);
-    const containerRef = ref(null);
-    const svgHeight = ref(240);
+    const { containerRef, chartWidth: containerWidth, chartHeight: svgHeight } = useChartSize(420, 240);
     const svgRef = ref(null);
     const margin = ref(0);
     const hoveredIdx = ref(null);
     const tooltipX = ref(0);
     const tooltipY = ref(0);
     const tooltipRef = ref(null);
-    function updateContainerWidth() {
-      if (containerRef.value) {
-        containerWidth.value = containerRef.value.clientWidth;
-        svgHeight.value = containerRef.value.clientHeight || 240;
-      }
-    }
-    onMounted(() => {
-      nextTick(updateContainerWidth);
-      window.addEventListener('resize', updateContainerWidth);
-    });
-    onBeforeUnmount(() => {
-      window.removeEventListener('resize', updateContainerWidth);
-    });
     return { containerWidth, containerRef, svgHeight, svgRef, margin, hoveredIdx, tooltipX, tooltipY, tooltipRef };
   },
   data() {
@@ -253,15 +237,15 @@ export default {
 
 <style scoped>
 .tower-metrics-title {
-  color: var(--navy-50);
-  font-family: var(--font-family);
-  position: relative;
   display: flex;
   flex-direction: column;
   flex: 1 1 0%;
   min-height: 0;
   box-sizing: border-box;
   gap: 0;
+}
+.tower-metrics-title .card-title {
+  margin-bottom: 0;
 }
 .tower-metrics-svg {
   width: 100%;
@@ -287,6 +271,11 @@ export default {
 .tower-metrics-container {
   position: relative;
   width: 100%;
+  flex: 1 1 0%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 }
 .tower-tooltip {
   position: absolute;

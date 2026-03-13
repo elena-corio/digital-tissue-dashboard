@@ -27,6 +27,9 @@ export default {
    font-family: var(--font-family);
    position: relative;
  }
+ .version-metrics-title .card-title {
+   margin-bottom: 0;
+ }
  .version-metrics-container {
    display: flex;
    flex-direction: column;
