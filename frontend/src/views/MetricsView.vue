@@ -97,6 +97,8 @@ components: {
             const benchmark = METRICS[metric.name];
             return {
               key: `properties.${metric.filter}`,
+              label: metric.label,
+              unit: metric.unit,
               left: benchmark?.left,
               right: benchmark?.right,
               benchmark: benchmark?.benchmark

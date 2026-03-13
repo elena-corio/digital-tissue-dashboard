@@ -16,7 +16,8 @@ import {
   UrlHelper, 
   CameraController, 
   SelectionExtension,
-  FilteringExtension
+  FilteringExtension,
+  ViewerEvent
 } from '@speckle/viewer';
 
 const props = defineProps({
@@ -28,7 +29,7 @@ const props = defineProps({
   filterConfig: { type: Object, default: null }  // { key, left, right } for color mapping
 });
 
-const emit = defineEmits(['viewer-ready', 'model-loaded', 'error']);
+const emit = defineEmits(['viewer-ready', 'model-loaded', 'error', 'object-clicked']);
 
 const viewerContainer = ref(null);  // Reference to the DOM element
 const loading = ref(true);          // Loading state
@@ -63,6 +64,16 @@ const initViewer = async () => {
 
     filtering = viewer.createExtension(FilteringExtension);
     filtering.enabled = true;
+
+    // Listen for object clicks
+    viewer.on(ViewerEvent.ObjectClicked, (selectionData) => {
+      if (selectionData && selectionData.hits?.length > 0) {
+        const raw = selectionData.hits[0].node.model.raw;
+        emit('object-clicked', raw?.properties ?? null);
+      } else {
+        emit('object-clicked', null);
+      }
+    });
 
     emit('viewer-ready', viewer); // Tell parent viewer is ready
 
