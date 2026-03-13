@@ -19,7 +19,11 @@
             <!-- Viewer Card -->
             <div class="metrics-explorer-card card">
               <div class="card-title"><span v-if="selectedKPI">3D Viewer </span></div>
-              <div class="speckle-viewer-card viewer-container aspect">Speckle Viewer: {{ selectedKPI || 'None' }}</div>
+              <ViewerPanel
+                v-model:modelIds="inputModelId"
+                :projectId="projectId"
+                :authToken="speckleToken"
+              />
             </div>
             <div class="metrics-toggles-center">
               <TowerSelector />
@@ -55,6 +59,8 @@ import TowerMetrics from '../components/metrics/TowerMetrics.vue';
 import VersionMetrics from '../components/metrics/VersionMetrics.vue';
 import ActionRequired from '../components/metrics/ActionRequired.vue';
 import GlobalScore from '../components/metrics/GlobalScore.vue';
+import ViewerPanel from '../components/metrics/ViewerPanel.vue';
+import { speckleModels, speckleToken } from '../config/speckleModel.js';
 import * as uiText from '../uitext.js';
 
 export default {
@@ -67,6 +73,7 @@ components: {
   VersionMetrics,
   ActionRequired,
   GlobalScore,
+  ViewerPanel,
 },
   data() {
     // Default to first KPI metric
@@ -74,6 +81,9 @@ components: {
     return {
       uiText,
       selectedKPI: firstKPI,
+      projectId: speckleModels.metrics.projectId,
+      inputModelId: [speckleModels.metrics.modelId],
+      speckleToken,
       globalScore: 8.0 // Placeholder, update with actual calculation if needed
     };
   },
@@ -150,7 +160,6 @@ components: {
   flex: 1 1 0%;
   min-height: 0;
 }
-
 .metrics-global-score-card {
   width: 100%;
   display: flex;
