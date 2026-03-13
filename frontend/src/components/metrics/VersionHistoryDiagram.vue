@@ -44,14 +44,6 @@ export default {
       svgW: 400,
       svgH: 200,
       years: ['v-3', 'v-2', 'v-1', 'latest'],
-      versionKeys: ['version01', 'version02', 'version03', 'version04']
-    };
-  },
-  data() {
-    return {
-      svgW: 400,
-      svgH: 200,
-      years: ['v-3', 'v-2', 'v-1', 'latest'],
       versionKeys: ['version01', 'version02', 'version03', 'version04'],
       hoveredIdx: null
     };
