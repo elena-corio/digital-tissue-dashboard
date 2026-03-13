@@ -1,5 +1,5 @@
 <template>
-  <svg :width="width" :height="height" style="width: 100%; height: 40px;">
+  <svg :width="width" :height="height" style="display: block; width: 100%; height: 100%;">
     <line
       :x1="0"
       :x2="width"

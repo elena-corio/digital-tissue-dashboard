@@ -10,7 +10,7 @@
         :viewBox="`0 0 ${containerWidth} ${svgHeight}`"
         :width="containerWidth"
         :height="svgHeight"
-        style="display: block; margin-top: 1.5rem;"
+        style="display: block;"
       >
         <circle
           v-for="(cluster, idx) in clusters"
@@ -33,30 +33,7 @@
           r="6"
           fill="#fff"
         />
-        <!-- Benchmark label inside the diagram, just above the line -->
-        <text
-          v-if="benchmarkY() !== null"
-          :x="benchmarkLineEndX - 4"
-          :y="benchmarkY() - 8"
-          text-anchor="end"
-          font-size="11"
-          font-weight="normal"
-          fill="#303179"
-        >
-           benchmark = {{ typeof safeBenchmarkValue() === 'number' ? safeBenchmarkValue().toFixed(2) : safeBenchmarkValue() }}<tspan v-if="kpiUnit()">&nbsp;{{ kpiUnit() }}</tspan>
-        </text>
-        <!-- Benchmark line (robust, always visible) -->
-        <line
-          v-if="benchmarkY() !== null"
-          :x1="benchmarkLineStartX"
-          :x2="benchmarkLineEndX"
-          :y1="benchmarkY()"
-          :y2="benchmarkY()"
-          stroke="var(--navy-100)"
-          stroke-width="2"
-          stroke-dasharray="6,4"
-          opacity="1"
-        />
+
         <!-- Small center circle for each cluster -->
         <circle
           v-for="(cluster, idx) in clusters"
@@ -81,6 +58,16 @@
           {{ 't' + String(idx + 1).padStart(2, '0') }}
         </text>
       </svg>
+      <!-- Benchmark line overlay -->
+      <BenchmarkLine
+        v-if="selectedMetric"
+        :benchmarkValue="safeBenchmarkValue()"
+        :unit="kpiUnit()"
+        :width="containerWidth"
+        :height="svgHeight"
+        :y="benchmarkY()"
+        :style="{ position: 'absolute', left: 0, top: 0, width: '100%', height: '100%', pointerEvents: 'none' }"
+      />
       <!-- Show tower name and value only on hover, centered inside the hovered circle -->
       <svg v-if="hoveredIdx !== null" class="tower-names-svg" :style="{ position: 'absolute', left: 0, top: 0, width: '100%', height: '100%', pointerEvents: 'none' }">
         <text
@@ -101,9 +88,11 @@
 <script>
 import projectData from '../../assets/cache/data.json'
 import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue';
+import BenchmarkLine from './BenchmarkLine.vue';
 
 export default {
   name: 'TowerMetrics',
+  components: { BenchmarkLine },
   props: {
     selectedMetric: Object
   },
@@ -165,16 +154,6 @@ export default {
     maxArea() {
       return Math.max(...this.clusters.map(c => c.grossFloorArea ?? 1));
     },
-    benchmarkLineStartX() {
-      // Start at left margin of container (smaller margin for longer line)
-      const margin = Math.max(this.margin, this.containerWidth * 0.05);
-      return margin;
-    },
-    benchmarkLineEndX() {
-      // End at right margin of container (smaller margin for longer line)
-      const margin = Math.max(this.margin, this.containerWidth * 0.05);
-      return this.containerWidth - margin;
-    }
   },
   methods: {
     circleR(cluster) {
@@ -283,5 +262,6 @@ export default {
 .tower-metrics-container {
   position: relative;
   width: 100%;
+  margin-top: 1.5rem;
 }
 </style>
