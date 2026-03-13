@@ -26,7 +26,7 @@
       </div>
       <div class="object-info-row">
         <span class="object-info-tag-label">Level</span>
-        <span class="object-info-tag-value">{{ selectedProperties.level != null ? selectedProperties.level + ' m' : '—' }}</span>
+        <span class="object-info-tag-value">{{ selectedProperties.level != null ? Number(selectedProperties.level).toFixed(2) + ' m' : '—' }}</span>
       </div>
       <div class="object-info-divider"></div>
       <div class="object-info-row">

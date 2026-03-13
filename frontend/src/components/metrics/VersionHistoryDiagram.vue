@@ -1,5 +1,5 @@
 <template>
-  <div ref="containerRef" style="position: relative; width: 100%; height: 100%;">
+  <div ref="containerRef" style="position: relative; width: 100%; height: 100%;" @mousemove="onMouseMove">
     <svg :width="svgW" :height="svgH" :viewBox="`0 0 ${svgW} ${svgH}`" class="version-history-svg">
       <!-- Area fill -->
       <polygon :points="areaPoints" fill="#b3bad8" opacity="0.5" />
@@ -19,27 +19,36 @@
       <text v-if="selectedMetric" x="4" :y="svgH - 28" text-anchor="start" font-size="11" class="axis-label" style="fill: var(--navy-50);"
       >{{ typeof selectedMetric.left === 'number' ? selectedMetric.left.toFixed(2) : selectedMetric.left }}<tspan v-if="kpiUnit">&nbsp;{{ kpiUnit }}</tspan></text>
     </svg>
-    <!-- Hover label in separate SVG, matching TowerMetrics.vue style -->
-    <svg v-if="hoveredIdx !== null" :width="svgW" :height="svgH" :viewBox="`0 0 ${svgW} ${svgH}`" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none;">
-      <text
-        :x="points[hoveredIdx].x"
-        :y="points[hoveredIdx].y - 20"
-        text-anchor="middle"
-        font-size="15"
-        class="hover-label"
-      >
-        {{ points[hoveredIdx].label }}<tspan v-if="kpiUnit"> {{ kpiUnit }}</tspan>
-      </text>
-    </svg>
+    <!-- Hover tooltip -->
+    <div
+      v-if="hoveredIdx !== null"
+      ref="tooltipRef"
+      class="history-tooltip"
+      :style="{ left: tooltipX + 'px', top: tooltipY + 'px' }"
+    >
+      <span class="history-tooltip-value">{{ points[hoveredIdx].label }}</span>
+    </div>
+    <!-- Benchmark line overlay -->
+    <BenchmarkLine
+      v-if="selectedMetric && typeof selectedMetric.benchmark !== 'undefined'"
+      :benchmarkValue="selectedMetric.benchmark"
+      :unit="kpiUnit"
+      :width="svgW"
+      :height="svgH"
+      :y="benchmarkY"
+      :style="{ position: 'absolute', left: 0, top: 0, width: '100%', height: '100%', pointerEvents: 'none' }"
+    />
   </div>
 </template>
 
 <script>
 import projectData from '../../assets/cache/data.json';
 import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue';
+import BenchmarkLine from './BenchmarkLine.vue';
 
 export default {
   name: 'VersionHistoryDiagram',
+  components: { BenchmarkLine },
   props: {
     selectedMetric: Object
   },
@@ -47,6 +56,9 @@ export default {
     const containerRef = ref(null);
     const svgW = ref(400);
     const svgH = ref(240);
+    const tooltipX = ref(0);
+    const tooltipY = ref(0);
+    const tooltipRef = ref(null);
     function updateSize() {
       if (containerRef.value) {
         svgW.value = containerRef.value.clientWidth;
@@ -55,7 +67,7 @@ export default {
     }
     onMounted(() => { nextTick(updateSize); window.addEventListener('resize', updateSize); });
     onBeforeUnmount(() => { window.removeEventListener('resize', updateSize); });
-    return { containerRef, svgW, svgH };
+    return { containerRef, svgW, svgH, tooltipX, tooltipY, tooltipRef };
   },
   data() {
     return {
@@ -112,6 +124,39 @@ export default {
         ...pts,
         `${this.points[this.points.length - 1].x},${this.svgH - 24}`
       ].join(' ');
+    },
+    benchmarkY() {
+      if (!this.selectedMetric || typeof this.selectedMetric.benchmark === 'undefined') return 0;
+      const benchmark = this.selectedMetric.benchmark;
+      const marginTop = 4;
+      const marginBottom = 24;
+      const yBottom = this.svgH - marginBottom;
+      const yTop = marginTop;
+
+      const leftBound = this.selectedMetric.left ?? 0;
+      const rightBound = this.selectedMetric.right ?? 1;
+      const inverted = leftBound > rightBound;
+
+      const dataVals = [...this.values, benchmark, leftBound, rightBound];
+      const rangeMin = Math.min(...dataVals);
+      const rangeMax = Math.max(...dataVals);
+
+      if (rangeMax === rangeMin) return (yBottom + yTop) / 2;
+      const norm = inverted
+        ? (rangeMax - benchmark) / (rangeMax - rangeMin)
+        : (benchmark - rangeMin) / (rangeMax - rangeMin);
+      return yBottom - norm * (yBottom - yTop);
+    }
+  },
+  methods: {
+    onMouseMove(e) {
+      const rect = this.containerRef.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const tooltipW = this.tooltipRef?.offsetWidth || 60;
+      const tooltipH = this.tooltipRef?.offsetHeight || 36;
+      this.tooltipX = x + 12 + tooltipW > rect.width ? x - tooltipW - 12 : x + 12;
+      this.tooltipY = y + 12 + tooltipH > rect.height ? y - tooltipH - 12 : y + 12;
     }
   }
 };
@@ -128,9 +173,20 @@ export default {
   font-weight: var(--font-weight-regular);
   fill: var(--navy-100);
 }
-.hover-label {
+.history-tooltip {
+  position: absolute;
+  pointer-events: none;
+  background: var(--card-bg, #fff);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-xs) var(--space-sm);
+  width: fit-content;
+}
+.history-tooltip-value {
+  font-size: var(--font-size-body);
   font-weight: var(--font-weight-bold);
-  fill: var(--navy-100);
+  color: var(--navy-100);
+  white-space: nowrap;
 }
 .axis-label {
   font-weight: var(--font-weight-regular);
