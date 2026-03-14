@@ -44,27 +44,31 @@
 </template>
 
 <script setup>
-import projectData from '../../assets/cache/data.json'
 import { defineEmits } from 'vue'
 const emit = defineEmits(['selectKPI'])
+
+// Accept speckleData as a prop
+const props = defineProps({ selectedKPI: String, speckleData: Object })
 
 function selectKPI(name) {
   emit('selectKPI', name)
 }
-
-
-// Props for selected KPI
-const props = defineProps({ selectedKPI: String })
 
 function isSelected(name) {
   return props.selectedKPI === name
 }
 
 // Returns style for the loaded bar from left to normalized actual value
+function toSnakeCase(str) {
+  return str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`)
+}
+
 function getLoadedBarStyle(metricName) {
   const metric = METRICS[metricName]
-  const value = projectData.project[metricName]
-  if (!metric || value === undefined) return {}
+  const snakeKey = toSnakeCase(metricName)
+  let value = props.speckleData?.data?.properties?.[snakeKey]
+  if (typeof value === 'string') value = Number(value)
+  if (!metric || value === undefined || isNaN(value)) return {}
   const normActual = normalize(value, metric.left, metric.right)
   const normBenchmark = metric.benchmark !== undefined ? normalize(metric.benchmark, metric.left, metric.right) : 0.5
   // Clamp between 0 and 1

@@ -77,14 +77,21 @@
         class="tower-tooltip"
         :style="{ left: tooltipX + 'px', top: tooltipY + 'px' }"
       >
-        <span class="tower-tooltip-value">{{ typeof clusters[hoveredIdx][selectedMetric.name] === 'number' ? clusters[hoveredIdx][selectedMetric.name].toFixed(2) : clusters[hoveredIdx][selectedMetric.name] }}</span>
+        <span class="tower-tooltip-value">
+          {{ (() => {
+            const metricName = selectedMetric?.name;
+            const snakeKey = metricName ? metricName.replace(/[A-Z]/g, l => `_${l.toLowerCase()}`) : '';
+            const value = clusters[hoveredIdx]?.properties?.[snakeKey];
+            return typeof value === 'number' ? value.toFixed(2) : value;
+          })() }}
+        </span>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import projectData from '../../assets/cache/data.json'
+// import projectData from '../../assets/cache/data.json'
 import { ref } from 'vue';
 import BenchmarkLine from './BenchmarkLine.vue';
 import { useChartSize } from '../../utils/useChartSize.js';
@@ -93,7 +100,8 @@ export default {
   name: 'TowerMetrics',
   components: { BenchmarkLine },
   props: {
-    selectedMetric: Object
+    selectedMetric: Object,
+    speckleData: Object
   },
   setup() {
     const { containerRef, chartWidth: containerWidth, chartHeight: svgHeight } = useChartSize(420, 240);
@@ -118,56 +126,55 @@ export default {
   },
   computed: {
     clusters() {
-      // Convert clusters object to array with name
-      return Object.entries(projectData.clusters).map(([name, values]) => ({ name, ...values }))
+      // Use real Speckle data: data.data.elements (array of clusters)
+      if (this.speckleData && this.speckleData.data && Array.isArray(this.speckleData.data.elements)) {
+        return this.speckleData.data.elements;
+      }
+      return [];
     },
     minArea() {
-      return Math.min(...this.clusters.map(c => c.grossFloorArea ?? 0));
+      return Math.min(...this.clusters.map(c => c.properties?.gross_floor_area ?? 0));
     },
     maxArea() {
-      return Math.max(...this.clusters.map(c => c.grossFloorArea ?? 1));
+      return Math.max(...this.clusters.map(c => c.properties?.gross_floor_area ?? 1));
     },
   },
   methods: {
     circleR(cluster) {
-      // Area proportional to grossFloorArea: radius = k * sqrt(grossFloorArea)
       const minA = this.minArea;
       const maxA = this.maxArea;
       if (maxA === minA) return 52;
       const minSqrt = Math.sqrt(minA);
       const maxSqrt = Math.sqrt(maxA);
-      const sqrtA = Math.sqrt(cluster.grossFloorArea);
+      const sqrtA = Math.sqrt(cluster.properties?.gross_floor_area ?? 0);
       const normA = (sqrtA - minSqrt) / (maxSqrt - minSqrt);
-      // Map to radius range 40-60
       return 40 + normA * (60 - 40);
     },
     normalizedY(value, radius = 0) {
       const leftBound = this.selectedMetric?.left ?? 0;
       const rightBound = this.selectedMetric?.right ?? 1;
-      // direction: left = bad (bottom), right = good (top)
       const inverted = leftBound > rightBound;
-
-      // Extend range to include all data values + benchmark so nothing goes off-screen
-      const dataVals = this.clusters.map(c => c[this.selectedMetric?.name] ?? 0);
+      const metricName = this.selectedMetric?.name;
+      const snakeKey = metricName ? metricName.replace(/[A-Z]/g, l => `_${l.toLowerCase()}`) : '';
+      const dataVals = this.clusters.map(c => c.properties?.[snakeKey] ?? 0);
       if (typeof this.selectedMetric?.benchmark !== 'undefined') dataVals.push(this.selectedMetric.benchmark);
       dataVals.push(leftBound, rightBound);
       const rangeMin = Math.min(...dataVals);
       const rangeMax = Math.max(...dataVals);
-
       const marginTop = 4;
       const marginBottom = 24;
       const minY = radius + marginTop;
       const maxY = this.svgHeight - radius - marginBottom;
       if (rangeMax === rangeMin) return (minY + maxY) / 2;
-
-      // norm 0 = bad (bottom), norm 1 = good (top)
       const norm = inverted
         ? (rangeMax - value) / (rangeMax - rangeMin)
         : (value - rangeMin) / (rangeMax - rangeMin);
       return maxY - norm * (maxY - minY);
     },
     circleY(cluster) {
-      const val = cluster[this.selectedMetric?.name];
+      const metricName = this.selectedMetric?.name;
+      const snakeKey = metricName ? metricName.replace(/[A-Z]/g, l => `_${l.toLowerCase()}`) : '';
+      const val = cluster.properties?.[snakeKey];
       const r = this.circleR(cluster);
       return this.normalizedY(val, r);
     },
@@ -193,9 +200,7 @@ export default {
       return this.selectedMetric && typeof this.selectedMetric.benchmark !== 'undefined' ? this.selectedMetric.benchmark : '';
     },
     circleX(idx) {
-      // Use actual container width for responsive positioning
       const n = this.clusters.length;
-      // Further increase margin for left/right padding
       const margin = Math.max(this.margin, this.containerWidth * 0.16);
       const minX = margin;
       const maxX = this.containerWidth - margin;
@@ -205,7 +210,9 @@ export default {
     circleColor(cluster) {
       if (!this.selectedMetric) return `var(--lila-100)`;
       const benchmark = this.selectedMetric.benchmark;
-      const value = cluster[this.selectedMetric.name];
+      const metricName = this.selectedMetric.name;
+      const snakeKey = metricName ? metricName.replace(/[A-Z]/g, l => `_${l.toLowerCase()}`) : '';
+      const value = cluster.properties?.[snakeKey];
       const higherIsBetter = this.selectedMetric.right > this.selectedMetric.left;
       const success = 'var(--color-success)';
       const error = 'var(--color-error)';

@@ -40,7 +40,7 @@ export const KPIS = {
     {
       name: 'Interconnection',
       metrics: [
-        { name: 'programDiversity', label: 'Program Diversity', filter: 'program', value: 'health', unit: '', 'action': 'Increase diversity of programs.' },
+        { name: 'programDiversityIndex', label: 'Program Diversity Index', filter: 'program', value: 'health', unit: '', 'action': 'Increase diversity of programs.' },
         { name: 'circulationEfficiency', label: 'Circulation Efficiency', filter: 'circulation_efficiency', value: 'risk', unit: '', 'action': 'Decrease circulation area.' }
       ]
     },
@@ -55,7 +55,7 @@ export const KPIS = {
       name: 'Sustainability',
       metrics: [
         { name: 'carbonIntensity', label: 'Carbon Intensity', filter: 'carbon_intensity', value: 'health', unit: 'kgCO2/m2' , 'action': 'Reduce carbon intensity.'},
-        { name: 'volumeToSurface', label: 'Volume to Surface', filter: 'volume_to_envelope', value: 'risk', unit: 'm3/m2' , 'action': 'Optimize volume to surface ratio.'}
+        { name: 'volumeToEnvelope', label: 'Volume to Envelope', filter: 'volume_to_envelope', value: 'risk', unit: 'm3/m2' , 'action': 'Optimize volume to envelope ratio.'}
       ]
     }
   ]

@@ -6,15 +6,17 @@
     :statusLabel="uiText.TABS.metrics.statusLabel"
     :statusDescription="uiText.TABS.metrics.statusDescription"
   >
-    <div class="metrics-main">
+    <div v-if="loading" class="metrics-loading">Loading Speckle data...</div>
+    <div v-else-if="error" class="metrics-error">Error loading Speckle data: {{ error.message }}</div>
+    <div v-else class="metrics-main">
       <!-- Left Column -->
       <section class="metrics-left metrics-col">
         <div class="metrics-left-stack">
           <div class="speckle-tower-wrapper">
             <!-- Global Score + Action Required Row -->
             <div class="metrics-top-row">
-              <GlobalScore :selectedMetric="selectedMetric" />
-              <ActionRequired :selectedMetric="selectedMetric" />
+              <GlobalScore :selectedMetric="selectedMetric" :value="selectedMetricValue" />
+              <ActionRequired :selectedMetric="selectedMetric" :value="selectedMetricValue" />
             </div>
             <!-- Viewer Card -->
             <div class="metrics-explorer-card card">
@@ -33,14 +35,15 @@
       <section class="metrics-right metrics-col">
         <div class="metrics-right-stack">
           <div class="metrics-kpis-wrapper">
-            <KPIsOverview @selectKPI="onSelectKPI" :selectedKPI="selectedKPI" />
+            <KPIsOverview @selectKPI="onSelectKPI" :selectedKPI="selectedKPI" :speckleData="speckleData" />
           </div>
           <div class="metrics-detail-wrapper">
             <div class="metrics-detail-left">
-              <VersionMetrics :selectedMetric="selectedMetric" />
+              <TowerMetrics :selectedMetric="selectedMetric" :speckleData="speckleData" />
+              
             </div>
             <div class="metrics-detail-right">
-              <TowerMetrics :selectedMetric="selectedMetric" />
+              <VersionMetrics :selectedMetric="selectedMetric" :value="selectedMetricValue" />
             </div>
           </div>
         </div>
@@ -57,7 +60,10 @@ import VersionMetrics from '../components/metrics/VersionMetrics.vue';
 import ActionRequired from '../components/metrics/ActionRequired.vue';
 import GlobalScore from '../components/metrics/GlobalScore.vue';
 import ViewerPanel from '../components/metrics/ViewerPanel.vue';
-import { speckleModels, speckleToken } from '../config/speckleModel.js';
+
+// (no ref import needed)
+import { useSpeckleData } from '../composables/useSpeckleData';
+import { speckleModels, speckleToken } from '../config/speckleConfig.js';
 import * as uiText from '../uitext.js';
 import { METRICS } from '../benchmarks.js';
 
@@ -73,15 +79,18 @@ components: {
   ViewerPanel,
 },
   data() {
-    // Default to first KPI metric
-    const firstKPI = uiText.KPIS.kpis[0]?.metrics[0]?.name || null;
+    const { data: speckleData, loading, error, refresh } = useSpeckleData();
     return {
       uiText,
-      selectedKPI: firstKPI,
+      selectedKPI: uiText.KPIS.kpis[0]?.metrics[0]?.name || null,
       projectId: speckleModels.metrics.projectId,
       inputModelId: [speckleModels.metrics.modelId],
-      speckleToken,
-      globalScore: 8.0 // Placeholder, update with actual calculation if needed
+      speckleToken: speckleToken,
+      globalScore: 8.0, // Placeholder, update with actual calculation if needed
+      speckleData,
+      loading,
+      error,
+      refresh
     };
   },
   computed: {
@@ -95,6 +104,13 @@ components: {
         }
       }
       return null;
+    },
+    selectedMetricValue() {
+      // Extract the value for the selected metric from speckleData (root level)
+      if (!this.selectedMetric || !this.speckleData || !this.speckleData.data || !this.speckleData.data.properties) return undefined;
+      const metricName = this.selectedMetric.name;
+      const snakeKey = metricName ? metricName.replace(/[A-Z]/g, l => `_${l.toLowerCase()}`) : '';
+      return this.speckleData.data.properties[snakeKey];
     },
     selectedFilterConfig() {
       const m = this.selectedMetric;
