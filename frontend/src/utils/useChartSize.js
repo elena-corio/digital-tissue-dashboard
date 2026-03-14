@@ -17,7 +17,11 @@ export function useChartSize(defaultWidth = 400, defaultHeight = 240) {
     nextTick(() => {
       updateSize();
       resizeObserver = new ResizeObserver(updateSize);
-      resizeObserver.observe(containerRef.value);
+      if (containerRef.value instanceof Element) {
+        resizeObserver.observe(containerRef.value);
+      } else {
+        console.warn('useChartSize: containerRef is not a DOM Element, skipping observe.');
+      }
     });
   });
 

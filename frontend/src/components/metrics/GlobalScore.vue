@@ -15,21 +15,26 @@
 </template>
 
 <script>
-import cacheData from '../../assets/cache/data.json';
-
 export default {
   name: 'GlobalScore',
   props: {
     selectedMetric: {
       type: Object,
       required: true
+    },
+    speckleData: {
+      type: Object,
+      required: false
     }
   },
   computed: {
     metricValue() {
-      if (!this.selectedMetric) return '-';
-      const value = cacheData.project[this.selectedMetric.name];
+      if (!this.selectedMetric || !this.speckleData || !this.speckleData.data) return '-';
+      // Convert metric name to snake_case
+      const snakeKey = this.selectedMetric.name.replace(/[A-Z]/g, l => `_${l.toLowerCase()}`);
+      let value = this.speckleData.data.properties?.[snakeKey];
       const unit = this.selectedMetric.unit || '';
+      if (typeof value === 'string') value = Number(value);
       if (typeof value === 'number') return value.toFixed(2) + (unit ? ' ' + unit : '');
       if (value !== undefined && value !== null) return value + (unit ? ' ' + unit : '');
       return '-';

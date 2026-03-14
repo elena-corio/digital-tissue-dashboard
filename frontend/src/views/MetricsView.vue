@@ -15,7 +15,7 @@
           <div class="speckle-tower-wrapper">
             <!-- Global Score + Action Required Row -->
             <div class="metrics-top-row">
-              <GlobalScore :selectedMetric="selectedMetric" />
+              <GlobalScore :selectedMetric="selectedMetric" :speckleData="speckleData" />
               <ActionRequired :selectedMetric="selectedMetric" />
             </div>
             <!-- Viewer Card -->

@@ -7,7 +7,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, watch } from 'vue';
+import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue';
 import { normalize } from '../../utils/normalize.js';
 import { 
   Viewer, 
@@ -42,7 +42,12 @@ const initViewer = async () => {
     loading.value = true;
     error.value = null;
 
-    if (!viewerContainer.value) return; // Wait for DOM to be ready
+    await nextTick(); // Ensure DOM is ready
+    if (!viewerContainer.value) {
+      console.warn('SpeckleViewer: viewerContainer ref is not ready. Initialization skipped.');
+      loading.value = false;
+      return;
+    }
 
     // Configure viewer params
     const params = DefaultViewerParams;
@@ -84,13 +89,13 @@ const initViewer = async () => {
     }
 
     loading.value = false;
-    } catch (err) {
-      // Handle any errors
-      error.value = `Failed to initialize viewer: ${err.message}`;
-      loading.value = false;
-      emit('error', err);
-      console.error('Speckle Viewer Error:', err);
-    }
+  } catch (err) {
+    // Handle any errors
+    error.value = `Failed to initialize viewer: ${err.message}`;
+    loading.value = false;
+    emit('error', err);
+    console.error('Speckle Viewer Error:', err);
+  }
 };
 
 const loadModel = async (url) => {

@@ -1,6 +1,6 @@
 export const METRICS = {
     daylightPotential:{left: 0.00, right: 0.5, benchmark: 0.25},
-    greenSpaceDistance: {left: 300.00, right: 0.00, benchmark: 150.00},
+    greenSpaceDistance: {left: 200.00, right: 0.00, benchmark: 100.00},
     programDiversityIndex: {left: 0.00, right: 1.00, benchmark: 0.75},
     circulationEfficiency: {left: 0.00, right: 1.00, benchmark: 0.75},
     usableAreaRatio: {left: 0.00, right: 1.00, benchmark: 0.75},
