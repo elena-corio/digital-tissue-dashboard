@@ -1,13 +1,13 @@
 import { createClient, fetchExchange, cacheExchange } from '@urql/vue'
-import { speckleConfig } from '../config/speckleConfig'
+import { speckleEnv } from '../config/speckleConfig'
 
 export const speckleClient = createClient({
-  url: `${speckleConfig.serverUrl}/graphql`,
+  url: `${speckleEnv.serverUrl}/graphql`,
   exchanges: [cacheExchange, fetchExchange],
   fetchOptions: () => ({
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${speckleConfig.token}`,
+      'Authorization': `Bearer ${speckleEnv.token}`,
       'Apollo-Require-Preflight': 'true'
     }
   })

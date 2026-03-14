@@ -1,7 +1,7 @@
 import { ref, onMounted } from 'vue'
 import { useQuery } from '@urql/vue'
 import { GET_LATEST_VERSION, GET_ROOT_OBJECT } from '../queries/gqlQueries'
-import { speckleConfig, speckleModels } from '../config/speckleConfig'
+import {  speckleModels } from '../config/speckleConfig'
 import { speckleClient } from '../services/speckleClient'
 import type { SpeckleModelData, LatestVersionResponse, RootObjectResponse } from '../types/speckle'
 
@@ -52,10 +52,9 @@ export function useSpeckleData() {
     const data = result.data.project.object.data
     const parsed = typeof data === 'string' ? JSON.parse(data) : data
     
-    // Validate: new structure requires 'metrics'
+    // Validate: must have id and name
     if (!parsed.id || !parsed.name) throw new Error('Invalid data structure: missing id or name')
-    if (!parsed.metrics) throw new Error('New structure required: missing metrics field')
-    
+    // No metrics check: metrics are now under properties
     return parsed
   }
 
@@ -83,6 +82,8 @@ export function useSpeckleData() {
       return cache.value
     } catch (err) {
       error.value = err as Error
+      // Log error for debugging
+      console.error('useSpeckleData fetchData error:', err)
       return null
     } finally {
       loading.value = false
