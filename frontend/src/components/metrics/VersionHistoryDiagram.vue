@@ -1,13 +1,19 @@
 <template>
   <div ref="containerRef" style="position: relative; width: 100%; flex: 1 1 0%; min-height: 0; display: flex; flex-direction: column;" @mousemove="onMouseMove">
     <svg :width="svgW" :height="svgH" :viewBox="`0 0 ${svgW} ${svgH}`" class="version-history-svg">
+      <defs>
+        <linearGradient id="history-gradient" x1="0" y1="0" x2="0" :y2="svgH" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" :stop-color="successColor" />
+          <stop offset="100%" :stop-color="errorColor" />
+        </linearGradient>
+      </defs>
       <!-- Area fill -->
-      <polygon :points="areaPoints" fill="#b3bad8" opacity="0.5" />
+      <polygon :points="areaPoints" fill="url(#history-gradient)" opacity="0.3" />
       <!-- Line -->
-      <polyline :points="linePoints" fill="none" stroke="#3b479f" stroke-width="3" />
+      <polyline :points="linePoints" fill="none" stroke="var(--navy-100)" stroke-width="3" />
       <!-- Circles -->
       <g v-for="(pt, i) in points" :key="i">
-        <circle :cx="pt.x" :cy="pt.y" r="6" fill="#3b479f" @mouseenter="hoveredIdx = i" @mouseleave="hoveredIdx = null" />
+        <circle :cx="pt.x" :cy="pt.y" r="6" fill="var(--navy-100)" @mouseenter="hoveredIdx = i" @mouseleave="hoveredIdx = null" />
       </g>
       <!-- X axis labels -->
       <g v-for="(pt, i) in points" :key="'year-' + i">
@@ -42,7 +48,6 @@
 </template>
 
 <script>
-import projectData from '../../assets/cache/data.json';
 import { ref } from 'vue';
 import BenchmarkLine from './BenchmarkLine.vue';
 import { useChartSize } from '../../utils/useChartSize.js';
@@ -51,7 +56,8 @@ export default {
   name: 'VersionHistoryDiagram',
   components: { BenchmarkLine },
   props: {
-    selectedMetric: Object
+    selectedMetric: Object,
+    history: Array
   },
   setup() {
     const { containerRef, chartWidth: svgW, chartHeight: svgH } = useChartSize(400, 240);
@@ -71,8 +77,15 @@ export default {
     kpiUnit() {
       return this.selectedMetric?.unit || '';
     },
+    successColor() {
+      return getComputedStyle(document.documentElement).getPropertyValue('--color-success') || '#4caf50';
+    },
+    errorColor() {
+      return getComputedStyle(document.documentElement).getPropertyValue('--color-error') || '#f44336';
+    },
     values() {
-      return this.versionKeys.map(v => projectData.versions[v][this.selectedMetric?.name]);
+      // Use passed-in history if available, else fallback to empty array
+      return this.history && this.history.length ? this.history : [];
     },
     points() {
       const marginTop = 4;

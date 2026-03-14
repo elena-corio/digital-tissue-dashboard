@@ -39,10 +39,11 @@
           </div>
           <div class="metrics-detail-wrapper">
             <div class="metrics-detail-left">
-              <VersionMetrics :selectedMetric="selectedMetric" />
+              <TowerMetrics :selectedMetric="selectedMetric" :speckleData="speckleData" />
+              
             </div>
             <div class="metrics-detail-right">
-              <TowerMetrics :selectedMetric="selectedMetric" :speckleData="speckleData" />
+              <VersionMetrics :selectedMetric="selectedMetric" :value="selectedMetricValue" />
             </div>
           </div>
         </div>

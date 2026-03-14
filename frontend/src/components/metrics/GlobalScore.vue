@@ -26,6 +26,14 @@ export default {
   },
   computed: {
     metricValue() {
+      // Use the value prop if provided, else fallback to old logic
+      if (this.value !== undefined && this.value !== null && this.value !== '') {
+        const unit = this.selectedMetric?.unit || '';
+        let v = typeof this.value === 'string' ? Number(this.value) : this.value;
+        if (typeof v === 'number' && !isNaN(v)) return v.toFixed(2) + (unit ? ' ' + unit : '');
+        if (v !== undefined && v !== null) return v + (unit ? ' ' + unit : '');
+      }
+      // fallback to old logic for backward compatibility
       if (!this.selectedMetric || !this.speckleData || !this.speckleData.data) return '-';
       // Convert metric name to snake_case
       const snakeKey = this.selectedMetric.name.replace(/[A-Z]/g, l => `_${l.toLowerCase()}`);

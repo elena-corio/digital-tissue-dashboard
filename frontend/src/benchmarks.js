@@ -1,12 +1,12 @@
 export const METRICS = {
     daylightPotential:{left: 0.00, right: 0.5, benchmark: 0.25},
-    greenSpaceDistance: {left: 200.00, right: 0.00, benchmark: 100.00},
-    programDiversityIndex: {left: 0.00, right: 1.00, benchmark: 0.75},
-    circulationEfficiency: {left: 0.00, right: 1.00, benchmark: 0.75},
-    usableAreaRatio: {left: 0.00, right: 1.00, benchmark: 0.75},
-    netFloorAreaRatio: {left: 0.00, right: 1.00, benchmark: 0.75},
-    carbonIntensity: {left: 1000.00, right: 0.00, benchmark: 500.00},
-    volumeToEnvelope: {left: 0.00, right: 15.00, benchmark: 12.50},
+    greenSpaceDistance: {left: 100.00, right: 0.00, benchmark: 50.00},
+    programDiversityIndex: {left: 0.50, right: 1.00, benchmark: 0.75},
+    circulationEfficiency: {left: 0.50, right: 1.00, benchmark: 0.75},
+    usableAreaRatio: {left: 0.50, right: 1.00, benchmark: 0.75},
+    netFloorAreaRatio: {left: 0.50, right: 1.00, benchmark: 0.75},
+    carbonIntensity: {left: 500.00, right: 0.00, benchmark: 300.00},
+    volumeToEnvelope: {left: 10.00, right: 15.00, benchmark: 12.50},
 }
 
 export const VITALITY = {
