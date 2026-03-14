@@ -1,8 +1,8 @@
-
-
-export const speckleConfig = {
-  token: import.meta.env.VITE_SPECKLE_TOKEN || '',
-    serverUrl: import.meta.env.VITE_SPECKLE_SERVER_URL 
+export const speckleToken = import.meta.env.VITE_SPECKLE_TOKEN || '';
+export const speckleServerUrl = import.meta.env.VITE_SPECKLE_SERVER_URL || '';
+export const speckleEnv = {
+  token: speckleToken,
+  serverUrl: speckleServerUrl
 }
 export const speckleModels = {
     metrics: {
