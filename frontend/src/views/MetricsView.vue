@@ -15,8 +15,8 @@
           <div class="speckle-tower-wrapper">
             <!-- Global Score + Action Required Row -->
             <div class="metrics-top-row">
-              <GlobalScore :selectedMetric="selectedMetric" :speckleData="speckleData" />
-              <ActionRequired :selectedMetric="selectedMetric" />
+              <GlobalScore :selectedMetric="selectedMetric" :value="selectedMetricValue" />
+              <ActionRequired :selectedMetric="selectedMetric" :value="selectedMetricValue" />
             </div>
             <!-- Viewer Card -->
             <div class="metrics-explorer-card card">
@@ -103,6 +103,13 @@ components: {
         }
       }
       return null;
+    },
+    selectedMetricValue() {
+      // Extract the value for the selected metric from speckleData (root level)
+      if (!this.selectedMetric || !this.speckleData || !this.speckleData.data || !this.speckleData.data.properties) return undefined;
+      const metricName = this.selectedMetric.name;
+      const snakeKey = metricName ? metricName.replace(/[A-Z]/g, l => `_${l.toLowerCase()}`) : '';
+      return this.speckleData.data.properties[snakeKey];
     },
     selectedFilterConfig() {
       const m = this.selectedMetric;

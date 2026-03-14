@@ -11,21 +11,19 @@
 </template>
 
 <script>
-import cacheData from '../../assets/cache/data.json';
 export default {
   name: 'ActionRequired',
   props: {
-    selectedMetric: Object
+    selectedMetric: Object,
+    value: [Number, String]
   },
   computed: {
     statusClass() {
-      if (!this.selectedMetric) return '';
-      const value = cacheData.project[this.selectedMetric.name];
-      if (value === undefined) return '';
+      if (!this.selectedMetric || this.value === undefined) return '';
       if (this.selectedMetric.left < this.selectedMetric.right) {
-        return value >= this.selectedMetric.benchmark ? 'success' : 'warning';
+        return this.value >= this.selectedMetric.benchmark ? 'success' : 'warning';
       } else {
-        return value <= this.selectedMetric.benchmark ? 'success' : 'warning';
+        return this.value <= this.selectedMetric.benchmark ? 'success' : 'warning';
       }
     }
   }

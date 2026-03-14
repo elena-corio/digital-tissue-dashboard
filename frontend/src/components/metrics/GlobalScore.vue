@@ -22,10 +22,7 @@ export default {
       type: Object,
       required: true
     },
-    speckleData: {
-      type: Object,
-      required: false
-    }
+    value: [Number, String]
   },
   computed: {
     metricValue() {
@@ -45,6 +42,9 @@ export default {
       const unit = this.selectedMetric.unit || '';
       if (typeof bm === 'number') return bm.toFixed(2) + (unit ? ' ' + unit : '');
       return bm ?? '-';
+    },
+    displayValue() {
+      return this.value;
     }
   }
 };
