@@ -42,7 +42,7 @@
               <VersionMetrics :selectedMetric="selectedMetric" />
             </div>
             <div class="metrics-detail-right">
-              <TowerMetrics :selectedMetric="selectedMetric" />
+              <TowerMetrics :selectedMetric="selectedMetric" :speckleData="speckleData" />
             </div>
           </div>
         </div>
