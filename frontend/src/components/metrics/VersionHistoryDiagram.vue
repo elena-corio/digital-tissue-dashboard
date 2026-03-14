@@ -62,7 +62,7 @@ export default {
   },
   data() {
     return {
-      years: ['Version -3', 'VVersion -2', 'Version -1', 'Latest'],
+      years: ['Version -3', 'Version -2', 'Version -1', 'Latest'],
       versionKeys: ['version01', 'version02', 'version03', 'version04'],
       hoveredIdx: null
     };
