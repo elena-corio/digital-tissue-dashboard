@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecting...</title>
+    <script>
+      (function () {
+        // GitHub Pages SPA redirect for /digital-tissue base path.
+        var segmentCount = 1;
+        var location = window.location;
+        var origin = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '');
+        var pathSegments = location.pathname.split('/');
+        var basePath = pathSegments.slice(0, 1 + segmentCount).join('/');
+        var rest = pathSegments.slice(1 + segmentCount).join('/');
+        var search = location.search ? '&' + location.search.slice(1).replace(/&/g, '~and~') : '';
+        var redirectUrl = origin + basePath + '/?/' + rest + search + location.hash;
+        location.replace(redirectUrl);
+      })();
+    </script>
+  </head>
+  <body></body>
+</html>
