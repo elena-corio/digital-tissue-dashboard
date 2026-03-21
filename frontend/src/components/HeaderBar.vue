@@ -14,15 +14,20 @@
         <div class="user-name">{{ uitext.HEADER.userName }}</div>
         <div class="user-role">{{ uitext.HEADER.userRole }}</div>
       </div>
-      <div class="dropdown-menu">
-        <span class="dropdown-chevron">﹀</span>
-        <!-- Dropdown placeholder -->
+      <div class="dropdown-menu" @mouseleave="showDropdown = false">
+        <span class="dropdown-chevron" @click="toggleDropdown">﹀</span>
+        <div v-if="showDropdown" class="dropdown-list">
+          <button class="dropdown-item" @click="handleSignOut">Sign out</button>
+        </div>
       </div>
     </div>
   </header>
 </template>
 
 <script setup>
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useClerk } from '../composables/useClerk.js'
 import * as uitext from '../uitext.js'
 import NavTabs from './NavTabs.vue'
 
@@ -32,6 +37,20 @@ const navTabs = [
   { label: 'Project', route: '/workspace/project', name: 'Project' },
   { label: 'Metrics', route: '/workspace/metrics', name: 'Metrics' }
 ];
+
+const showDropdown = ref(false)
+const router = useRouter()
+const { signOut } = useClerk()
+
+function toggleDropdown() {
+  showDropdown.value = !showDropdown.value
+}
+
+async function handleSignOut() {
+  await signOut()
+  showDropdown.value = false
+  router.push({ path: '/sign-in' })
+}
 </script>
 
 <style scoped>
@@ -93,6 +112,7 @@ const navTabs = [
 }
 .dropdown-menu {
   position: relative;
+  user-select: none;
 }
 .dropdown-chevron {
   font-size: 1.1rem;
@@ -103,5 +123,30 @@ const navTabs = [
   cursor: pointer;
   display: flex;
   align-items: center;
+}
+.dropdown-list {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border: 1px solid var(--grey-100);
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  min-width: 120px;
+  z-index: 10;
+}
+.dropdown-item {
+  width: 100%;
+  padding: 10px 16px;
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: 1rem;
+  color: var(--navy-100);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.dropdown-item:hover {
+  background: var(--grey-50);
 }
 </style>
