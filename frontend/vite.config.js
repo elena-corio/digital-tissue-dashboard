@@ -12,7 +12,7 @@ export default defineConfig({
   optimizeDeps: {
     include: ['@clerk/clerk-js']
   },
-  base: '/',
+  base: '/digital-tissue-dashboard/',
   server: {
     port: 5173,
     open: true
