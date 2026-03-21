@@ -22,12 +22,13 @@ onMounted(async () => {
   await initClerk();
 
   if (clerk.value && signInContainer.value) {
-    const signUpUrl = '/sign-up'; // always use local path
-    const forceRedirectUrl = '/workspace'; // always use local path
-    unmount = clerk.value.mountSignIn(signInContainer.value, {
-      signUpUrl,
-      forceRedirectUrl
-    });
+  const baseUrl = import.meta.env.BASE_URL;
+  const signUpUrl = baseUrl + 'sign-up';
+  const forceRedirectUrl = baseUrl + 'workspace';
+  unmount = clerk.value.mountSignIn(signInContainer.value, {
+    signUpUrl,
+    forceRedirectUrl
+});
   }
 });
 
