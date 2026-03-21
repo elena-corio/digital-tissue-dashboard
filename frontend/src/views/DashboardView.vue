@@ -1,65 +1,51 @@
 <template>
-  <Workspace
-    :title="uiText.TABS.overview.title"
-    :subtitle="uiText.TABS.overview.subtitle"
-    :statusIcon="uiText.TABS.overview.statusIcon"
-    :statusLabel="uiText.TABS.overview.statusLabel"
-    :statusDescription="uiText.TABS.overview.statusDescription"
-  >
-    <div class="dashboard-main">
-      <!-- Left Column -->
-      <section class="dashboard-left dashboard-col">
-        <div class="dashboard-left-stack">
-          <div class="tissue-organ-wrapper">
-            <TissueCanvas />
-            <OrganSelector class="dashboard-organs" />
+  <div class="dashboard-main">
+    <!-- Left Column -->
+    <section class="dashboard-left dashboard-col">
+      <div class="dashboard-left-stack">
+        <div class="tissue-organ-wrapper">
+          <TissueCanvas />
+          <OrganSelector class="dashboard-organs" />
+        </div>
+      </div>
+    </section>
+    <!-- Right Column -->
+    <section class="dashboard-right dashboard-col">
+      <div class="dashboard-right-stack">
+        <div class="dashboard-vitality-wrapper">
+          <VitalityCard />
+        </div>
+        <div class="dashboard-detail-wrapper">
+          <div class="dashboard-detail-left">
+            <TeamList />
+          </div>
+          <div class="dashboard-detail-right">
+            <GrowthPhases />
+            <IssueFound />
           </div>
         </div>
-        </section>
-      <!-- Right Column -->
-      <section class="dashboard-right dashboard-col">
-        <div class="dashboard-right-stack">
-          <div class="dashboard-vitality-wrapper">
-            <VitalityCard />
-          </div>
-          <div class="dashboard-detail-wrapper">
-            <div class="dashboard-detail-left">
-              <TeamList />
-            </div>
-            <div class="dashboard-detail-right">
-              <GrowthPhases />
-              <IssueFound />
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
-  </Workspace>
+      </div>
+    </section>
+  </div>
 </template>
 
 <script>
-import Workspace from '../components/Workspace.vue';
 import TissueCanvas from '../components/dashboard/TissueCanvas.vue'
 import OrganSelector from '../components/dashboard/OrganSelector.vue'
 import VitalityCard from '../components/dashboard/VitalityCard.vue'
 import GrowthPhases from '../components/dashboard/GrowthPhases.vue'
 import IssueFound from '../components/dashboard/LastUpdate.vue'
 import TeamList from '../components/dashboard/TeamList.vue'
-import * as uiText from '../uitext.js';
 
 export default {
   name: 'DashboardView',
   components: {
-    Workspace,
     TissueCanvas,
     OrganSelector,
     VitalityCard,
     GrowthPhases,
     IssueFound,
     TeamList
-  },
-  data() {
-    return { uiText };
   }
 };
 </script>
