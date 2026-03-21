@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-import * as uiText from '@/uiText.js'
+import * as uiText from '@/uitext.js'
 import { useRouter } from 'vue-router'
 import { useClerk } from '@/composables/useClerk.js'
 
