@@ -55,6 +55,8 @@ import ViewerPanel from '../components/metrics/ViewerPanel.vue';
 import { useSpeckleData } from '../composables/useSpeckleData';
 import { speckleModels, speckleToken } from '../config/speckleConfig.js';
 import * as uiText from '../uitext.js';
+import { onMounted } from 'vue';
+import { useWorkspaceUI } from '../composables/useWorkspaceUI.js';
 import { METRICS } from '../benchmarks.js';
 
 export default {
@@ -119,6 +121,19 @@ export default {
       this.selectedKPI = name;
     }
   }
+    ,
+    setup() {
+      const { title, subtitle, statusIcon, statusLabel, statusDescription, statusValue } = useWorkspaceUI();
+      onMounted(() => {
+        title.value = uiText.TABS.metrics.title;
+        subtitle.value = uiText.TABS.metrics.subtitle;
+        statusIcon.value = uiText.TABS.metrics.statusIcon;
+        statusLabel.value = uiText.TABS.metrics.statusLabel;
+        statusDescription.value = uiText.TABS.metrics.statusDescription;
+        statusValue.value = 90; // Example value, replace with real data if available
+      });
+      return {};
+    }
 };
 </script>
 

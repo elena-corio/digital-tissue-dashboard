@@ -1,3 +1,4 @@
+
 <template>
   <div class="workspace-root">
     <div class="workspace-header">
@@ -5,11 +6,16 @@
     </div>
     <div class="workspace-title-row">
       <div class="workspace-title-block">
-        <h2 class="h2">Workspace</h2>
-        <div class="subtitle">Your main workspace area</div>
+        <h2 class="h2">{{ title }}</h2>
+        <div class="subtitle">{{ subtitle }}</div>
       </div>
       <div class="workspace-status-indicator">
-        <StatusIndicator />
+        <StatusIndicator
+          :icon="statusIcon"
+          :label="statusLabel"
+          :description="statusDescription"
+          :value="statusValue"
+        />
       </div>
     </div>
     <div class="workspace-content">
@@ -21,12 +27,31 @@
 <script>
 import HeaderBar from '../components/HeaderBar.vue';
 import StatusIndicator from '../components/StatusIndicator.vue';
+import { useWorkspaceUI } from '../composables/useWorkspaceUI.js';
 
 export default {
   name: 'Workspace',
   components: {
     HeaderBar,
     StatusIndicator
+  },
+  setup() {
+    const {
+      title,
+      subtitle,
+      statusIcon,
+      statusLabel,
+      statusDescription,
+      statusValue
+    } = useWorkspaceUI();
+    return {
+      title,
+      subtitle,
+      statusIcon,
+      statusLabel,
+      statusDescription,
+      statusValue
+    };
   }
 };
 </script>

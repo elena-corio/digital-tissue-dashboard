@@ -30,12 +30,15 @@
 </template>
 
 <script>
-import TissueCanvas from '../components/dashboard/TissueCanvas.vue'
-import OrganSelector from '../components/dashboard/OrganSelector.vue'
-import VitalityCard from '../components/dashboard/VitalityCard.vue'
-import GrowthPhases from '../components/dashboard/GrowthPhases.vue'
-import IssueFound from '../components/dashboard/LastUpdate.vue'
-import TeamList from '../components/dashboard/TeamList.vue'
+import { onMounted } from 'vue';
+import { useWorkspaceUI } from '../composables/useWorkspaceUI.js';
+import { TABS } from '../uitext.js';
+import TissueCanvas from '../components/dashboard/TissueCanvas.vue';
+import OrganSelector from '../components/dashboard/OrganSelector.vue';
+import VitalityCard from '../components/dashboard/VitalityCard.vue';
+import GrowthPhases from '../components/dashboard/GrowthPhases.vue';
+import IssueFound from '../components/dashboard/LastUpdate.vue';
+import TeamList from '../components/dashboard/TeamList.vue';
 
 export default {
   name: 'DashboardView',
@@ -46,6 +49,24 @@ export default {
     GrowthPhases,
     IssueFound,
     TeamList
+  },
+  setup() {
+    const {
+      title,
+      subtitle,
+      statusIcon,
+      statusLabel,
+      statusDescription,
+      statusValue
+    } = useWorkspaceUI();
+    onMounted(() => {
+      title.value = TABS.overview.title;
+      subtitle.value = TABS.overview.subtitle;
+      statusIcon.value = TABS.overview.statusIcon;
+      statusLabel.value = TABS.overview.statusLabel;
+      statusDescription.value = TABS.overview.statusDescription;
+      statusValue.value = 80; // Example value, replace with real data if available
+    });
   }
 };
 </script>
