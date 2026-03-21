@@ -6,7 +6,7 @@
         :key="tab.label"
         :to="tab.route"
         class="nav-tab"
-        :class="{ active: $route.name === tab.label }"
+        :class="{ active: $route.name === tab.name }"
       >
         {{ tab.label }}
       </router-link>

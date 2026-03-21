@@ -1,9 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Homepage from './views/Homepage.vue';
-import DashboardView from './views/DashboardView.vue';
-import SiteView from './views/SiteView.vue';
-import ProjectView from './views/ProjectView.vue';
-import MetricsView from './views/MetricsView.vue';
 
 import SignIn from './views/SignIn.vue';
 import SignUp from './views/SignUp.vue';
@@ -11,18 +7,35 @@ import Workspace from './views/Workspace.vue';
 import { useClerk } from './composables/useClerk';
 const routes = [
   { path: '/', name: 'Homepage', component: Homepage },
-  {
-    path: '/workspace',
-    component: Workspace,
-    meta: { requiresAuth: true },
-    children: [
-      { path: '', redirect: 'overview' },
-      { path: 'overview', name: 'Overview', component: DashboardView },
-      { path: 'site', name: 'Site', component: SiteView },
-      { path: 'project', name: 'Project', component: ProjectView },
-      { path: 'metrics', name: 'Metrics', component: MetricsView },
-    ]
-  },
+ {
+  path: '/workspace',
+  component: Workspace,
+  redirect: { name: 'Overview' },
+  meta: { requiresAuth: true },
+  children: [
+    {
+      path: 'overview',
+      name: 'Overview',
+      component: () => import('@/views/DashboardView.vue')
+    },
+    {
+      path: 'site',
+      name: 'Site',
+      component: () => import('@/views/SiteView.vue')
+    },
+    {
+      path: 'project',
+      name: 'Project',
+      component: () => import('@/views/ProjectView.vue')
+    },
+    {
+      path: 'metrics',
+      name: 'Metrics',
+      component: () => import('@/views/MetricsView.vue')
+    },
+
+  ]
+},
   {
     path: '/sign-in',
     name: 'sign-in',
@@ -60,6 +73,8 @@ router.beforeEach(async (to, from, next) => {
       next({ name: 'sign-in' })
       return
     }
+
+    console.log('Route:', to.path, 'isSignedIn:', isSignedIn.value);
 
     if (!isSignedIn.value) {
       next({ name: 'sign-in' })
