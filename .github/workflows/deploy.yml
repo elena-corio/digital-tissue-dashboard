@@ -40,6 +40,8 @@ jobs:
         env:
           VITE_CLERK_PUBLISHABLE_KEY: ${{ secrets.VITE_CLERK_PUBLISHABLE_KEY }}
           VITE_SKIP_AUTH: "false"
+          VITE_SPECKLE_SERVER_URL: ${{ secrets.VITE_SPECKLE_SERVER_URL }}
+          VITE_SPECKLE_TOKEN: ${{ secrets.VITE_SPECKLE_TOKEN }}
       
       - name: Setup Pages
         uses: actions/configure-pages@v4
