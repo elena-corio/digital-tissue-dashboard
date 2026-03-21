@@ -1,5 +1,6 @@
+
 <template>
- <div class="workspace-root">
+  <div class="workspace-root">
     <div class="workspace-header">
       <HeaderBar />
     </div>
@@ -18,16 +19,15 @@
       </div>
     </div>
     <div class="workspace-content">
-      <slot />
+      <router-view />
     </div>
   </div>
 </template>
 
 <script>
-import HeaderBar from './HeaderBar.vue';
-import StatusIndicator from './StatusIndicator.vue';
-
-import * as uitext from '../uitext.js';
+import HeaderBar from '../components/HeaderBar.vue';
+import StatusIndicator from '../components/StatusIndicator.vue';
+import { useWorkspaceUI } from '../composables/useWorkspaceUI.js';
 
 export default {
   name: 'Workspace',
@@ -35,31 +35,23 @@ export default {
     HeaderBar,
     StatusIndicator
   },
-  props: {
-    title: {
-      type: String,
-      required: true
-    },
-    subtitle: {
-      type: String,
-      default: ''
-    },
-    statusIcon: {
-      type: String,
-      default: ''
-    },
-    statusLabel: {
-      type: String,
-      default: ''
-    },
-    statusDescription: {
-      type: String,
-      default: ''
-    },
-    statusValue: {
-      type: Number,
-      default: 80
-    }
+  setup() {
+    const {
+      title,
+      subtitle,
+      statusIcon,
+      statusLabel,
+      statusDescription,
+      statusValue
+    } = useWorkspaceUI();
+    return {
+      title,
+      subtitle,
+      statusIcon,
+      statusLabel,
+      statusDescription,
+      statusValue
+    };
   }
 };
 </script>
@@ -88,8 +80,8 @@ export default {
   margin-left: auto;
   margin-right: auto;
   width: 100%;
-    padding-left: var(--space-lg);
-    padding-right: var(--space-lg);
+  padding-left: var(--space-lg);
+  padding-right: var(--space-lg);
 }
 .workspace-content {
   flex: 1;

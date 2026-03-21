@@ -1,24 +1,31 @@
 <template>
-  <Workspace
-    :title="uiText.TABS.project.title"
-    :subtitle="uiText.TABS.project.subtitle"
-    :statusIcon="uiText.TABS.project.statusIcon"
-    :statusLabel="uiText.TABS.project.statusLabel"
-    :statusDescription="uiText.TABS.project.statusDescription"
-  >
-    <div class="project-placeholder">Project content placeholder</div>
-  </Workspace>
+  <div class="project-placeholder">Project content placeholder</div>
 </template>
 
 <script>
-import Workspace from '../components/Workspace.vue';
-import * as uiText from '../uitext.js';
+import { onMounted } from 'vue';
+import { useWorkspaceUI } from '../composables/useWorkspaceUI.js';
+import { TABS } from '../uitext.js';
 
 export default {
   name: 'ProjectView',
-  components: { Workspace },
-  data() {
-    return { uiText };
+  setup() {
+    const {
+      title,
+      subtitle,
+      statusIcon,
+      statusLabel,
+      statusDescription,
+      statusValue
+    } = useWorkspaceUI();
+    onMounted(() => {
+      title.value = TABS.project.title;
+      subtitle.value = TABS.project.subtitle;
+      statusIcon.value = TABS.project.statusIcon;
+      statusLabel.value = TABS.project.statusLabel;
+      statusDescription.value = TABS.project.statusDescription;
+      statusValue.value = 60; // Example value, replace with real data if available
+    });
   }
 };
 </script>

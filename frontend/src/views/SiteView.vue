@@ -1,24 +1,31 @@
 <template>
-  <Workspace
-    :title="uiText.TABS.site.title"
-    :subtitle="uiText.TABS.site.subtitle"
-    :statusIcon="uiText.TABS.site.statusIcon"
-    :statusLabel="uiText.TABS.site.statusLabel"
-    :statusDescription="uiText.TABS.site.statusDescription"
-  >
-    <div class="site-placeholder">Site content placeholder</div>
-  </Workspace>
+  <div class="site-placeholder">Site content placeholder</div>
 </template>
 
 <script>
-import Workspace from '../components/Workspace.vue';
-import * as uiText from '../uitext.js';
+import { onMounted } from 'vue';
+import { useWorkspaceUI } from '../composables/useWorkspaceUI.js';
+import { TABS } from '../uitext.js';
 
 export default {
   name: 'SiteView',
-  components: { Workspace },
-  data() {
-    return { uiText };
+  setup() {
+    const {
+      title,
+      subtitle,
+      statusIcon,
+      statusLabel,
+      statusDescription,
+      statusValue
+    } = useWorkspaceUI();
+    onMounted(() => {
+      title.value = TABS.site.title;
+      subtitle.value = TABS.site.subtitle;
+      statusIcon.value = TABS.site.statusIcon;
+      statusLabel.value = TABS.site.statusLabel;
+      statusDescription.value = TABS.site.statusDescription;
+      statusValue.value = 70; // Example value, replace with real data if available
+    });
   }
 };
 </script>

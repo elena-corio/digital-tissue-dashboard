@@ -1,59 +1,49 @@
 <template>
-  <Workspace
-    :title="uiText.TABS.metrics.title"
-    :subtitle="uiText.TABS.metrics.subtitle"
-    :statusIcon="uiText.TABS.metrics.statusIcon"
-    :statusLabel="uiText.TABS.metrics.statusLabel"
-    :statusDescription="uiText.TABS.metrics.statusDescription"
-  >
-    <div v-if="loading" class="metrics-loading">Loading Speckle data...</div>
-    <div v-else-if="error" class="metrics-error">Error loading Speckle data: {{ error.message }}</div>
-    <div v-else class="metrics-main">
-      <!-- Left Column -->
-      <section class="metrics-left metrics-col">
-        <div class="metrics-left-stack">
-          <div class="speckle-tower-wrapper">
-            <!-- Global Score + Action Required Row -->
-            <div class="metrics-top-row">
-              <GlobalScore :selectedMetric="selectedMetric" :value="selectedMetricValue" />
-              <ActionRequired :selectedMetric="selectedMetric" :value="selectedMetricValue" />
-            </div>
-            <!-- Viewer Card -->
-            <div class="metrics-explorer-card card">
-              <div class="card-title"><span v-if="selectedKPI">3D Viewer </span></div>
-              <ViewerPanel
-                v-model:modelIds="inputModelId"
-                :projectId="projectId"
-                :authToken="speckleToken"
-                :filterConfig="selectedFilterConfig"
-              />
-            </div>
+  <div v-if="loading" class="metrics-loading">Loading Speckle data...</div>
+  <div v-else-if="error" class="metrics-error">Error loading Speckle data: {{ error.message }}</div>
+  <div v-else class="metrics-main">
+    <!-- Left Column -->
+    <section class="metrics-left metrics-col">
+      <div class="metrics-left-stack">
+        <div class="speckle-tower-wrapper">
+          <!-- Global Score + Action Required Row -->
+          <div class="metrics-top-row">
+            <GlobalScore :selectedMetric="selectedMetric" :value="selectedMetricValue" />
+            <ActionRequired :selectedMetric="selectedMetric" :value="selectedMetricValue" />
+          </div>
+          <!-- Viewer Card -->
+          <div class="metrics-explorer-card card">
+            <div class="card-title"><span v-if="selectedKPI">3D Viewer </span></div>
+            <ViewerPanel
+              v-model:modelIds="inputModelId"
+              :projectId="projectId"
+              :authToken="speckleToken"
+              :filterConfig="selectedFilterConfig"
+            />
           </div>
         </div>
-      </section>
-      <!-- Right Column -->
-      <section class="metrics-right metrics-col">
-        <div class="metrics-right-stack">
-          <div class="metrics-kpis-wrapper">
-            <KPIsOverview @selectKPI="onSelectKPI" :selectedKPI="selectedKPI" :speckleData="speckleData" />
+      </div>
+    </section>
+    <!-- Right Column -->
+    <section class="metrics-right metrics-col">
+      <div class="metrics-right-stack">
+        <div class="metrics-kpis-wrapper">
+          <KPIsOverview @selectKPI="onSelectKPI" :selectedKPI="selectedKPI" :speckleData="speckleData" />
+        </div>
+        <div class="metrics-detail-wrapper">
+          <div class="metrics-detail-left">
+            <TowerMetrics :selectedMetric="selectedMetric" :speckleData="speckleData" />
           </div>
-          <div class="metrics-detail-wrapper">
-            <div class="metrics-detail-left">
-              <TowerMetrics :selectedMetric="selectedMetric" :speckleData="speckleData" />
-              
-            </div>
-            <div class="metrics-detail-right">
-              <VersionMetrics :selectedMetric="selectedMetric" :value="selectedMetricValue" />
-            </div>
+          <div class="metrics-detail-right">
+            <VersionMetrics :selectedMetric="selectedMetric" :value="selectedMetricValue" />
           </div>
         </div>
-      </section>
-    </div>
-  </Workspace>
+      </div>
+    </section>
+  </div>
 </template>
 
 <script>
-import Workspace from '../components/Workspace.vue';
 import KPIsOverview from '../components/metrics/KPIsOverview.vue';
 import TowerMetrics from '../components/metrics/TowerMetrics.vue';
 import VersionMetrics from '../components/metrics/VersionMetrics.vue';
@@ -65,19 +55,20 @@ import ViewerPanel from '../components/metrics/ViewerPanel.vue';
 import { useSpeckleData } from '../composables/useSpeckleData';
 import { speckleModels, speckleToken } from '../config/speckleConfig.js';
 import * as uiText from '../uitext.js';
+import { onMounted } from 'vue';
+import { useWorkspaceUI } from '../composables/useWorkspaceUI.js';
 import { METRICS } from '../benchmarks.js';
 
 export default {
   name: 'MetricsView',
-components: {
-  Workspace,
-  KPIsOverview,
-  TowerMetrics,
-  VersionMetrics,
-  ActionRequired,
-  GlobalScore,
-  ViewerPanel,
-},
+  components: {
+    KPIsOverview,
+    TowerMetrics,
+    VersionMetrics,
+    ActionRequired,
+    GlobalScore,
+    ViewerPanel,
+  },
   data() {
     const { data: speckleData, loading, error, refresh } = useSpeckleData();
     return {
@@ -130,6 +121,19 @@ components: {
       this.selectedKPI = name;
     }
   }
+    ,
+    setup() {
+      const { title, subtitle, statusIcon, statusLabel, statusDescription, statusValue } = useWorkspaceUI();
+      onMounted(() => {
+        title.value = uiText.TABS.metrics.title;
+        subtitle.value = uiText.TABS.metrics.subtitle;
+        statusIcon.value = uiText.TABS.metrics.statusIcon;
+        statusLabel.value = uiText.TABS.metrics.statusLabel;
+        statusDescription.value = uiText.TABS.metrics.statusDescription;
+        statusValue.value = 90; // Example value, replace with real data if available
+      });
+      return {};
+    }
 };
 </script>
 

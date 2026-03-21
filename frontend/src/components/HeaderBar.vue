@@ -27,10 +27,10 @@ import * as uitext from '../uitext.js'
 import NavTabs from './NavTabs.vue'
 
 const navTabs = [
-  { label: 'Overview', route: '/' },
-  { label: 'Site', route: '/site' },
-  { label: 'Project', route: '/project' },
-  { label: 'Metrics', route: '/metrics' }
+  { label: 'Overview', route: '/workspace/overview', name: 'Overview' },
+  { label: 'Site', route: '/workspace/site', name: 'Site' },
+  { label: 'Project', route: '/workspace/project', name: 'Project' },
+  { label: 'Metrics', route: '/workspace/metrics', name: 'Metrics' }
 ];
 </script>
 
