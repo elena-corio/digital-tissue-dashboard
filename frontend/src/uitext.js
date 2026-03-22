@@ -1,5 +1,5 @@
 export const HOMEPAGE = {
-  title: 'A living map of your project\'s cells.',
+  title: 'A living map of<br>your project\'s cells',
   description: 'Built for clarity and insights.',
   getStarted: 'Enter the tissue',
 };
