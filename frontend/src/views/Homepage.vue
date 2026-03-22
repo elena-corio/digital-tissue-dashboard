@@ -40,7 +40,7 @@ function handleGetStarted() {
 .page-container.homepage-center {
   position: relative;
   width: 100vw;
-  height: 750px;
+  height: 700px;
   min-height: 400px;
   overflow: hidden;
 }
