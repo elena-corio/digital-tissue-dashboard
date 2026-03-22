@@ -2,11 +2,19 @@ export const HOMEPAGE = {
   title: 'A living map of<br>your project\'s cells',
   description: 'Built for clarity and insights.',
   getStarted: 'Enter the tissue',
+  credits: {
+    allRightsReserved: '© 2026 Digital Tissue. All rights reserved.',
+    organisation: 'Institute for Advanced Architecture of Catalonia',
+    seminar: 'MaCAD 25/26 - BISMC Studio',
+    developers: [
+      'Elena Corio','Symon Kipkemei'],
+    faculty: [
+      'Pablo Antuña Molina', 'Cristóbal Ignácio Burgos Sanhueza', 'Hari Krishnan',
+    ],
+    learnMore: 'Blog Post'
+  }
 };
 
-export const ROLES = [
-  'Team Member', 'Reviewer','Visitor'
-];
 export const TABS = {
   overview:
 {  title: 'Welcome to Digital Tissue',

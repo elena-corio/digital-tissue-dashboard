@@ -14,12 +14,19 @@
       </button>
     </div>
   </div>
+  <div class="homepage-scroll-content">
+    <div style="height: 1200px; display: flex; align-items: center; justify-content: center; color: #888; font-size: 2rem;">
+      Placeholder content for scroll testing
+    </div>
+    <CreditsSection />
+  </div>
 </template>
 
 <script setup>
 
 import Header from '@/components/Header.vue'
 import CircleGridBackground from '@/components/CircleGridBackground.vue'
+import CreditsSection from '@/components/CreditsSection.vue'
 import * as uiText from '@/uitext.js'
 import { useRouter } from 'vue-router'
 import { useClerk } from '@/composables/useClerk.js'
@@ -43,6 +50,15 @@ function handleGetStarted() {
   height: 700px;
   min-height: 400px;
   overflow: hidden;
+}
+.homepage-scroll-content {
+  width: 100vw;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0;
 }
 .homepage-content-centered {
   position: absolute;
