@@ -2,10 +2,10 @@
   <div class="auth-container">
     <div class="auth-card">
       <div class="auth-header">
-        <h1>Welcome Back</h1>
-        <p>Sign in to access your workspace</p>
+        <h1 class="h1">Welcome Back</h1>
+        <p class="h4">Sign in to access your workspace</p>
       </div>
-      <div ref="signInContainer"></div>
+      <div ref="signInContainer" class="body"></div>
     </div>
   </div>
 </template>
@@ -22,13 +22,18 @@ onMounted(async () => {
   await initClerk();
 
   if (clerk.value && signInContainer.value) {
-  const baseUrl = import.meta.env.BASE_URL;
-  const signUpUrl = baseUrl + 'sign-up';
-  const forceRedirectUrl = baseUrl + 'workspace';
-  unmount = clerk.value.mountSignIn(signInContainer.value, {
-    signUpUrl,
-    forceRedirectUrl
-});
+    const baseUrl = import.meta.env.BASE_URL;
+    const signUpUrl = baseUrl + 'sign-up';
+    const forceRedirectUrl = baseUrl + 'workspace';
+    unmount = clerk.value.mountSignIn(signInContainer.value, {
+      signUpUrl,
+      forceRedirectUrl,
+      appearance: {
+        variables: {
+          colorText: '#303179' // matches var(--navy-100)
+        }
+      }
+    });
   }
 });
 
@@ -56,22 +61,22 @@ onUnmounted(() => {
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-lg);
   padding: var(--space-xl);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .auth-header {
   text-align: center;
   margin-bottom: var(--space-xl);
+  width: 100%;
 }
-
-.auth-header h1 {
-  font-size: var(--font-size-h1);
-  font-weight: var(--font-weight-bold);
-  color: var(--navy-blue-100);
-  margin-bottom: var(--space-sm);
-}
-
-.auth-header p {
-  font-size: var(--font-size-body);
-  color: var(--navy-blue-50);
+/* Center Clerk widget inside card */
+.body {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 </style>

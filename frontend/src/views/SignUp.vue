@@ -2,10 +2,10 @@
   <div class="auth-container">
     <div class="auth-card">
       <div class="auth-header">
-        <h1>Create Account</h1>
-        <p>Sign up to get started with Digital Tissue</p>
+        <h1 class="h1">Create Account</h1>
+        <p class="h4">Sign up to digital tissue</p>
       </div>
-      <div ref="signUpContainer"></div>
+      <div ref="signUpContainer" class="body"></div>
     </div>
   </div>
 </template>
@@ -27,8 +27,13 @@ onMounted(async () => {
     const forceRedirectUrl = baseUrl + 'workspace';
     unmount = clerk.value.mountSignUp(signUpContainer.value, {
       signInUrl,
-      forceRedirectUrl
-});
+      forceRedirectUrl,
+      appearance: {
+        variables: {
+          colorText: '#303179' // matches var(--navy-100)
+        }
+      }
+    });
   }
 });
 
@@ -56,22 +61,24 @@ onUnmounted(() => {
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-lg);
   padding: var(--space-xl);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .auth-header {
   text-align: center;
   margin-bottom: var(--space-xl);
+  width: 100%;
+}
+/* Center Clerk widget inside card */
+.body {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-.auth-header h1 {
-  font-size: var(--font-size-h1);
-  font-weight: var(--font-weight-bold);
-  color: var(--navy-blue-100);
-  margin-bottom: var(--space-sm);
-}
 
-.auth-header p {
-  font-size: var(--font-size-body);
-  color: var(--navy-blue-50);
-}
 </style>
