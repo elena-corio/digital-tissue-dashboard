@@ -5,6 +5,9 @@ export const HOMEPAGE = {
   learnMore: 'Learn More'
 };
 
+export const ROLES = [
+  'Team Member', 'Reviewer','Visitor'
+];
 export const TABS = {
   overview:
 {  title: 'Welcome to Digital Tissue',
@@ -75,9 +78,9 @@ export const STATUS = {
 export const HEADER = {
   title: 'digital.tissue',
   nav: ['Overview', 'Site', 'Project', 'Metrics'],
-  avatarPlaceholder: 'EC',
-  userName: 'Elena Corio',
-  userRole: 'Software Engineer',
+  avatarPlaceholder: 'CN',
+  userName: 'Chuck Norris',
+  userRole: 'Architect',
   dropdown: ['Sign out'],
 };
 

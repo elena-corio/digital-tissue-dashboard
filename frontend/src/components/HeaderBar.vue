@@ -7,16 +7,18 @@
     </div>
     <NavTabs :tabs="navTabs" />
     <div class="header-right">
-      <div class="avatar-circle">
-        {{ uitext.HEADER.avatarPlaceholder }}
+      <div class="avatar-dropdown-wrapper">
+        <div class="avatar-circle" >
+          {{ userInitials }}
+        </div>
       </div>
       <div class="user-info">
-        <div class="user-name">{{ uitext.HEADER.userName }}</div>
-        <div class="user-role">{{ uitext.HEADER.userRole }}</div>
+        <div class="user-name">{{ userName }}</div>
+        <div class="user-role">{{ userRole }}</div>
       </div>
-      <div class="dropdown-menu" @mouseleave="showDropdown = false">
-        <span class="dropdown-chevron" @click="toggleDropdown">﹀</span>
-        <div v-if="showDropdown" class="dropdown-list">
+       <span class="dropdown-chevron" @click="toggleDropdown" tabindex="0" aria-haspopup="true" :aria-expanded="showDropdown" @keydown.enter="toggleDropdown">﹀</span>
+      <div class="dropdown-menu" v-if="showDropdown">
+        <div class="dropdown-list">
           <button class="dropdown-item" @click="handleSignOut">Sign out</button>
         </div>
       </div>
@@ -25,7 +27,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useClerk } from '../composables/useClerk.js'
 import * as uitext from '../uitext.js'
@@ -40,10 +42,48 @@ const navTabs = [
 
 const showDropdown = ref(false)
 const router = useRouter()
-const { signOut } = useClerk()
+const { signOut, user } = useClerk()
+
+
+const userName = computed(() => {
+  if (user.value && (user.value.firstName || user.value.lastName)) {
+    return `${user.value.firstName || ''} ${user.value.lastName || ''}`.trim()
+  }
+  return uitext.HEADER.userName
+})
+
+const userRole = computed(() => {
+  if (user.value && (user.value.firstName || user.value.lastName)) {
+    const fullName = `${user.value.firstName || ''} ${user.value.lastName || ''}`.trim().toLowerCase();
+    const member = uitext.TEAM.members.find(m => m.name.toLowerCase() === fullName);
+    return member ? member.role : 'Visitor';
+  }
+  return 'Visitor';
+})
+
+const userInitials = computed(() => {
+  if (user.value && (user.value.firstName || user.value.lastName)) {
+    const first = user.value.firstName ? user.value.firstName[0] : ''
+    const last = user.value.lastName ? user.value.lastName[0] : ''
+    return (first + last).toUpperCase() || uitext.HEADER.avatarPlaceholder
+  }
+  return uitext.HEADER.avatarPlaceholder
+})
 
 function toggleDropdown() {
   showDropdown.value = !showDropdown.value
+}
+
+function closeDropdown(e) {
+  // Close dropdown if click is outside avatar or dropdown
+  if (!e.target.closest('.dropdown-chevron') && !e.target.closest('.dropdown-menu')) {
+    showDropdown.value = false
+  }
+}
+
+// Listen for outside clicks
+if (typeof window !== 'undefined') {
+  window.addEventListener('click', closeDropdown)
 }
 
 async function handleSignOut() {
@@ -81,6 +121,11 @@ async function handleSignOut() {
   gap: var(--space-md);
   justify-content: flex-end;
 }
+.avatar-dropdown-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
 .avatar-circle {
   width: 40px;
   height: 40px;
@@ -95,6 +140,19 @@ async function handleSignOut() {
   background-color: white;
   border: 1.5px solid var(--grey-100);
   /* No shadow */
+  cursor: pointer;
+  outline: none;
+}
+.dropdown-chevron {
+  font-size: 1.1rem;
+  color: var(--navy-100);
+  background: transparent;
+  border: none;
+  padding: 0 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  user-select: none;
 }
 .user-info {
   display: flex;

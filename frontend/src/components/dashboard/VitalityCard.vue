@@ -23,7 +23,7 @@ import * as uitext from '../../uitext.js'
 import ArrowButton from '../ArrowButton.vue'
 
 const vitalityCards = Object.values(uitext.VITALITY.cards)
-const cardRoutes = ['/site', '/project', '/metrics'] // order matches cards
+const cardRoutes = ['/workspace/site', '/workspace/project', '/workspace/metrics'] // order matches cards
 
 function getPercent(value, goal) {
   if (!goal || isNaN(value) || isNaN(goal)) return 0;
