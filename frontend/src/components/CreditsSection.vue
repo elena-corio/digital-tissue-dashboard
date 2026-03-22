@@ -53,7 +53,7 @@ import { computed } from 'vue'
 import * as uiText from '@/uiText.js'
 
 const credits = computed(() => uiText.HOMEPAGE.credits)
-const subtitle = computed(() => uiText.HOMEPAGE.description)
+const subtitle = computed(() => uiText.HOMEPAGE.subtitle)
 </script>
 
 <style scoped>

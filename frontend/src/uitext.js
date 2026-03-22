@@ -1,7 +1,8 @@
 export const HOMEPAGE = {
   title: 'A living map of<br>your project\'s cells',
-  description: 'Built for clarity and insights.',
+  subtitle: 'Built for clarity and insights.',
   getStarted: 'Enter the tissue',
+  description: 'Digital Tissue transforms complex building models into a living map — tracking system health, coordinating cells, and receiving signals in real time.',
   credits: {
     allRightsReserved: '© 2026 Digital Tissue. All rights reserved.',
     organisation: 'Institute for Advanced Architecture of Catalonia',

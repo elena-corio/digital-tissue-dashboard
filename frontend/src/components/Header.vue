@@ -45,7 +45,13 @@ async function handleAuthClick() {
 	justify-content: space-between;
 	align-items: center;
 	padding: var(--space-md) var(--space-lg);
-	background: #fff;
+	background: rgba(255,255,255,0.85);
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 1000;
+	box-shadow: var(--shadow-card);
 }
 .header-title {
 	color: var(--navy-100);

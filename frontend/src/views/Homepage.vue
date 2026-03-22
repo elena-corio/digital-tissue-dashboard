@@ -5,7 +5,7 @@
     <CircleGridBackground />
     <div class="homepage-content homepage-content-centered">
       <h1 v-html="uiText.HOMEPAGE.title"></h1>
-      <h3>{{ uiText.HOMEPAGE.description }}</h3>
+      <h3>{{ uiText.HOMEPAGE.subtitle }}</h3>
       <button
         class="btn get-started-btn"
         @click="handleGetStarted"
@@ -15,9 +15,7 @@
     </div>
   </div>
   <div class="homepage-scroll-content">
-    <div style="height: 1200px; display: flex; align-items: center; justify-content: center; color: #888; font-size: 2rem;">
-      Placeholder content for scroll testing
-    </div>
+    <div class="h4 homepage-desc-center">{{ uiText.HOMEPAGE.description }}</div>
     <CreditsSection />
   </div>
 </template>
@@ -50,6 +48,7 @@ function handleGetStarted() {
   height: 700px;
   min-height: 400px;
   overflow: hidden;
+  margin-top: 64px;
 }
 .homepage-scroll-content {
   width: 100vw;
@@ -59,6 +58,19 @@ function handleGetStarted() {
   align-items: center;
   justify-content: flex-start;
   padding: 0;
+}
+.homepage-desc-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  min-height: 200px;
+  margin-top: 100px;
+  margin-bottom: 100px;
+  margin-left: 50vw;
+  margin-right: 50vw;
+  max-width: 500px;
 }
 .homepage-content-centered {
   position: absolute;
