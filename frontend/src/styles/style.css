@@ -80,13 +80,14 @@ body {
 /* Typography utility classes */
 h1, .h1 {
   font-size: var(--font-size-h1);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-medium);
   line-height: var(--line-height-tight);
   margin: 0 0 var(--space-md) 0;
+  color: var(--navy-100);
 }
 h2, .h2 {
   font-size: var(--font-size-h2);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-medium);
   line-height: var(--line-height-normal);
   margin: 0;
   color: var(--navy-100);
@@ -140,7 +141,6 @@ h6, .h6 {
   color: var(--navy-100);
 }
 
-/* Utility classes */
 .btn {
   background: white;
   border-radius: var(--radius-lg);

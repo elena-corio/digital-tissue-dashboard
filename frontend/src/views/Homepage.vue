@@ -1,22 +1,22 @@
 <template>
+  <Header />
   <div class="page-container homepage-center">
     <div class="homepage-content">
       <h1>{{ uiText.HOMEPAGE.title }}</h1>
-      <h3>{{ uiText.HOMEPAGE.description }}</h3>
-      <div class="button-group">
+      <h2>{{ uiText.HOMEPAGE.description }}</h2>
         <button
           class="btn get-started-btn"
           @click="handleGetStarted"
         >
           {{ uiText.HOMEPAGE.getStarted }}
         </button>
-        
-      </div>
     </div>
   </div>
 </template>
 
 <script setup>
+
+import Header from '@/components/Header.vue'
 import * as uiText from '@/uitext.js'
 import { useRouter } from 'vue-router'
 import { useClerk } from '@/composables/useClerk.js'
@@ -46,16 +46,16 @@ function handleGetStarted() {
   text-align: center;
   gap: var(--space-lg);
 }
-
-.button-group {
-  display: flex;
-  gap: var(--space-lg);
-  margin-top: var(--space-md);
+.get-started-btn {
+    font-size: var(--font-size-body);
+    border-radius: var(--radius-sm);
+    background-color: var(--fucsia-50);
+    color: var(--navy-100);
+    font-weight: bold
 }
 
-.get-started-btn.btn-disabled {
-  background: var(--fucsia-50);
-  color: white;
-  cursor: pointer;
+.get-started-btn:hover {
+  background-color: var(--fucsia-100);
+  color: white
 }
 </style>

@@ -1,8 +1,7 @@
 export const HOMEPAGE = {
-  title: 'A living data system for design intelligence',
-  description: 'Explore your models | Track key metrics | Collaborate seamlessly',
-  getStarted: 'Get Started',
-  learnMore: 'Learn More'
+  title: 'A living map of your project\'s cells.',
+  description: 'Built for clarity and insights.',
+  getStarted: 'Enter the tissue',
 };
 
 export const ROLES = [
