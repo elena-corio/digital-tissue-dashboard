@@ -87,7 +87,7 @@ h1, .h1 {
 }
 h2, .h2 {
   font-size: var(--font-size-h2);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-bold);
   line-height: var(--line-height-normal);
   margin: 0;
   color: var(--navy-100);

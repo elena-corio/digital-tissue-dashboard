@@ -19,7 +19,7 @@
        <span class="dropdown-chevron" @click="toggleDropdown" tabindex="0" aria-haspopup="true" :aria-expanded="showDropdown" @keydown.enter="toggleDropdown">﹀</span>
       <div class="dropdown-menu" v-if="showDropdown">
         <div class="dropdown-list">
-          <button class="dropdown-item" @click="handleSignOut">Sign out</button>
+          <button class="btn dropdown-item" @click="handleSignOut">Logout</button>
         </div>
       </div>
     </div>
@@ -89,7 +89,7 @@ if (typeof window !== 'undefined') {
 async function handleSignOut() {
   await signOut()
   showDropdown.value = false
-  router.push({ path: '/sign-in' })
+  router.push({ path: '/' })
 }
 </script>
 
@@ -186,23 +186,16 @@ async function handleSignOut() {
   position: absolute;
   top: 100%;
   right: 0;
-  background: white;
-  border: 1px solid var(--grey-100);
   border-radius: 6px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   min-width: 120px;
   z-index: 10;
 }
 .dropdown-item {
-  width: 100%;
-  padding: 10px 16px;
-  background: none;
-  border: none;
-  text-align: left;
-  font-size: 1rem;
-  color: var(--navy-100);
-  cursor: pointer;
-  transition: background 0.15s;
+  border-radius: var(--radius-sm);
+  padding: var(--space-sm) var(--space-lg);
+    color: var(--navy-100);
+    font-weight: bold;
+    font-size: var(--font-size-body);
 }
 .dropdown-item:hover {
   background: var(--grey-50);

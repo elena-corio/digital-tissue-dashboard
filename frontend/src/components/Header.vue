@@ -6,16 +6,36 @@
 			</h3>
 		</div>
 		<div class="header-right">
-			<button class="btn login-btn" @click="goToLogin">Login</button>
+			<button class="btn login-btn" @click="handleAuthClick">
+				{{ isSignedIn.value ? 'Logout' : 'Login' }}
+			</button>
 		</div>
 	</header>
 </template>
 
 <script setup>
 import { useRouter } from 'vue-router'
+import { useClerk } from '../composables/useClerk.js'
+import { onMounted } from 'vue'
+
 const router = useRouter()
+const { isSignedIn, signOut, initClerk } = useClerk()
+
+onMounted(() => {
+	initClerk()
+})
+
 function goToLogin() {
 	router.push('/sign-in')
+}
+
+async function handleAuthClick() {
+	if (isSignedIn.value) {
+		await signOut()
+		router.push('/')
+	} else {
+		goToLogin()
+	}
 }
 </script>
 
@@ -24,7 +44,7 @@ function goToLogin() {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	padding: 1.5rem 2rem;
+	padding: var(--space-md) var(--space-lg);
 	background: #fff;
 }
 .header-title {
@@ -39,6 +59,7 @@ function goToLogin() {
 	font-weight: 700;
 }
 .login-btn {
+    padding: var(--space-sm) var(--space-lg);
     border-radius: var(--radius-sm);
     color: var(--navy-100);
     font-weight: bold;

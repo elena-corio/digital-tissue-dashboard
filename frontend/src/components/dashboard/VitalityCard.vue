@@ -90,7 +90,7 @@ function percentColor(percent) {
   gap: 1rem;
 }
 .vitality-percent {
-  font-size: var(--font-size-h1);
+  font-size: var(--font-size-h2);
   font-weight: var(--font-weight-bold);
 }
 .success {
