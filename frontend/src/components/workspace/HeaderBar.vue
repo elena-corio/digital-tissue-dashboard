@@ -29,8 +29,8 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { useClerk } from '../composables/useClerk.js'
-import * as uiText from '../uiText.js'
+import { useClerk } from '../../composables/useClerk.js'
+import * as uiText from '../../uiText.js'
 import NavTabs from './NavTabs.vue'
 
 const navTabs = [

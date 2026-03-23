@@ -20,7 +20,7 @@
 
 <script setup>
 import * as uiText from '../../uiText.js'
-import ArrowButton from '../ArrowButton.vue'
+import ArrowButton from '../workspace/ArrowButton.vue'
 
 const vitalityCards = Object.values(uiText.VITALITY.cards)
 const cardRoutes = ['/workspace/site', '/workspace/project', '/workspace/metrics'] // order matches cards

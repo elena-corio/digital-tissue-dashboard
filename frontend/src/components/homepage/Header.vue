@@ -15,7 +15,7 @@
 
 <script setup>
 import { useRouter } from 'vue-router'
-import { useClerk } from '../composables/useClerk.js'
+import { useClerk } from '../../composables/useClerk.js'
 import { onMounted } from 'vue'
 
 const router = useRouter()

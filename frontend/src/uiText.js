@@ -168,14 +168,14 @@ export const TEAM = {
 export const GROWTH_PHASES = {
   title: 'Growth Phases',
   phases: [
-    { label: '1', title: 'Foundations', description: 'Site Research · Initial Planning' },
+    { label: '1', title: 'Foundations', description: 'Site Analysis · Initial Planning' },
     { label: '2', title: 'Constraints Definition', description: 'Plot Choice · KPIs & Metrics' },
-    { label: '3', title: 'Design Exploration', description: 'Massing Proposals· Algorithmic Thinking' },
-    { label: '4', title: 'Data Streaming', description: 'Speckle Streams · Speckle Framework' },
-    { label: '5', title: 'Feedback Integration', description: 'Iterative Design · Agile Development ' },
-    { label: '6', title: 'Neighbors Test', description: 'Coordination · Sight Analysis' },
+    { label: '3', title: 'Design Exploration', description: 'Massing Proposals · Algorithmic Thinking' },
+    { label: '4', title: 'Data Streaming', description: 'Speckle Streams · Naming Conventions' },
+    { label: '5', title: 'Feedback Integration', description: 'Parametric Design · Performance Evaluation' },
+    { label: '6', title: 'Neighbors Test', description: 'Teams Coordination · Environmental Analysis' },
     { label: '7', title: 'Automation', description: 'Process Optimization · Workflow Automation' },
-    { label: '8', title: 'Data Visualization', description: 'Interactive Dashboards · Insights' },
+    { label: '8', title: 'Data Visualization', description: 'Integrated Dashboards · Feedback Loops' },
     { label: '9', title: 'Final Stretch', description: 'Refine Narrative · Final Adjustments' },
   ]
 };

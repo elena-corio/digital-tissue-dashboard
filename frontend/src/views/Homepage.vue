@@ -23,10 +23,10 @@
 
 <script setup>
 
-import Header from '@/components/Header.vue'
-import CircleGridBackground from '@/components/CircleGridBackground.vue'
-import AboutSection from '@/components/AboutSection.vue'
-import CreditsSection from '@/components/CreditsSection.vue'
+import Header from '@/components/homepage/Header.vue'
+import CircleGridBackground from '@/components/homepage/CircleGridBackground.vue'
+import AboutSection from '@/components/homepage/AboutSection.vue'
+import CreditsSection from '@/components/homepage/CreditsSection.vue'
 import * as uiText from '@/uiText.js'
 import { useRouter } from 'vue-router'
 import { useClerk } from '@/composables/useClerk.js'
