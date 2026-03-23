@@ -1,13 +1,64 @@
 export const HOMEPAGE = {
-  title: 'A living data system for design intelligence',
-  description: 'Explore your models | Track key metrics | Collaborate seamlessly',
-  getStarted: 'Get Started',
-  learnMore: 'Learn More'
+  title: 'A living map of<br>your project\'s cells',
+  subtitle: 'Built for clarity and insights.',
+  getStarted: 'Enter the tissue',
+  description: 'Digital Tissue transforms complex building models into a living map — tracking system health, coordinating cells, and receiving signals in real time.',
+  credits: {
+    allRightsReserved: '© 2026 Digital Tissue. All rights reserved.',
+    organisation: 'Institute for Advanced Architecture of Catalonia',
+    seminar: 'MaCAD 25/26 - BISMC Studio',
+    developers: [
+      'Elena Corio','Symon Kipkemei'],
+    faculty: [
+      'Pablo Antuña Molina', 'Cristóbal Ignácio Burgos Sanhueza', 'Hari Krishnan',
+    ],
+    learnMore: 'Blog Post'
+  },
+  cards: [
+    {
+      name: 'Framework',
+      description: 'How the system grows and evolves',
+      icon: 'dna.svg',
+      bullets: [
+        'Data structure',
+        'Naming conventions',
+        'Template & standards'
+      ]
+    },
+    {
+      name: 'Automation',
+      description: 'How models and tools exchange meaning',
+      icon: 'synapses.svg',
+      bullets: [
+        'Single source of truth',
+        'Automated data flow',
+        'Integrated dashboard'
+      ]
+    },
+    {
+      name: 'Monitoring',
+      description: 'How the system stays healthy and responsive',
+      icon: 'metabolism.png',
+      bullets: [
+        'KPIs & metrics',
+        'Real-time feedback',
+        'Data validation'
+      ]
+    },
+    {
+      name: 'Coordination',
+      description: 'How different parts of the system work together',
+      icon: 'network.svg',
+      bullets: [
+        'Decision tracking',
+        'Bottleneck detection',
+        'Team alignment'
+      ]
+    }
+  ]
+
 };
 
-export const ROLES = [
-  'Team Member', 'Reviewer','Visitor'
-];
 export const TABS = {
   overview:
 {  title: 'Welcome to Digital Tissue',

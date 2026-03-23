@@ -43,7 +43,7 @@
 
 <script setup>
 import { ref, reactive, onMounted, nextTick, onBeforeUnmount } from 'vue'
-import { KPIS } from '../../uitext.js'
+import { KPIS } from '../../uiText.js'
 const tissueColors = [
   'var(--navy-100)',
   'var(--blue-100)',

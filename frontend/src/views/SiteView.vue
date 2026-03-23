@@ -5,7 +5,7 @@
 <script>
 import { onMounted } from 'vue';
 import { useWorkspaceUI } from '../composables/useWorkspaceUI.js';
-import { TABS } from '../uitext.js';
+import { TABS } from '../uiText.js';
 
 export default {
   name: 'SiteView',

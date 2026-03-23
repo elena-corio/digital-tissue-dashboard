@@ -4,7 +4,8 @@ html, body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 #app, .app {
@@ -44,7 +45,8 @@ html, body {
   padding: 0;          /* Remove browser default padding */
   width: 100%;         /* Fill full viewport width */
   height: 100%;        /* Fill full viewport height */
-  overflow: hidden;    /* Hide scrollbars and clip overflow */
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 /* Add robust flex sizing for app containers */

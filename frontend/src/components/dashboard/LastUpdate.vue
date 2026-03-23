@@ -10,7 +10,7 @@
   </div>
 </template>
 <script setup>
-import { UPDATES } from '../../uitext.js';
+import { UPDATES } from '../../uiText.js';
 
 const updates = UPDATES;
 

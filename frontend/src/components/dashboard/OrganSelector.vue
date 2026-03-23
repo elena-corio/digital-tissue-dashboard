@@ -20,7 +20,7 @@
 <script setup>
 import { ref } from 'vue'
 import BtnCard from '../ToggleButton.vue'
-import { ORGANS } from '../../uitext.js'
+import { ORGANS } from '../../uiText.js'
 
 const selected = ref('Spine')
 const selectOrgan = (label) => {

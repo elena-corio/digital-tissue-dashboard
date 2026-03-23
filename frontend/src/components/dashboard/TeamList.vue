@@ -1,8 +1,8 @@
 <template>
   <div class="team-card card">
-    <div class="card-title">{{ uitext.TEAM.title }}</div>
+    <div class="card-title">{{ uiText.TEAM.title }}</div>
     <ul class="team-list">
-      <li v-for="member in uitext.TEAM.members" :key="member.name" class="team-list-item">
+      <li v-for="member in uiText.TEAM.members" :key="member.name" class="team-list-item">
         <span class="team-member-name">{{ member.name }}</span>
         <span class="team-member-role">{{ member.role }}</span>
       </li>
@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import * as uitext from '../../uitext.js'
+import * as uiText from '../../uiText.js'
 </script>
 
 <style scoped>

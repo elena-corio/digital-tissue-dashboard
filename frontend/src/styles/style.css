@@ -5,7 +5,7 @@
 :root {
     /* Typography */
     --font-family: 'Inter', sans-serif;
-    --font-size-h1: 2.5rem;
+    --font-size-h1: 4rem;
     --font-size-h2: 2rem;
     --font-size-h3: 1.5rem;
     --font-size-h4: 1.25rem;
@@ -83,6 +83,7 @@ h1, .h1 {
   font-weight: var(--font-weight-bold);
   line-height: var(--line-height-tight);
   margin: 0 0 var(--space-md) 0;
+  color: var(--navy-100);
 }
 h2, .h2 {
   font-size: var(--font-size-h2);
@@ -96,12 +97,14 @@ h3, .h3 {
   font-weight: var(--font-weight-medium);
   line-height: var(--line-height-normal);
   margin: 0 0 var(--space-sm) 0;
+   color: var(--navy-100);
 }
 h4, .h4 {
   font-size: var(--font-size-h4);
   font-weight: var(--font-weight-medium);
   line-height: var(--line-height-normal);
   margin: 0 0 var(--space-sm) 0;
+  color: var(--navy-100);
 }
 h5, .h5 {
   font-size: var(--font-size-h5);
@@ -125,6 +128,7 @@ h6, .h6 {
   font-size: var(--font-size-body);
   font-weight: var(--font-weight-regular);
   line-height: var(--line-height-normal);
+  color: var(--navy-100);
 }
 .caption {
   font-size: var(--font-size-caption);
@@ -140,7 +144,6 @@ h6, .h6 {
   color: var(--navy-100);
 }
 
-/* Utility classes */
 .btn {
   background: white;
   border-radius: var(--radius-lg);
