@@ -1,10 +1,24 @@
 
 <template>
   <div class="siteview-grid">
-    <!-- Left Column: 2/3 width -->
+    <!-- Left Column: 1/3 width -->
     <div class="left-col">
-      <div class="card card-16-9">
-        <SiteViewer :modelUrls="activeModelUrls" :authToken="speckleToken" />
+      <div class="card" style="margin-bottom: 1rem;">
+        <SiteInfoList />
+      </div>
+      <div class="card card-flex-fill card-flex-center">
+        <SitePlanView />
+      </div>
+
+
+    
+    </div>
+    <!-- Right Column: 2/3 width -->
+    <div class="right-col">
+      <div class="card card-16-9-aspect">
+        <div class="aspect-ratio-box">
+          <SiteViewer :modelUrls="activeModelUrls" :authToken="speckleToken" />
+        </div>
       </div>
       <div class="toggle-row">
         <ToggleButton
@@ -27,12 +41,6 @@
         />
       </div>
     </div>
-    <!-- Right Column: 1/3 width -->
-    <div class="right-col">
-      <div class="card" v-for="n in 3" :key="'rcard'+n" style="margin-bottom: 1rem;">
-        <div class="card-title">Card {{ n }}</div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -42,6 +50,8 @@ import { useWorkspaceUI } from '../composables/useWorkspaceUI.js';
 import { TABS } from '../uiText.js';
 import ToggleButton from '../components/workspace/ToggleButton.vue';
 import SiteViewer from '../components/siteView/SiteViewer.vue';
+import SiteInfoList from '../components/siteView/SiteInfoList.vue';
+import SitePlanView from '../components/siteView/SitePlanView.vue';
 import { speckleModels, speckleServerUrl, speckleToken } from '../config/speckleConfig.js';
 
 const toggleStates = ref([false, false, true]);
@@ -82,18 +92,44 @@ onMounted(() => {
 </script>
 
 <style scoped>
+/* Remove duplicate .siteview-grid rule */
+.card-16-9-aspect {
+  width: 100%;
+  display: block;
+  position: relative;
+  padding: 0;
+}
+.aspect-ratio-box {
+  width: 100%;
+  padding-top: 56.25%; /* 16:9 ratio */
+  position: relative;
+}
 .siteview-grid {
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 1fr 2fr;
   gap: var(--space-md);
   width: 100%;
-  align-items: flex-start;
+  align-items: stretch;
   margin-top: var(--space-lg);
   padding-left: var(--space-lg);
   padding-right: var(--space-lg);
   min-height: 0;
+  margin-bottom: var(--space-lg);
+}
+
+@media (min-width: 1200px) {
+  .siteview-grid {
+    margin-bottom: 3rem;
+  }
 }
 .left-col {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-xs);
+  min-height: 0;
+}
+.right-col {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -103,6 +139,7 @@ onMounted(() => {
 .card-16-9 {
   aspect-ratio: 16 / 9;
   width: 100%;
+  max-height: 70vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -111,12 +148,35 @@ onMounted(() => {
 .toggle-row {
   display: flex;
   gap: var(--space-md);
-  justify-content: flex-start;
+  justify-content: center;
 }
-.right-col {
+.card-flex-fill {
+  flex: 1 1 0%;
+  min-height: 0;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  gap: var(--space-xs);
-  min-height: 0;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+}
+/* Center content in the flex-fill card */
+.card-flex-center {
+  justify-content: center;
+  align-items: center;
+}
+.placeholder-text {
+  color: var(--navy-50, #888);
+  font-size: 1.1rem;
+  opacity: 0.7;
+  text-align: center;
+}
+.svg-plot-img {
+  height: 100%;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
 }
 </style>

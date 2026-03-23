@@ -186,3 +186,13 @@ export const UPDATES = {
   issueFound: 'The last update was more than 24 hours ago. Publish your latest design iteration to keep the tissue healthy.',
   allGood: 'The latest update was published recently. Keep up the good work to maintain tissue vitality!',
 };
+
+export const SITE = {
+  timeline: 'Beginning 2026',
+  typology: 'Hyperbuildings',
+  city: 'Santiago Metropolitan Region',
+  address: 'Providentia, Santiago, Chile',
+  coordinates: { latitude: -33.4298, longitude: -70.6234 },
+  siteArea: 93146.30, // in m2
+  hypersArea: {hb01: 20000, hb02: 15000, hb03: 10000}, // in m2
+};

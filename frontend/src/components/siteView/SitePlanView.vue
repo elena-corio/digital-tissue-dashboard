@@ -1,0 +1,107 @@
+
+<template>
+  <div class="site-plan-view">
+    <div class="card-title">Site Plan</div>
+    <svg
+      viewBox="0 0 141.73 141.73"
+      class="svg-plot-img"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      
+      <!-- Areas -->
+      <path class="st0" d="M23.31,50.99L0,99.36l41.66,36.34,29.38-58.3-47.73-26.41Z"/>
+      <path class="st1" d="M141.73,59.67l-30.04-34.28-40.65,52.01-29.38,58.3,43.82-38.19,56.25-37.84Z"/>
+      <path class="st2" d="M44.96,6.03l66.74,19.36-40.65,52.01-47.73-26.41L44.96,6.03Z"/>
+
+      <!-- Callout lines and tags (hardcoded centroids and tag positions for demo) -->
+      <!-- Blue (st0): left horizontal callout -->
+      <line class="area-line" x1="35" y1="90" x2="-15" y2="90" />
+      <text class="area-label" x="-15" y="85">HB3</text>
+      <text class="area-sqm" x="-15" y="95">{{ uiText.SITE.hypersArea.hb03.toLocaleString() }} sqm</text>
+      <!-- Fucsia (st1): right horizontal callout -->
+      <line class="area-line" x1="100" y1="70" x2="150" y2="70" />
+      <text class="area-label" x="150" y="65">HB2</text>
+      <text class="area-sqm" x="150" y="75">{{ uiText.SITE.hypersArea.hb02.toLocaleString() }} sqm</text>
+      <!-- Yellow (st2): left horizontal callout -->
+      <line class="area-line" x1="70" y1="30" x2="-15" y2="30" />
+      <text class="area-label" x="-15" y="25">HB1</text>
+      <text class="area-sqm" x="-15" y="35">{{ uiText.SITE.hypersArea.hb01.toLocaleString() }} sqm</text>
+    </svg>
+  </div>
+</template>
+
+<script setup>
+      import * as uiText from '@/uiText.js';
+      </script>
+
+<style scoped>
+.site-plan-view {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  box-sizing: border-box;
+}
+.card-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--navy-100, #222);
+  margin-bottom:var(--space-md);
+  text-align: left;
+  width: 100%;
+}
+.svg-plot-img {
+  max-width: 100%;
+  max-height: 300px;
+  height: auto;
+  width: 100%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 0 !important;
+}
+</style>
+
+<style>
+.st0 {
+  fill: #4697e3;
+  stroke: #fff;
+  fill-opacity: 0.5;
+  transition: fill-opacity 0.2s;
+}
+.st1 {
+  fill: #e9268c;
+  stroke: #fff;
+  fill-opacity: 0.5;
+  transition: fill-opacity 0.2s;
+}
+.st2 {
+  fill: #f0b43a;
+  stroke: #fff;
+  fill-opacity: 0.5;
+  transition: fill-opacity 0.2s;
+}
+.st0:hover, .st1:hover, .st2:hover {
+  fill-opacity: 1;
+}
+.area-line {
+  stroke: var(--navy-100);
+  stroke-width: 1;
+  stroke-dasharray: 3,2;
+}
+.area-label {
+  font-size: 6px;
+  font-weight: 600;
+  fill: var(--navy-100);
+  text-anchor: middle;
+  dominant-baseline: baseline;
+}
+.area-sqm {
+  font-size: 5px;
+  fill: var(--navy-50);
+  text-anchor: middle;
+  dominant-baseline: baseline;
+}
+</style>

@@ -164,12 +164,11 @@ defineExpose({
 
 <style scoped>
 .speckle-viewer-container {
-  aspect-ratio: 16 / 9;
   width: 100%;
   height: 100%;
-  max-width: 100vw;
-  max-height: 100vh;
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
   background-color: var(--color-background-alt);
   overflow: hidden;
   box-sizing: border-box;
