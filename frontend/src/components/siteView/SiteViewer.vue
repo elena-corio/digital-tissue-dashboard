@@ -2,11 +2,15 @@
   <div ref="viewerContainer" class="speckle-viewer-container">
     <!-- Shows "Loading 3D model..." while initializing -->
     <div v-if="loading" class="loading-overlay">
+      <div class="spinner"></div>
       <p>Loading 3D model...</p>
     </div>
     <!-- Shows error message if something fails -->
     <div v-if="error" class="error-overlay">
       <p>{{ error }}</p>
+    </div>
+    <div v-if="!loading && !error && !modelsLoaded" class="debug-info" style="color:orange;position:absolute;top:10px;left:10px;z-index:20;">
+      <p>No models loaded.</p>
     </div>
   </div>
 </template>
@@ -29,7 +33,8 @@ const props = defineProps({
   modelUrls: { type: Array, required: true },  // URL to the Speckle model
   height: { type: String, default: '600px' },  // Container height
   showStats: { type: Boolean, default: false }, // Show FPS/performance stats
-  verbose: { type: Boolean, default: false }    // Console logging
+  verbose: { type: Boolean, default: false },   // Console logging
+  authToken: { type: String, default: '' }      // Speckle personal access token
 });
 
 const emit = defineEmits(['viewer-ready', 'model-loaded', 'error']);
@@ -37,6 +42,7 @@ const emit = defineEmits(['viewer-ready', 'model-loaded', 'error']);
 const viewerContainer = ref(null);  // Reference to the DOM element
 const loading = ref(true);          // Loading state
 const error = ref(null);            // Error message
+const modelsLoaded = ref(false);    // Track if any model loaded
 let viewer = null;                  // Speckle Viewer instance (not reactive)
 
 const initViewer = async () => {
@@ -76,10 +82,20 @@ const initViewer = async () => {
 
     // Load the model
     //Note: cannot use await inside forEach loop, so we use a regular for loop
+    modelsLoaded.value = false;
     for (const url of props.modelUrls) {
+      console.log('[SiteViewer] Loading model URL:', url, 'Token:', props.authToken ? '***' + props.authToken.slice(-4) : 'none');
       await loadModel(url);
     }
-
+    // Check if any geometry is loaded
+    if (viewer) {
+      const worldTree = viewer.getWorldTree ? viewer.getWorldTree() : null;
+      if (worldTree && worldTree.children && worldTree.children.length > 0) {
+        console.log('[SiteViewer] Geometry loaded:', worldTree.children.length, 'root children');
+      } else {
+        console.warn('[SiteViewer] No geometry loaded in world tree.');
+      }
+    }
     loading.value = false;
     } catch (err) {
       // Handle any errors
@@ -96,24 +112,24 @@ const loadModel = async (url) => {
 
     loading.value = true;
 
-    // Get resource URLs from the project/model URL
-    const urls = await UrlHelper.getResourceUrls(url);
+    // Get resource URLs from the project/model URL, with authToken
+    const urls = await UrlHelper.getResourceUrls(url, props.authToken || undefined);
 
     // Load each resource (a model might have multiple files)
     for (const resourceUrl of urls) {
-      // Create a loader for this specific resource
-      const loader = new SpeckleLoader(viewer.getWorldTree(), resourceUrl);
+      // Create a loader for this specific resource, with authToken
+      const loader = new SpeckleLoader(viewer.getWorldTree(), resourceUrl, props.authToken || undefined);
       // Load and display the geometry
       await viewer.loadObject(loader, true);
     }
 
     emit('model-loaded', url);
+    modelsLoaded.value = true;
     loading.value = false;
   } catch (err) {
     error.value = `Failed to load model: ${err.message}`;
     loading.value = false;
     emit('error', err);
-
   }
 };
 
@@ -177,5 +193,19 @@ defineExpose({
 
 .error-overlay {
   background-color: var(--color-error);
+}
+/* Spinner styles */
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid var(--blue-100, #3b479f);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 </style>

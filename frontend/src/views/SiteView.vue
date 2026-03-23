@@ -4,8 +4,7 @@
     <!-- Left Column: 2/3 width -->
     <div class="left-col">
       <div class="card card-16-9">
-        <!-- 16:9 content placeholder -->
-        <div class="card-title">16:9 Card</div>
+        <SiteViewer :modelUrls="activeModelUrls" :authToken="speckleToken" />
       </div>
       <div class="toggle-row">
         <ToggleButton
@@ -38,12 +37,31 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useWorkspaceUI } from '../composables/useWorkspaceUI.js';
 import { TABS } from '../uiText.js';
 import ToggleButton from '../components/workspace/ToggleButton.vue';
+import SiteViewer from '../components/siteView/SiteViewer.vue';
+import { speckleModels, speckleServerUrl, speckleToken } from '../config/speckleConfig.js';
 
-const toggleStates = ref([false, false, false]);
+const toggleStates = ref([false, false, true]);
+
+// Compose model URLs for toggled models
+const activeModelUrls = computed(() => {
+  const urls = [];
+  // Always show context model
+  urls.push(`${speckleServerUrl}/projects/${speckleModels.site.projectId}/models/${speckleModels.site.contextModelId}`);
+  if (toggleStates.value[0]) {
+    urls.push(`${speckleServerUrl}/projects/${speckleModels.site.projectId}/models/${speckleModels.site.hb01ModelId}`);
+  }
+  if (toggleStates.value[1]) {
+    urls.push(`${speckleServerUrl}/projects/${speckleModels.site.projectId}/models/${speckleModels.site.hb02ModelId}`);
+  }
+  if (toggleStates.value[2]) {
+    urls.push(`${speckleServerUrl}/projects/${speckleModels.site.projectId}/models/${speckleModels.site.hb03ModelId}`);
+  }
+  return urls;
+});
 
 const {
   title,
