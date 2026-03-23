@@ -30,7 +30,7 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useClerk } from '../composables/useClerk.js'
-import * as uitext from '../uitext.js'
+import * as uiText from '../uiText.js'
 import NavTabs from './NavTabs.vue'
 
 const navTabs = [
@@ -49,13 +49,13 @@ const userName = computed(() => {
   if (user.value && (user.value.firstName || user.value.lastName)) {
     return `${user.value.firstName || ''} ${user.value.lastName || ''}`.trim()
   }
-  return uitext.HEADER.userName
+  return uiText.HEADER.userName
 })
 
 const userRole = computed(() => {
   if (user.value && (user.value.firstName || user.value.lastName)) {
     const fullName = `${user.value.firstName || ''} ${user.value.lastName || ''}`.trim().toLowerCase();
-    const member = uitext.TEAM.members.find(m => m.name.toLowerCase() === fullName);
+    const member = uiText.TEAM.members.find(m => m.name.toLowerCase() === fullName);
     return member ? member.role : 'Visitor';
   }
   return 'Visitor';
@@ -65,9 +65,9 @@ const userInitials = computed(() => {
   if (user.value && (user.value.firstName || user.value.lastName)) {
     const first = user.value.firstName ? user.value.firstName[0] : ''
     const last = user.value.lastName ? user.value.lastName[0] : ''
-    return (first + last).toUpperCase() || uitext.HEADER.avatarPlaceholder
+    return (first + last).toUpperCase() || uiText.HEADER.avatarPlaceholder
   }
-  return uitext.HEADER.avatarPlaceholder
+  return uiText.HEADER.avatarPlaceholder
 })
 
 function toggleDropdown() {

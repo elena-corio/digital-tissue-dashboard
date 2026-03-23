@@ -7,7 +7,7 @@ Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://
 
 1. Project initialization (Vite + Vue 3)
 2. Folder structure + global styles (Inter font, base CSS, animations)
-3. uitext.js setup (all UI text)
+3. uiText.js setup (all UI text)
 4. Dashboard layout scaffold (DashboardView.vue)
 5. HeaderBar, TissueCanvas, OrganSelector components
 6. VitalityCard, CircularGraph, GrowthCycles, IssueFound, TeamList components

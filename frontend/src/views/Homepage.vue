@@ -15,7 +15,8 @@
     </div>
   </div>
   <div class="homepage-scroll-content">
-    <div class="h4 homepage-desc-center">{{ uiText.HOMEPAGE.description }}</div>
+    <div class="h3 homepage-desc-center">{{ uiText.HOMEPAGE.description }}</div>
+    <AboutSection />
     <CreditsSection />
   </div>
 </template>
@@ -24,8 +25,9 @@
 
 import Header from '@/components/Header.vue'
 import CircleGridBackground from '@/components/CircleGridBackground.vue'
+import AboutSection from '@/components/AboutSection.vue'
 import CreditsSection from '@/components/CreditsSection.vue'
-import * as uiText from '@/uitext.js'
+import * as uiText from '@/uiText.js'
 import { useRouter } from 'vue-router'
 import { useClerk } from '@/composables/useClerk.js'
 
@@ -66,8 +68,8 @@ function handleGetStarted() {
   text-align: center;
   width: 100%;
   min-height: 200px;
-  margin-top: 100px;
-  margin-bottom: 100px;
+  margin-top: 120px;
+  margin-bottom: 120px;
   margin-left: 50vw;
   margin-right: 50vw;
   max-width: 500px;

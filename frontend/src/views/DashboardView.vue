@@ -32,7 +32,7 @@
 <script>
 import { onMounted } from 'vue';
 import { useWorkspaceUI } from '../composables/useWorkspaceUI.js';
-import { TABS } from '../uitext.js';
+import { TABS } from '../uiText.js';
 import TissueCanvas from '../components/dashboard/TissueCanvas.vue';
 import OrganSelector from '../components/dashboard/OrganSelector.vue';
 import VitalityCard from '../components/dashboard/VitalityCard.vue';

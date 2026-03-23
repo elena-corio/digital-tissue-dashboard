@@ -54,7 +54,7 @@ import ViewerPanel from '../components/metrics/ViewerPanel.vue';
 // (no ref import needed)
 import { useSpeckleData } from '../composables/useSpeckleData';
 import { speckleModels, speckleToken } from '../config/speckleConfig.js';
-import * as uiText from '../uitext.js';
+import * as uiText from '../uiText.js';
 import { onMounted } from 'vue';
 import { useWorkspaceUI } from '../composables/useWorkspaceUI.js';
 import { METRICS } from '../benchmarks.js';

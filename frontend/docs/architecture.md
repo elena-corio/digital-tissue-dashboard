@@ -8,7 +8,7 @@ This document describes the architecture of the digital.tissue dashboard fronten
 - **src/views/**: Page-level views
 - **src/styles/**: Global and utility CSS
 - **src/assets/**: Icons and SVGs
-- **src/uitext.js**: All UI text and labels
+- **src/uiText.js**: All UI text and labels
 
 ## Design Principles
 - Minimal, soft-organic, and alive UI

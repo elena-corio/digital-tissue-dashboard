@@ -1,9 +1,9 @@
 <template>
   <div class="kpis-grid card">
-    <div class="card-title">{{ uitext.KPIS.sectionTitle }}</div>
+    <div class="card-title">{{ uiText.KPIS.sectionTitle }}</div>
     <div class="kpis-grid-inner">
       <div v-for="(col, i) in columns" :key="i" class="kpi-column">
-        <div class="kpi-column-title">{{ uitext.KPIS.kpis[i]?.name }}</div>
+        <div class="kpi-column-title">{{ uiText.KPIS.kpis[i]?.name }}</div>
           <div
            v-for="(kpi, j) in col"
            :key="kpi.label"
@@ -16,25 +16,25 @@
            }"
           >
             <div class="kpi-label">
-              {{ uitext.KPIS.kpis[i]?.metrics[j]?.label || 'KPI' }}
-              <span v-if="uitext.KPIS.kpis[i]?.metrics[j]?.unit" class="kpi-unit">{{ uitext.KPIS.kpis[i]?.metrics[j]?.unit }}</span>
+              {{ uiText.KPIS.kpis[i]?.metrics[j]?.label || 'KPI' }}
+              <span v-if="uiText.KPIS.kpis[i]?.metrics[j]?.unit" class="kpi-unit">{{ uiText.KPIS.kpis[i]?.metrics[j]?.unit }}</span>
             </div>
           <div class="kpi-bar-wrapper">
             <div class="kpi-bar">
               <!-- Loaded value bar -->
               <span
                 class="kpi-loaded-bar"
-                :style="getLoadedBarStyle(uitext.KPIS.kpis[i]?.metrics[j]?.name)"
+                :style="getLoadedBarStyle(uiText.KPIS.kpis[i]?.metrics[j]?.name)"
               ></span>
               <!-- Benchmark diamond and value -->
               <span
                 class="kpi-diamond"
-                :style="{ left: getDiamondPosition(uitext.KPIS.kpis[i]?.metrics[j]?.name) }"
+                :style="{ left: getDiamondPosition(uiText.KPIS.kpis[i]?.metrics[j]?.name) }"
               >◆</span>
             </div>
             <div class="kpi-bar-values">
-              <span class="kpi-bar-left">{{ getLeft(uitext.KPIS.kpis[i]?.metrics[j]?.name) }}</span>
-              <span class="kpi-bar-right">{{ getRight(uitext.KPIS.kpis[i]?.metrics[j]?.name) }}</span>
+              <span class="kpi-bar-left">{{ getLeft(uiText.KPIS.kpis[i]?.metrics[j]?.name) }}</span>
+              <span class="kpi-bar-right">{{ getRight(uiText.KPIS.kpis[i]?.metrics[j]?.name) }}</span>
             </div>
           </div>
         </div>
@@ -85,11 +85,11 @@ function getLoadedBarStyle(metricName) {
     zIndex: 1,
   }
 }
-import * as uitext from '../../uitext.js'
+import * as uiText from '../../uiText.js'
 import { METRICS } from '../../benchmarks.js'
 import { normalize } from '../../utils/normalize.js'
 
-const columns = uitext.KPIS.kpis.map(kpi => kpi.metrics)
+const columns = uiText.KPIS.kpis.map(kpi => kpi.metrics)
 
 function formatValue(val) {
   if (val === '' || val === undefined) return '';

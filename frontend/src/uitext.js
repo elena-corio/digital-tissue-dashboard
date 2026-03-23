@@ -13,7 +13,50 @@ export const HOMEPAGE = {
       'Pablo Antuña Molina', 'Cristóbal Ignácio Burgos Sanhueza', 'Hari Krishnan',
     ],
     learnMore: 'Blog Post'
-  }
+  },
+  cards: [
+    {
+      name: 'Framework',
+      description: 'How the system grows and evolves',
+      icon: 'dna.svg',
+      bullets: [
+        'Data structure',
+        'Naming conventions',
+        'Template & standards'
+      ]
+    },
+    {
+      name: 'Automation',
+      description: 'How models and tools exchange meaning',
+      icon: 'synapses.svg',
+      bullets: [
+        'Single source of truth',
+        'Automated data flow',
+        'Integrated dashboard'
+      ]
+    },
+    {
+      name: 'Monitoring',
+      description: 'How the system stays healthy and responsive',
+      icon: 'metabolism.png',
+      bullets: [
+        'KPIs & metrics',
+        'Real-time feedback',
+        'Data validation'
+      ]
+    },
+    {
+      name: 'Coordination',
+      description: 'How different parts of the system work together',
+      icon: 'network.svg',
+      bullets: [
+        'Decision tracking',
+        'Bottleneck detection',
+        'Team alignment'
+      ]
+    }
+  ]
+
 };
 
 export const TABS = {

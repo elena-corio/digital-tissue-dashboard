@@ -51,7 +51,7 @@ async function handleAuthClick() {
 	left: 0;
 	width: 100%;
 	z-index: 1000;
-	box-shadow: var(--shadow-card);
+	box-shadow: var(--shadow-soft);
 }
 .header-title {
 	color: var(--navy-100);

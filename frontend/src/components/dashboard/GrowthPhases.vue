@@ -1,9 +1,9 @@
 <template>
   <div class="card growth-cycles">
-    <div class="card-title">{{ uitext.GROWTH_PHASES.title }}</div>
+    <div class="card-title">{{ uiText.GROWTH_PHASES.title }}</div>
     <div class="growth-nails">
       <div
-        v-for="(phase, idx) in uitext.GROWTH_PHASES.phases"
+        v-for="(phase, idx) in uiText.GROWTH_PHASES.phases"
         :key="phase.label"
         class="growth-nail"
         :class="{ selected: idx === selectedIdx }"
@@ -13,15 +13,15 @@
         <div class="growth-nail-label" :class="{ selected: idx === selectedIdx }">{{ phase.label }}</div>
       </div>
     </div>
-    <div v-if="uitext.GROWTH_PHASES.phases[selectedIdx]" class="growth-phase-details">
-      <div class="growth-phase-title">{{ uitext.GROWTH_PHASES.phases[selectedIdx].title }}</div>
-      <div class="growth-phase-desc">{{ uitext.GROWTH_PHASES.phases[selectedIdx].description }}</div>
+    <div v-if="uiText.GROWTH_PHASES.phases[selectedIdx]" class="growth-phase-details">
+      <div class="growth-phase-title">{{ uiText.GROWTH_PHASES.phases[selectedIdx].title }}</div>
+      <div class="growth-phase-desc">{{ uiText.GROWTH_PHASES.phases[selectedIdx].description }}</div>
     </div>
   </div>
 </template>
 <script setup>
 import { ref } from 'vue'
-import * as uitext from '../../uitext.js'
+import * as uiText from '../../uiText.js'
 const selectedIdx = ref(7)
 function selectNail(idx) {
   selectedIdx.value = idx

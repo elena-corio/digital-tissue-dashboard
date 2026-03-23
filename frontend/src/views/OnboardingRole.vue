@@ -17,11 +17,11 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useClerk } from '@/composables/useClerk.js';
-import * as uitext from '@/uitext.js';
+import * as uiText from '@/uiText.js';
 
 const { user } = useClerk();
 const router = useRouter();
-const roles = uitext.ROLES;
+const roles = uiText.ROLES;
 const selectedRole = ref(roles[0]);
 
 async function saveRole() {

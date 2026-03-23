@@ -4,4 +4,4 @@
 - Project initialized with Vite + Vue 3
 - Folder structure and global styles set up
 - Design tokens and utility classes for color, spacing, shadow, radius, and typography added
-- uitext.js created for all UI text
+- uiText.js created for all UI text

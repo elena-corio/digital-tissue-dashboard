@@ -1,6 +1,6 @@
 <template>
   <div class="card vitality-card-parent">
-    <div class="card-title">{{ uitext.VITALITY.sectionTitle }}</div>
+    <div class="card-title">{{ uiText.VITALITY.sectionTitle }}</div>
     <div class="vitality-children-wrapper">
       <div class="card vitality-card-child" v-for="(card, idx) in vitalityCards" :key="card.title">
         <router-link :to="cardRoutes[idx]" class="arrow-btn">
@@ -19,10 +19,10 @@
 </template>
 
 <script setup>
-import * as uitext from '../../uitext.js'
+import * as uiText from '../../uiText.js'
 import ArrowButton from '../ArrowButton.vue'
 
-const vitalityCards = Object.values(uitext.VITALITY.cards)
+const vitalityCards = Object.values(uiText.VITALITY.cards)
 const cardRoutes = ['/workspace/site', '/workspace/project', '/workspace/metrics'] // order matches cards
 
 function getPercent(value, goal) {
