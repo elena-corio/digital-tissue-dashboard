@@ -39,7 +39,7 @@ const props = defineProps({
 }
 .btn-card-label {
   font-size: var(--font-size-body);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-bold);
   color: var(--navy-100);
 }
 </style>

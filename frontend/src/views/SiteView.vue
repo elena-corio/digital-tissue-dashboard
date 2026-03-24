@@ -7,7 +7,11 @@
         <SiteInfoList />
       </div>
       <div class="card card-flex-fill card-flex-center">
-        <SitePlanView />
+        <SitePlanView
+          :activeAreas="[toggleStates[0], toggleStates[1], toggleStates[2]]"
+          @area-hover="onAreaHover"
+          @area-leave="onAreaLeave"
+        />
       </div>
 
 
@@ -17,7 +21,7 @@
     <div class="right-col">
       <div class="card card-16-9-aspect">
         <div class="aspect-ratio-box">
-          <SiteViewer :modelUrls="activeModelUrls" :authToken="speckleToken" />
+          <SiteViewer :modelUrls="activeModelUrls" :authToken="speckleToken" :hoveredArea="hoveredArea" />
         </div>
       </div>
       <div class="toggle-row">
@@ -47,7 +51,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { useWorkspaceUI } from '../composables/useWorkspaceUI.js';
-import { TABS } from '../uiText.js';
+import { TABS, SITE } from '../uiText.js';
 import ToggleButton from '../components/workspace/ToggleButton.vue';
 import SiteViewer from '../components/siteView/SiteViewer.vue';
 import SiteInfoList from '../components/siteView/SiteInfoList.vue';
@@ -55,6 +59,14 @@ import SitePlanView from '../components/siteView/SitePlanView.vue';
 import { speckleModels, speckleServerUrl, speckleToken } from '../config/speckleConfig.js';
 
 const toggleStates = ref([false, false, true]);
+const hoveredArea = ref(null); // { areaKey, idx } or null
+
+function onAreaHover(payload) {
+  hoveredArea.value = payload;
+}
+function onAreaLeave() {
+  hoveredArea.value = null;
+}
 
 // Compose model URLs for toggled models
 const activeModelUrls = computed(() => {
@@ -81,13 +93,26 @@ const {
   statusDescription,
   statusValue
 } = useWorkspaceUI();
+
+// Calculate max deviation from 33% for area distribution
+const totalArea = SITE.hypersArea.hb01 + SITE.hypersArea.hb02 + SITE.hypersArea.hb03;
+const areaPercents = [
+  (SITE.hypersArea.hb01 / totalArea) * 100,
+  (SITE.hypersArea.hb02 / totalArea) * 100,
+  (SITE.hypersArea.hb03 / totalArea) * 100
+];
+
+
+const maxDeviation = Math.round(Math.max(...areaPercents.map(p => Math.abs(p - 33))));
+const balanceScore = 100 - maxDeviation;
+
 onMounted(() => {
   title.value = TABS.site.title;
   subtitle.value = TABS.site.subtitle;
   statusIcon.value = TABS.site.statusIcon;
   statusLabel.value = TABS.site.statusLabel;
   statusDescription.value = TABS.site.statusDescription;
-  statusValue.value = 70; // Example value, replace with real data if available
+  statusValue.value = `${balanceScore}`;
 });
 </script>
 

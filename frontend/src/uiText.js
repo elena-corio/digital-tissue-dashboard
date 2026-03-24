@@ -61,28 +61,28 @@ export const HOMEPAGE = {
 
 export const TABS = {
   overview:
-{  title: 'Welcome to Digital Tissue',
+{  title: 'Project Overview',
   subtitle: 'A quick pulse check of your project',
   statusLabel: 'Pulse Check',
-  statusDescription: 'Organ Vitality Avg',
+  statusDescription: 'Average Organ Vitality',
   statusIcon: '💓'},
   site: {
     title: 'Site Analysis',
-    subtitle: 'Key insights and metrics about your site',
+    subtitle: 'A close look at the site as a holistic system',
     statusLabel: 'Body Balance',
-    statusDescription: 'Floor Area Ratio',
+    statusDescription: 'How evenly the site area is distributed among hypers',
     statusIcon: '🧘' 
   },
   project: {
-    title: 'Project Overview',
-    subtitle: 'Current status and recent updates of your project',
+    title: 'Building Viewer',
+    subtitle: 'Key indicators for your project\'s growth',
     statusLabel: 'Tissue Expansion',
-    statusDescription: 'Gross Floor Area',
+    statusDescription: 'Gross Floor Area compared to target',
     statusIcon: '🧬' 
   },
   metrics: {
     title: 'Metrics Dashboard',
-    subtitle: 'Detailed performance indicators and KPIs',
+    subtitle: 'A cell-level view of your project\'s health',
     statusLabel: 'Metabolic Health',
     statusDescription: 'KPIs on Target',
     statusIcon: '🦠'
@@ -136,9 +136,9 @@ export const HEADER = {
 };
 
 export const ORGANS = {
-  heart: {name: 'Heart', icon: 'organ-heart.svg', color: "var(--fucsia-100)"},
-  lungs: {name: 'Lungs', icon: 'organ-lungs.svg', color: "var(--yellow-100)"},
-  spine: {name: 'Spine', icon: 'organ-spine.svg', color: "var(--light-blue-100)"},
+  lungs: {name: 'HB01', icon: 'organ-lungs.svg', color: "var(--yellow-100)"},
+  heart: {name: 'HB02', icon: 'organ-heart.svg', color: "var(--fucsia-100)"},
+  spine: {name: 'HB03', icon: 'organ-spine.svg', color: "var(--light-blue-100)"},
 };
 
 export const VITALITY = {
@@ -193,6 +193,6 @@ export const SITE = {
   city: 'Santiago Metropolitan Region',
   address: 'Providentia, Santiago, Chile',
   coordinates: { latitude: -33.4298, longitude: -70.6234 },
-  siteArea: 93146.30, // in m2
-  hypersArea: {hb01: 20000, hb02: 15000, hb03: 10000}, // in m2
+  siteArea: 85460, // in m2
+  hypersArea: {hb01: 30630, hb02: 26635, hb03: 28195}, // in m2
 };

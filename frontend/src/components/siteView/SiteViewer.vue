@@ -29,12 +29,15 @@ import {
   FilteringExtension
 } from '@speckle/viewer';
 
+import { watch as vueWatch } from 'vue';
+
 const props = defineProps({
   modelUrls: { type: Array, required: true },  // URL to the Speckle model
   height: { type: String, default: '600px' },  // Container height
   showStats: { type: Boolean, default: false }, // Show FPS/performance stats
   verbose: { type: Boolean, default: false },   // Console logging
-  authToken: { type: String, default: '' }      // Speckle personal access token
+  authToken: { type: String, default: '' },     // Speckle personal access token
+  hoveredArea: { type: Object, default: null }  // { areaKey, idx } or null
 });
 
 const emit = defineEmits(['viewer-ready', 'model-loaded', 'error']);
@@ -76,7 +79,34 @@ const initViewer = async () => {
     const sectionTool = viewer.createExtension(SectionTool);
     sectionTool.enabled = false;
     const filtering = viewer.createExtension(FilteringExtension);
-    filtering.enabled = false;
+    filtering.enabled = true;
+
+// --- Area hover coloring logic using property ---
+vueWatch(
+  () => props.hoveredArea,
+  async (hovered, prev) => {
+    if (!viewer || !filtering) return;
+    filtering.removeUserObjectColors();
+    if (hovered && hovered.areaKey) {
+      // Map areaKey to property value (e.g., hb01 -> HB01)
+      const hyperValue = hovered.areaKey.toUpperCase();
+      const tree = viewer.getWorldTree();
+      const nodes = tree.findAll(node => node.model?.raw?.properties?.hyper === hyperValue);
+      if (nodes.length > 0) {
+        filtering.setUserObjectColors([
+          { objectIds: nodes.map(n => n.model.id), color: getAreaColor(hovered.areaKey) }
+        ]);
+      }
+    }
+  }
+);
+
+function getAreaColor(areaKey) {
+  if (areaKey === 'hb01') return '#f0b43a';
+  if (areaKey === 'hb02') return '#e9268c';
+  if (areaKey === 'hb03') return '#4697e3';
+  return '#cccccc';
+}
 
     emit('viewer-ready', viewer); // Tell parent viewer is ready
 
