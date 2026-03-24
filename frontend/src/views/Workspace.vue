@@ -25,8 +25,8 @@
 </template>
 
 <script>
-import HeaderBar from '../components/HeaderBar.vue';
-import StatusIndicator from '../components/StatusIndicator.vue';
+import HeaderBar from '../components/workspace/HeaderBar.vue';
+import StatusIndicator from '../components/workspace/StatusIndicator.vue';
 import { useWorkspaceUI } from '../composables/useWorkspaceUI.js';
 
 export default {

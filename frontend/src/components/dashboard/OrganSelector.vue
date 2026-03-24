@@ -19,7 +19,7 @@
 </template>
 <script setup>
 import { ref } from 'vue'
-import BtnCard from '../ToggleButton.vue'
+import BtnCard from '../workspace/ToggleButton.vue'
 import { ORGANS } from '../../uiText.js'
 
 const selected = ref('Spine')

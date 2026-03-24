@@ -61,28 +61,28 @@ export const HOMEPAGE = {
 
 export const TABS = {
   overview:
-{  title: 'Welcome to Digital Tissue',
+{  title: 'Project Overview',
   subtitle: 'A quick pulse check of your project',
   statusLabel: 'Pulse Check',
-  statusDescription: 'Organ Vitality Avg',
+  statusDescription: 'Average Organ Vitality',
   statusIcon: '💓'},
   site: {
     title: 'Site Analysis',
-    subtitle: 'Key insights and metrics about your site',
+    subtitle: 'A close look at the site as a holistic system',
     statusLabel: 'Body Balance',
-    statusDescription: 'Floor Area Ratio',
+    statusDescription: 'How evenly the site area is distributed among hypers',
     statusIcon: '🧘' 
   },
   project: {
-    title: 'Project Overview',
-    subtitle: 'Current status and recent updates of your project',
+    title: 'Building Viewer',
+    subtitle: 'Key indicators for your project\'s growth',
     statusLabel: 'Tissue Expansion',
-    statusDescription: 'Gross Floor Area',
+    statusDescription: 'Gross Floor Area compared to target',
     statusIcon: '🧬' 
   },
   metrics: {
     title: 'Metrics Dashboard',
-    subtitle: 'Detailed performance indicators and KPIs',
+    subtitle: 'A cell-level view of your project\'s health',
     statusLabel: 'Metabolic Health',
     statusDescription: 'KPIs on Target',
     statusIcon: '🦠'
@@ -136,9 +136,9 @@ export const HEADER = {
 };
 
 export const ORGANS = {
-  heart: {name: 'Heart', icon: 'organ-heart.svg', color: "var(--fucsia-100)"},
-  lungs: {name: 'Lungs', icon: 'organ-lungs.svg', color: "var(--yellow-100)"},
-  spine: {name: 'Spine', icon: 'organ-spine.svg', color: "var(--light-blue-100)"},
+  lungs: {name: 'HB01', icon: 'organ-lungs.svg', color: "var(--yellow-100)"},
+  heart: {name: 'HB02', icon: 'organ-heart.svg', color: "var(--fucsia-100)"},
+  spine: {name: 'HB03', icon: 'organ-spine.svg', color: "var(--light-blue-100)"},
 };
 
 export const VITALITY = {
@@ -168,14 +168,14 @@ export const TEAM = {
 export const GROWTH_PHASES = {
   title: 'Growth Phases',
   phases: [
-    { label: '1', title: 'Foundations', description: 'Site Research · Initial Planning' },
+    { label: '1', title: 'Foundations', description: 'Site Analysis · Initial Planning' },
     { label: '2', title: 'Constraints Definition', description: 'Plot Choice · KPIs & Metrics' },
-    { label: '3', title: 'Design Exploration', description: 'Massing Proposals· Algorithmic Thinking' },
-    { label: '4', title: 'Data Streaming', description: 'Speckle Streams · Speckle Framework' },
-    { label: '5', title: 'Feedback Integration', description: 'Iterative Design · Agile Development ' },
-    { label: '6', title: 'Neighbors Test', description: 'Coordination · Sight Analysis' },
+    { label: '3', title: 'Design Exploration', description: 'Massing Proposals · Algorithmic Thinking' },
+    { label: '4', title: 'Data Streaming', description: 'Speckle Streams · Naming Conventions' },
+    { label: '5', title: 'Feedback Integration', description: 'Parametric Design · Performance Evaluation' },
+    { label: '6', title: 'Neighbors Test', description: 'Teams Coordination · Environmental Analysis' },
     { label: '7', title: 'Automation', description: 'Process Optimization · Workflow Automation' },
-    { label: '8', title: 'Data Visualization', description: 'Interactive Dashboards · Insights' },
+    { label: '8', title: 'Data Visualization', description: 'Integrated Dashboards · Feedback Loops' },
     { label: '9', title: 'Final Stretch', description: 'Refine Narrative · Final Adjustments' },
   ]
 };
@@ -185,4 +185,14 @@ export const UPDATES = {
   lastUpdate: '3/1/2026 7:26:54 PM',
   issueFound: 'The last update was more than 24 hours ago. Publish your latest design iteration to keep the tissue healthy.',
   allGood: 'The latest update was published recently. Keep up the good work to maintain tissue vitality!',
+};
+
+export const SITE = {
+  timeline: 'Beginning 2026',
+  typology: 'Hyperbuildings',
+  city: 'Santiago Metropolitan Region',
+  address: 'Providentia, Santiago, Chile',
+  coordinates: { latitude: -33.4298, longitude: -70.6234 },
+  siteArea: 85460, // in m2
+  hypersArea: {hb01: 30630, hb02: 26635, hb03: 28195}, // in m2
 };
