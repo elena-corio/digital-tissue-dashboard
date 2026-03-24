@@ -138,7 +138,7 @@ export default {
   statusIcon.value = uiText.TABS.metrics.statusIcon;
   statusLabel.value = uiText.TABS.metrics.statusLabel;
   statusDescription.value = uiText.TABS.metrics.statusDescription;
-   kpiStatus.value = this.kpiStatus();
+  kpiStatus.value = this.kpiStatus();
   statusValue.value = kpisOnTargetPercent.value;
 
   this.$watch(

@@ -21,9 +21,25 @@
 <script setup>
 import * as uiText from '../../uiText.js'
 import ArrowButton from '../workspace/ArrowButton.vue'
+import { useWorkspaceUI } from '../../composables/useWorkspaceUI.js';
 
-const vitalityCards = Object.values(uiText.VITALITY.cards)
-const cardRoutes = ['/workspace/site', '/workspace/project', '/workspace/metrics'] // order matches cards
+const { bodyBalance } = useWorkspaceUI();
+
+const vitalityCards = [
+  {
+    ...uiText.VITALITY.cards.body,
+    value: bodyBalance.value / 100, // normalize to 0-1 for percent calc
+  },
+  {
+    ...uiText.VITALITY.cards.tissue,
+    // TODO: wire tissueExpansion here if available
+  },
+  {
+    ...uiText.VITALITY.cards.metabolism,
+    // TODO: wire kpisOnTargetPercent here if available
+  }
+];
+const cardRoutes = ['/workspace/site', '/workspace/project', '/workspace/metrics']; // order matches cards
 
 function getPercent(value, goal) {
   if (!goal || isNaN(value) || isNaN(goal)) return 0;

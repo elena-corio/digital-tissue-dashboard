@@ -51,31 +51,9 @@ export default {
     } = useWorkspaceUI();
     const { data: speckleData, loading, error, kpiStatus: getKpiStatus } = useSpeckleData();
 
-    // Set header/status on mount
-    onMounted(() => {
-      title.value = uiText.TABS.metrics.title;
-      subtitle.value = uiText.TABS.metrics.subtitle;
-      statusIcon.value = uiText.TABS.metrics.statusIcon;
-      statusLabel.value = uiText.TABS.metrics.statusLabel;
-      statusDescription.value = uiText.TABS.metrics.statusDescription;
-      // Set initial kpiStatus if data is already loaded
-      if (speckleData.value) {
-        kpiStatus.value = getKpiStatus();
-        statusValue.value = kpisOnTargetPercent.value;
-      }
-    });
 
-    // Watch for speckleData changes and update kpiStatus and statusValue
-    watch(
-      () => speckleData.value,
-      (newVal) => {
-        if (newVal) {
-          kpiStatus.value = getKpiStatus();
-          statusValue.value = kpisOnTargetPercent.value;
-        }
-      },
-      { immediate: true, deep: true }
-    );
+
+
 
     return {
       title,

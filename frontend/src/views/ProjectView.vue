@@ -3,6 +3,7 @@
 </template>
 
 <script>
+
 import { onMounted } from 'vue';
 import { useWorkspaceUI } from '../composables/useWorkspaceUI.js';
 import { TABS } from '../uiText.js';
@@ -16,7 +17,8 @@ export default {
       statusIcon,
       statusLabel,
       statusDescription,
-      statusValue
+      statusValue,
+      kpisOnTargetPercent
     } = useWorkspaceUI();
     onMounted(() => {
       title.value = TABS.project.title;
@@ -24,7 +26,7 @@ export default {
       statusIcon.value = TABS.project.statusIcon;
       statusLabel.value = TABS.project.statusLabel;
       statusDescription.value = TABS.project.statusDescription;
-      statusValue.value = 60; // Example value, replace with real data if available
+      statusValue.value = kpisOnTargetPercent.value;
     });
   }
 };

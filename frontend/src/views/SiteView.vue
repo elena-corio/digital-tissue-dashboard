@@ -104,8 +104,7 @@ const areaPercents = [
 ];
 
 
-const maxDeviation = Math.round(Math.max(...areaPercents.map(p => Math.abs(p - 33))));
-const balanceScore = 100 - maxDeviation;
+
 
 onMounted(() => {
   title.value = TABS.site.title;
@@ -113,7 +112,7 @@ onMounted(() => {
   statusIcon.value = TABS.site.statusIcon;
   statusLabel.value = TABS.site.statusLabel;
   statusDescription.value = TABS.site.statusDescription;
-  statusValue.value = bodyBalance;
+  statusValue.value = bodyBalance.value;
 });
 </script>
 

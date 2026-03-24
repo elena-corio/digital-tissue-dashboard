@@ -1,5 +1,14 @@
-<template>
-  <div class="dashboard-main">
+<template><div v-if="loading" class="dashboard-loading">
+    <div class="spinner"></div>
+    <p>Loading data...</p>
+  </div>
+  <div v-else-if="error" class="dashboard-error">
+    <p>Error loading data: {{ error.message }}</p>
+  </div>
+  <div v-else-if="!speckleData || !speckleData.latest" class="dashboard-nodata">
+    <p>No data available.</p>
+  </div>
+  <div v-else class="dashboard-main">
     <!-- Left Column -->
     <section class="dashboard-left dashboard-col">
       <div class="dashboard-left-stack">
@@ -58,9 +67,10 @@ export default {
       statusIcon,
       statusLabel,
       statusDescription,
-      statusValue
+      statusValue,
+      kpisOnTargetPercent
     } = useWorkspaceUI();
-    const { data: speckleData } = useSpeckleData();
+    const { data: speckleData, loading, error } = useSpeckleData();
     // Compute latest update date from speckleData
     const latestUpdate = computed(() => {
       const latest = speckleData.value?.latest;
@@ -73,9 +83,9 @@ export default {
       statusIcon.value = TABS.overview.statusIcon;
       statusLabel.value = TABS.overview.statusLabel;
       statusDescription.value = TABS.overview.statusDescription;
-      statusValue.value = 80; // Example value, replace with real data if available
+      statusValue.value = kpisOnTargetPercent.value;
     });
-    return { latestUpdate };
+    return { latestUpdate, loading, error, speckleData };
   }
 };
 </script>
@@ -156,5 +166,27 @@ export default {
   min-height: 0;
  gap: var(--space-md);
    margin-bottom: var(--space-lg);
+}
+.dashboard-loading, .dashboard-error, .dashboard-nodata {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  font-size: 1.2rem;
+  color: var(--navy-100);
+}
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #4697e3;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 </style>
