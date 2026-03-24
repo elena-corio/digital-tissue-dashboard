@@ -3,18 +3,23 @@
     <div class="card-title">{{ updates.title }}</div>
     <div class="last-update-row">
       <span class="last-update-label">Last update</span>
-      <span class="last-update-value">{{ updates.lastUpdate }}</span>
+      <span class="last-update-value">{{ lastUpdateDisplay }}</span>
     </div>
     <div class="last-update-divider"></div>
     <div class="last-update-message">{{ message }}</div>
   </div>
 </template>
 <script setup>
+import { computed } from 'vue';
 import { UPDATES } from '../../uiText.js';
-
 const updates = UPDATES;
 
+const props = defineProps({
+  lastUpdate: String
+});
+
 function isMoreThan24HoursAgo(dateString) {
+  if (!dateString) return false;
   const date = new Date(dateString);
   const now = new Date();
   const diffMs = now - date;
@@ -22,9 +27,23 @@ function isMoreThan24HoursAgo(dateString) {
   return diffMs > oneDayMs;
 }
 
-const isOld = isMoreThan24HoursAgo(updates.lastUpdate);
-const message = isOld ? updates.issueFound : updates.allGood;
-const messageClass = isOld ? 'warning' : 'success';
+function formatDate(dateString) {
+  if (!dateString) return '';
+  const date = new Date(dateString);
+  if (isNaN(date)) return dateString;
+  // Format as YYYY-MM-DD HH:mm (local time)
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  return `${year}-${month}-${day} ${hours}:${minutes}`;
+}
+
+const lastUpdateDisplay = computed(() => formatDate(props.lastUpdate || updates.lastUpdate));
+const isOld = computed(() => isMoreThan24HoursAgo(lastUpdateDisplay.value));
+const message = computed(() => isOld.value ? updates.issueFound : updates.allGood);
+const messageClass = computed(() => isOld.value ? 'warning' : 'success');
 </script>
 
 <style scoped>

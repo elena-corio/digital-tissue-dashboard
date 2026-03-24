@@ -28,6 +28,9 @@
 import HeaderBar from '../components/workspace/HeaderBar.vue';
 import StatusIndicator from '../components/workspace/StatusIndicator.vue';
 import { useWorkspaceUI } from '../composables/useWorkspaceUI.js';
+import { useSpeckleData } from '../composables/useSpeckleData';
+import { onMounted, watch } from 'vue';
+import * as uiText from '../uiText.js';
 
 export default {
   name: 'Workspace',
@@ -42,15 +45,48 @@ export default {
       statusIcon,
       statusLabel,
       statusDescription,
-      statusValue
+      statusValue,
+      kpiStatus,
+      kpisOnTargetPercent
     } = useWorkspaceUI();
+    const { data: speckleData, loading, error, kpiStatus: getKpiStatus } = useSpeckleData();
+
+    // Set header/status on mount
+    onMounted(() => {
+      title.value = uiText.TABS.metrics.title;
+      subtitle.value = uiText.TABS.metrics.subtitle;
+      statusIcon.value = uiText.TABS.metrics.statusIcon;
+      statusLabel.value = uiText.TABS.metrics.statusLabel;
+      statusDescription.value = uiText.TABS.metrics.statusDescription;
+      // Set initial kpiStatus if data is already loaded
+      if (speckleData.value) {
+        kpiStatus.value = getKpiStatus();
+        statusValue.value = kpisOnTargetPercent.value;
+      }
+    });
+
+    // Watch for speckleData changes and update kpiStatus and statusValue
+    watch(
+      () => speckleData.value,
+      (newVal) => {
+        if (newVal) {
+          kpiStatus.value = getKpiStatus();
+          statusValue.value = kpisOnTargetPercent.value;
+        }
+      },
+      { immediate: true, deep: true }
+    );
+
     return {
       title,
       subtitle,
       statusIcon,
       statusLabel,
       statusDescription,
-      statusValue
+      statusValue,
+      speckleData,
+      loading,
+      error
     };
   }
 };

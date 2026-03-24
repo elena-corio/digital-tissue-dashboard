@@ -21,7 +21,7 @@
           </div>
           <div class="dashboard-detail-right">
             <GrowthPhases />
-            <IssueFound />
+            <IssueFound :lastUpdate="latestUpdate" />
           </div>
         </div>
       </div>
@@ -30,9 +30,10 @@
 </template>
 
 <script>
-import { onMounted } from 'vue';
+import { onMounted, computed } from 'vue';
 import { useWorkspaceUI } from '../composables/useWorkspaceUI.js';
 import { TABS } from '../uiText.js';
+import { useSpeckleData } from '../composables/useSpeckleData';
 import TissueCanvas from '../components/dashboard/TissueCanvas.vue';
 import OrganSelector from '../components/dashboard/OrganSelector.vue';
 import VitalityCard from '../components/dashboard/VitalityCard.vue';
@@ -59,6 +60,13 @@ export default {
       statusDescription,
       statusValue
     } = useWorkspaceUI();
+    const { data: speckleData } = useSpeckleData();
+    // Compute latest update date from speckleData
+    const latestUpdate = computed(() => {
+      const latest = speckleData.value?.latest;
+      // Try createdAt, fallback to null
+      return latest?.createdAt || null;
+    });
     onMounted(() => {
       title.value = TABS.overview.title;
       subtitle.value = TABS.overview.subtitle;
@@ -67,6 +75,7 @@ export default {
       statusDescription.value = TABS.overview.statusDescription;
       statusValue.value = 80; // Example value, replace with real data if available
     });
+    return { latestUpdate };
   }
 };
 </script>
