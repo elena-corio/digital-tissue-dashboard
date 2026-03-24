@@ -91,7 +91,8 @@ const {
   statusIcon,
   statusLabel,
   statusDescription,
-  statusValue
+  statusValue,
+  bodyBalance
 } = useWorkspaceUI();
 
 // Calculate max deviation from 33% for area distribution
@@ -112,7 +113,7 @@ onMounted(() => {
   statusIcon.value = TABS.site.statusIcon;
   statusLabel.value = TABS.site.statusLabel;
   statusDescription.value = TABS.site.statusDescription;
-  statusValue.value = `${balanceScore}`;
+  statusValue.value = bodyBalance;
 });
 </script>
 

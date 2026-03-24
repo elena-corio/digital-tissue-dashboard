@@ -78,7 +78,6 @@ export default {
       projectId: speckleModels.metrics.projectId,
       inputModelId: [speckleModels.metrics.modelId],
       speckleToken: speckleToken,
-      globalScore: 8.0, // Placeholder, update with actual calculation if needed
       speckleData,
       loading,
       error,
@@ -88,12 +87,6 @@ export default {
     };
   },
   computed: {
-    kpisOnTargetPercent() {
-    const kpis = this.kpiStatus();
-    if (!kpis.length) return 0;
-    const onTarget = kpis.filter(k => k.onTarget).length;
-    return Math.round((onTarget / kpis.length) * 100);
-  },
     selectedMetric() {
       for (const section of uiText.KPIS.kpis) {
         for (const metric of section.metrics) {
@@ -139,16 +132,23 @@ export default {
   }
     ,
     mounted() {
-  const { title, subtitle, statusIcon, statusLabel, statusDescription, statusValue } = useWorkspaceUI();
+  const { title, subtitle, statusIcon, statusLabel, statusDescription, statusValue,  kpiStatus, kpisOnTargetPercent } = useWorkspaceUI();
   title.value = uiText.TABS.metrics.title;
   subtitle.value = uiText.TABS.metrics.subtitle;
   statusIcon.value = uiText.TABS.metrics.statusIcon;
   statusLabel.value = uiText.TABS.metrics.statusLabel;
   statusDescription.value = uiText.TABS.metrics.statusDescription;
-  statusValue.value = `${this.kpisOnTargetPercent}`;
-  this.$watch('kpisOnTargetPercent', (newVal) => {
-    statusValue.value = `${newVal}`;
-  });
+   kpiStatus.value = this.kpiStatus();
+  statusValue.value = kpisOnTargetPercent.value;
+
+  this.$watch(
+    () => this.kpiStatus(),
+    (newVal) => {
+      kpiStatus.value = newVal;
+      statusValue.value = kpisOnTargetPercent.value;
+    },
+    { immediate: true, deep: true }
+  );
 }
 };
 </script>
