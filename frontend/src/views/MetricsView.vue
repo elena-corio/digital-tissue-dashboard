@@ -56,7 +56,7 @@ import ViewerPanel from '../components/metrics/ViewerPanel.vue';
 import { useSpeckleData } from '../composables/useSpeckleData';
 import { speckleModels, speckleToken } from '../config/speckleConfig.js';
 import * as uiText from '../uiText.js';
-import { onMounted } from 'vue';
+import { onMounted, watch, computed } from 'vue';
 import { useWorkspaceUI } from '../composables/useWorkspaceUI.js';
 import { METRICS } from '../benchmarks.js';
 
@@ -71,7 +71,7 @@ export default {
     ViewerPanel,
   },
   data() {
-    const { data: speckleData, loading, error, refresh } = useSpeckleData();
+    const { data: speckleData, loading, error, refresh, kpiStatus } = useSpeckleData();
     return {
       uiText,
       selectedKPI: uiText.KPIS.kpis[0]?.metrics[0]?.name || null,
@@ -82,10 +82,18 @@ export default {
       speckleData,
       loading,
       error,
-      refresh
+      refresh,
+      kpiStatus
+
     };
   },
   computed: {
+    kpisOnTargetPercent() {
+    const kpis = this.kpiStatus();
+    if (!kpis.length) return 0;
+    const onTarget = kpis.filter(k => k.onTarget).length;
+    return Math.round((onTarget / kpis.length) * 100);
+  },
     selectedMetric() {
       for (const section of uiText.KPIS.kpis) {
         for (const metric of section.metrics) {
@@ -130,18 +138,18 @@ export default {
     }
   }
     ,
-    setup() {
-      const { title, subtitle, statusIcon, statusLabel, statusDescription, statusValue } = useWorkspaceUI();
-      onMounted(() => {
-        title.value = uiText.TABS.metrics.title;
-        subtitle.value = uiText.TABS.metrics.subtitle;
-        statusIcon.value = uiText.TABS.metrics.statusIcon;
-        statusLabel.value = uiText.TABS.metrics.statusLabel;
-        statusDescription.value = uiText.TABS.metrics.statusDescription;
-        statusValue.value = 90; // Example value, replace with real data if available
-      });
-      return {};
-    }
+    mounted() {
+  const { title, subtitle, statusIcon, statusLabel, statusDescription, statusValue } = useWorkspaceUI();
+  title.value = uiText.TABS.metrics.title;
+  subtitle.value = uiText.TABS.metrics.subtitle;
+  statusIcon.value = uiText.TABS.metrics.statusIcon;
+  statusLabel.value = uiText.TABS.metrics.statusLabel;
+  statusDescription.value = uiText.TABS.metrics.statusDescription;
+  statusValue.value = `${this.kpisOnTargetPercent}`;
+  this.$watch('kpisOnTargetPercent', (newVal) => {
+    statusValue.value = `${newVal}`;
+  });
+}
 };
 </script>
 

@@ -84,7 +84,7 @@ export const TABS = {
     title: 'Metrics Dashboard',
     subtitle: 'A cell-level view of your project\'s health',
     statusLabel: 'Metabolic Health',
-    statusDescription: 'KPIs on Target',
+    statusDescription: 'How many KPIs are on target',
     statusIcon: '🦠'
   }
 };

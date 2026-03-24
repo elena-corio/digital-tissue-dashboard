@@ -4,6 +4,7 @@ import { GET_LATEST_VERSIONS, GET_ROOT_OBJECT } from '../queries/gqlQueries'
 import {  speckleModels } from '../config/speckleConfig'
 import { speckleClient } from '../services/speckleClient'
 import type { SpeckleModelData, SpeckleModelHistory, LatestVersionResponse, RootObjectResponse } from '../types/speckle'
+import { METRICS } from '../benchmarks.js';
 
 // Two-step query: 1) Get version → 2) Get object data
 // Uses speckleClient.query() for step 2 (urql's executeQuery doesn't handle dynamic vars)
@@ -134,5 +135,36 @@ export function useSpeckleData() {
 
   onMounted(() => fetchDataTree())
 
-  return { data: cacheHistory, loading, error, refresh: () => fetchData(true) }
+  // Utility: compute KPI onTarget status for all metrics at project level (latest version)
+  interface KPIStatusResult {
+    name: string;
+    value: number | undefined;
+    onTarget: boolean;
+  }
+  const kpiStatus = (): KPIStatusResult[] => {
+    const latest = cacheHistory.value?.latest;
+    if (!latest || !latest.data || !latest.data.properties) return [];
+    const result: KPIStatusResult[] = [];
+    const properties = latest.data.properties as Record<string, any>;
+    for (const [metricKey, { left, right, benchmark }] of Object.entries(METRICS)) {
+      // Convert camelCase to snake_case for property lookup
+      const snakeKey = metricKey.replace(/[A-Z]/g, l => `_${l.toLowerCase()}`);
+      const value = properties[snakeKey];
+      if (typeof value !== 'number' || isNaN(value)) {
+        result.push({ name: metricKey, value: undefined, onTarget: false });
+        continue;
+      }
+      // If left < right, higher is better; if left > right, lower is better
+      let onTarget = false;
+      if (left < right) {
+        onTarget = value >= benchmark;
+      } else {
+        onTarget = value <= benchmark;
+      }
+      result.push({ name: metricKey, value, onTarget });
+    }
+    return result;
+  };
+
+  return { data: cacheHistory, loading, error, refresh: () => fetchData(true), kpiStatus };
 }
