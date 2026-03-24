@@ -1,9 +1,9 @@
 import { ref, onMounted } from 'vue'
 import { useQuery } from '@urql/vue'
-import { GET_LATEST_VERSION, GET_ROOT_OBJECT } from '../queries/gqlQueries'
+import { GET_LATEST_VERSIONS, GET_ROOT_OBJECT } from '../queries/gqlQueries'
 import {  speckleModels } from '../config/speckleConfig'
 import { speckleClient } from '../services/speckleClient'
-import type { SpeckleModelData, LatestVersionResponse, RootObjectResponse } from '../types/speckle'
+import type { SpeckleModelData, SpeckleModelHistory, LatestVersionResponse, RootObjectResponse } from '../types/speckle'
 
 // Two-step query: 1) Get version → 2) Get object data
 // Uses speckleClient.query() for step 2 (urql's executeQuery doesn't handle dynamic vars)
@@ -13,12 +13,13 @@ import type { SpeckleModelData, LatestVersionResponse, RootObjectResponse } from
 // Invalidates: After 5 minutes, or when force refresh
 export function useSpeckleData() {
   const cache = ref<SpeckleModelData | null>(null)
+  const cacheHistory = ref<SpeckleModelHistory | null>(null)
   const lastFetched = ref<Date | null>(null)
   const loading = ref(false)
   const error = ref<Error | null>(null)
 
   const { executeQuery: executeVersionQuery } = useQuery<LatestVersionResponse>({
-    query: GET_LATEST_VERSION,
+    query: GET_LATEST_VERSIONS,
     variables: { projectId: speckleModels.metrics.projectId, modelId: speckleModels.metrics.modelId },
     pause: true
   })
@@ -29,13 +30,19 @@ export function useSpeckleData() {
     return Date.now() - lastFetched.value.getTime() < 5 * 60 * 1000
   }
 
-  const fetchVersion = async () => {
-    const result = await executeVersionQuery()
-    if (result.error.value) throw new Error(`Version fetch failed: ${result.error.value.message}`)
-    const version = result.data.value?.project?.model?.versions?.items?.[0]
-    if (!version) throw new Error('No version found')
-    return version
-  }
+  const fetchVersions = async () => {
+  const result = await executeVersionQuery()
+  if (result.error.value) throw new Error(`Version fetch failed: ${result.error.value.message}`)
+  const model = result.data.value?.project?.model
+  const versions = model?.versions?.items
+  if (!versions || versions.length === 0) throw new Error('No versions found')
+  // Attach modelId/modelName to each version
+  return versions.slice().reverse().map(v => ({
+    ...v,
+    modelId: model.id,
+    modelName: model.name
+  }))
+}
 
   const fetchObject = async (objectId: string) => {
     const result = await speckleClient.query<RootObjectResponse>(
@@ -58,20 +65,17 @@ export function useSpeckleData() {
     return parsed
   }
 
-  const fetchData = async (force = false) => {
+  const fetchData = async (version: any, force = false) => {
     if (!force && isCacheFresh()) return cache.value
 
     loading.value = true
     error.value = null
 
     try {
-      const version = await fetchVersion()
       const rootData = await fetchObject(version.referencedObject)
-      const versionData = (await executeVersionQuery()).data.value!
-
       cache.value = {
-        modelId: versionData.project.model.id,
-        modelName: versionData.project.model.name,
+        modelId: version.project.model.id,
+        modelName: version.project.model.name,
         versionId: version.id,
         objectId: version.referencedObject,
         createdAt: version.createdAt,
@@ -90,7 +94,45 @@ export function useSpeckleData() {
     }
   }
 
-  onMounted(() => fetchData())
+  const fetchDataTree = async (force = false) => {
+  if (!force && isCacheFresh()) return cacheHistory.value
 
-  return { data: cache, loading, error, refresh: () => fetchData(true) }
+  loading.value = true
+  error.value = null
+
+  try {
+    const versions = await fetchVersions() // oldest to newest
+    const versionDataArr = await Promise.all(
+      versions.map(async (version) => {
+        const rootData = await fetchObject(version.referencedObject)
+        return {
+          modelId: version.modelId,      // ensure these are present on version
+          modelName: version.modelName,  // or pass them in another way
+          versionId: version.id,
+          objectId: version.referencedObject,
+          createdAt: version.createdAt,
+          data: rootData
+        }
+      })
+    )
+    // Cache and return the array for history
+    cacheHistory.value = {
+      versions: versionDataArr,
+      history: versionDataArr.map(v => v.data?.properties?.yourMetricKey), // replace with your metric key
+      latest: versionDataArr.length > 0 ? versionDataArr[versionDataArr.length - 1] : null
+    }
+    lastFetched.value = new Date()
+    return cacheHistory.value
+  } catch (err) {
+    error.value = err as Error
+    console.error('useSpeckleData fetchDataTree error:', err)
+    return null
+  } finally {
+    loading.value = false
+  }
+}
+
+  onMounted(() => fetchDataTree())
+
+  return { data: cacheHistory, loading, error, refresh: () => fetchData(true) }
 }

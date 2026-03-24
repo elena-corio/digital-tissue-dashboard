@@ -83,3 +83,9 @@ export interface SpeckleModelData {
   createdAt: string
   data: Project
 }
+
+export interface SpeckleModelHistory {
+  versions: SpeckleModelData[] // array of 4, oldest to newest
+  history: number[]            // metric values for the diagram
+  latest: SpeckleModelData  | null   // convenience: latest version data
+}

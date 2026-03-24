@@ -1,6 +1,7 @@
 <template>
   <div v-if="loading" class="metrics-loading">Loading Speckle data...</div>
   <div v-else-if="error" class="metrics-error">Error loading Speckle data: {{ error.message }}</div>
+  <div v-else-if="!speckleData || !speckleData.latest">No data available</div>  
   <div v-else class="metrics-main">
     <!-- Left Column -->
     <section class="metrics-left metrics-col">
@@ -28,14 +29,14 @@
     <section class="metrics-right metrics-col">
       <div class="metrics-right-stack">
         <div class="metrics-kpis-wrapper">
-          <KPIsOverview @selectKPI="onSelectKPI" :selectedKPI="selectedKPI" :speckleData="speckleData" />
+          <KPIsOverview @selectKPI="onSelectKPI" :selectedKPI="selectedKPI" :speckleData="speckleData.latest" />
         </div>
         <div class="metrics-detail-wrapper">
           <div class="metrics-detail-left">
-            <TowerMetrics :selectedMetric="selectedMetric" :speckleData="speckleData" />
+            <TowerMetrics :selectedMetric="selectedMetric" :speckleData="speckleData.latest" />
           </div>
           <div class="metrics-detail-right">
-            <VersionMetrics :selectedMetric="selectedMetric" :value="selectedMetricValue" />
+            <VersionMetrics :selectedMetric="selectedMetric" :value="selectedMetricValue" :history="metricHistory" />
           </div>
         </div>
       </div>
@@ -97,11 +98,18 @@ export default {
       return null;
     },
     selectedMetricValue() {
-      // Extract the value for the selected metric from speckleData (root level)
-      if (!this.selectedMetric || !this.speckleData || !this.speckleData.data || !this.speckleData.data.properties) return undefined;
+      // Use the latest version's properties
+      if (!this.selectedMetric || !this.speckleData || !this.speckleData.latest || !this.speckleData.latest.data || !this.speckleData.latest.data.properties) return undefined;
       const metricName = this.selectedMetric.name;
       const snakeKey = metricName ? metricName.replace(/[A-Z]/g, l => `_${l.toLowerCase()}`) : '';
-      return this.speckleData.data.properties[snakeKey];
+      return this.speckleData.latest.data.properties[snakeKey];
+    },
+    metricHistory() {
+      if (!this.selectedMetric || !this.speckleData || !this.speckleData.versions) return [];
+      const key = this.selectedMetric.name.replace(/[A-Z]/g, l => `_${l.toLowerCase()}`);
+      return this.speckleData.versions
+        .map(v => v.data?.properties?.[key])
+        .filter(v => typeof v === 'number' && !isNaN(v));
     },
     selectedFilterConfig() {
       const m = this.selectedMetric;
