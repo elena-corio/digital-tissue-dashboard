@@ -118,6 +118,12 @@ function handleAreaLeave() {
   transition: fill-opacity 0.2s;
 }
 .st0:hover, .st1:hover, .st2:hover {
+/* Inactive state for hidden/faded buildings */
+.inactive {
+  opacity: 0.15;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
   fill-opacity: 1;
 }
 .inactive {

@@ -2,15 +2,11 @@
   <div ref="viewerContainer" class="speckle-viewer-container">
     <!-- Shows "Loading 3D model..." while initializing -->
     <div v-if="loading" class="loading-overlay">
-      <div class="spinner"></div>
       <p>Loading 3D model...</p>
     </div>
     <!-- Shows error message if something fails -->
     <div v-if="error" class="error-overlay">
       <p>{{ error }}</p>
-    </div>
-    <div v-if="!loading && !error && !modelsLoaded" class="debug-info" style="color:orange;position:absolute;top:10px;left:10px;z-index:20;">
-      <p>No models loaded.</p>
     </div>
   </div>
 </template>
@@ -29,15 +25,11 @@ import {
   FilteringExtension
 } from '@speckle/viewer';
 
-import { watch as vueWatch } from 'vue';
-
 const props = defineProps({
   modelUrls: { type: Array, required: true },  // URL to the Speckle model
   height: { type: String, default: '600px' },  // Container height
   showStats: { type: Boolean, default: false }, // Show FPS/performance stats
-  verbose: { type: Boolean, default: false },   // Console logging
-  authToken: { type: String, default: '' },     // Speckle personal access token
-  hoveredArea: { type: Object, default: null }  // { areaKey, idx } or null
+  verbose: { type: Boolean, default: false }    // Console logging
 });
 
 const emit = defineEmits(['viewer-ready', 'model-loaded', 'error']);
@@ -45,9 +37,7 @@ const emit = defineEmits(['viewer-ready', 'model-loaded', 'error']);
 const viewerContainer = ref(null);  // Reference to the DOM element
 const loading = ref(true);          // Loading state
 const error = ref(null);            // Error message
-const modelsLoaded = ref(false);    // Track if any model loaded
 let viewer = null;                  // Speckle Viewer instance (not reactive)
-let loadedModelUrls = [];           // Track loaded model URLs
 
 const initViewer = async () => {
   try {
@@ -80,53 +70,16 @@ const initViewer = async () => {
     const sectionTool = viewer.createExtension(SectionTool);
     sectionTool.enabled = false;
     const filtering = viewer.createExtension(FilteringExtension);
-    filtering.enabled = true;
-
-// --- Area hover coloring logic using property ---
-vueWatch(
-  () => props.hoveredArea,
-  async (hovered, prev) => {
-    if (!viewer || !filtering) return;
-    filtering.removeUserObjectColors();
-    if (hovered && hovered.areaKey) {
-      // Map areaKey to property value (e.g., hb01 -> HB01)
-      const hyperValue = hovered.areaKey.toUpperCase();
-      const tree = viewer.getWorldTree();
-      const nodes = tree.findAll(node => node.model?.raw?.properties?.hyper === hyperValue);
-      if (nodes.length > 0) {
-        filtering.setUserObjectColors([
-          { objectIds: nodes.map(n => n.model.id), color: getAreaColor(hovered.areaKey) }
-        ]);
-      }
-    }
-  }
-);
-
-function getAreaColor(areaKey) {
-  if (areaKey === 'hb01') return '#f0b43a';
-  if (areaKey === 'hb02') return '#e9268c';
-  if (areaKey === 'hb03') return '#4697e3';
-  return '#cccccc';
-}
+    filtering.enabled = false;
 
     emit('viewer-ready', viewer); // Tell parent viewer is ready
 
     // Load the model
     //Note: cannot use await inside forEach loop, so we use a regular for loop
-    modelsLoaded.value = false;
     for (const url of props.modelUrls) {
-      console.log('[SiteViewer] Loading model URL:', url, 'Token:', props.authToken ? '***' + props.authToken.slice(-4) : 'none');
       await loadModel(url);
     }
-    // Check if any geometry is loaded
-    if (viewer) {
-      const worldTree = viewer.getWorldTree ? viewer.getWorldTree() : null;
-      if (worldTree && worldTree.children && worldTree.children.length > 0) {
-        console.log('[SiteViewer] Geometry loaded:', worldTree.children.length, 'root children');
-      } else {
-        console.warn('[SiteViewer] No geometry loaded in world tree.');
-      }
-    }
+
     loading.value = false;
     } catch (err) {
       // Handle any errors
@@ -143,53 +96,32 @@ const loadModel = async (url) => {
 
     loading.value = true;
 
-    // Get resource URLs from the project/model URL, with authToken
-    const urls = await UrlHelper.getResourceUrls(url, props.authToken || undefined);
+    // Get resource URLs from the project/model URL
+    const urls = await UrlHelper.getResourceUrls(url);
 
     // Load each resource (a model might have multiple files)
     for (const resourceUrl of urls) {
-      // Create a loader for this specific resource, with authToken
-      const loader = new SpeckleLoader(viewer.getWorldTree(), resourceUrl, props.authToken || undefined);
+      // Create a loader for this specific resource
+      const loader = new SpeckleLoader(viewer.getWorldTree(), resourceUrl);
       // Load and display the geometry
       await viewer.loadObject(loader, true);
     }
 
     emit('model-loaded', url);
-    modelsLoaded.value = true;
     loading.value = false;
-    if (!loadedModelUrls.includes(url)) {
-      loadedModelUrls.push(url);
-    }
   } catch (err) {
     error.value = `Failed to load model: ${err.message}`;
     loading.value = false;
     emit('error', err);
+
   }
 };
 
 // Watch for URL changes - reload model if URL prop changes
-watch(() => props.modelUrls, async (newUrls) => {
-  if (!viewer) return;
-  // Remove models that are no longer in newUrls
-  const toRemove = loadedModelUrls.filter(url => !newUrls.includes(url));
-  for (const url of toRemove) {
-    try {
-      // Remove model from viewer
-      const tree = viewer.getWorldTree();
-      const nodes = tree.findAll(node => node.model?.url === url);
-      for (const node of nodes) {
-        tree.removeChild(node);
-      }
-      // Remove from loadedModelUrls
-      loadedModelUrls = loadedModelUrls.filter(u => u !== url);
-    } catch (e) {
-      // Ignore errors
-    }
-  }
-  // Load new models
-  for (const url of newUrls) {
-    if (!loadedModelUrls.includes(url)) {
-      await loadModel(url);
+watch(() => props.modelUrls, (newUrls) => {
+  if (viewer && newUrls) {
+    for (const url of newUrls) {
+      loadModel(url);
     }
   }
 });
@@ -204,7 +136,6 @@ onUnmounted(() => {
   if (viewer) {
     viewer.dispose(); // Release GPU memory, remove event listeners
     viewer = null;
-    loadedModelUrls = [];
   }
 });
 
@@ -217,11 +148,12 @@ defineExpose({
 
 <style scoped>
 .speckle-viewer-container {
+  aspect-ratio: 16 / 9;
   width: 100%;
   height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
+  max-width: 100vw;
+  max-height: 100vh;
+  position: relative;
   background-color: var(--color-background-alt);
   overflow: hidden;
   box-sizing: border-box;
@@ -245,19 +177,5 @@ defineExpose({
 
 .error-overlay {
   background-color: var(--color-error);
-}
-/* Spinner styles */
-.spinner {
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid var(--blue-100, #3b479f);
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  animation: spin 1s linear infinite;
-  margin-bottom: 1rem;
-}
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
 }
 </style>

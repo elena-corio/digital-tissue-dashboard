@@ -21,7 +21,7 @@
     <div class="right-col">
       <div class="card card-16-9-aspect">
         <div class="aspect-ratio-box">
-          <SiteViewer :modelUrls="activeModelUrls" :authToken="speckleToken" :hoveredArea="hoveredArea" />
+          <SiteViewer :modelUrls="activeModelUrls" :authToken="speckleToken" :hoveredArea="hoveredArea" :key="activeModelUrls" />
         </div>
       </div>
       <div class="toggle-row">
