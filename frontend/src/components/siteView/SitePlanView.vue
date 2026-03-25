@@ -100,34 +100,31 @@ function handleAreaLeave() {
 
 <style>
 .st0 {
-  fill: #4697e3;
+  fill: var(--light-blue-100);
   stroke: #fff;
   fill-opacity: 0.5;
   transition: fill-opacity 0.2s;
 }
 .st1 {
-  fill: #e9268c;
+  fill: var(--fucsia-100);
   stroke: #fff;
   fill-opacity: 0.5;
   transition: fill-opacity 0.2s;
 }
 .st2 {
-  fill: #f0b43a;
+  fill: var(--yellow-100);
   stroke: #fff;
   fill-opacity: 0.5;
   transition: fill-opacity 0.2s;
 }
 .st0:hover, .st1:hover, .st2:hover {
+  fill-opacity: 1;
+  cursor: pointer;
+}
 /* Inactive state for hidden/faded buildings */
 .inactive {
-  opacity: 0.15;
   pointer-events: none;
   transition: opacity 0.2s;
-}
-  fill-opacity: 1;
-}
-.inactive {
-  pointer-events: none;
 }
 .area-line {
   stroke: var(--navy-100);
