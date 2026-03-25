@@ -186,12 +186,14 @@ export default {
   box-shadow: var(--shadow-card);
   padding: var(--space-xs) var(--space-sm);
   width: fit-content;
+   z-index: 600;
 }
 .history-tooltip-value {
   font-size: var(--font-size-body);
   font-weight: var(--font-weight-bold);
   color: var(--navy-100);
   white-space: nowrap;
+ 
 }
 .axis-label {
   font-weight: var(--font-weight-regular);
