@@ -1,6 +1,11 @@
 <template>
   <div class="pie-chart-wrapper">
-    <svg viewBox="0 0 120 120" class="pie-chart">
+    <svg
+      viewBox="0 0 120 120"
+      class="pie-chart"
+      @mousemove="onPieMouseMove"
+      @mouseleave="onPieMouseLeave"
+    >
       <g :transform="'rotate(-90 60 60)'">
         <g v-for="(slice, idx) in slices" :key="slice.label">
           <circle
@@ -20,6 +25,16 @@
         </g>
       </g>
     </svg>
+    <!-- Floating percentage tooltip next to mouse -->
+    <div
+      v-if="hovered !== null && tooltip.visible"
+      class="pie-thumbnail-tooltip"
+      :style="{ left: tooltip.x + 'px', top: tooltip.y + 'px' }"
+    >
+      <span class="pie-thumbnail-value">
+        {{ Math.round((slices[hovered].value / total) * 100) }}%
+      </span>
+    </div>
     <div class="pie-legend legend-2col">
       <div
         v-for="(slice, idx) in slices"
@@ -42,11 +57,28 @@ const props = defineProps({
   data: { type: Array, required: true }, // [{ label, value, color }]
 });
 const hovered = ref(null);
+const tooltip = ref({ x: 0, y: 0, visible: false });
+// Mouse move handler for pie chart
+function onPieMouseMove(e) {
+  if (hovered.value !== null) {
+    // Find the bounding rect of the wrapper for correct offset
+    const wrapper = e.currentTarget.closest('.pie-chart-wrapper');
+    if (wrapper) {
+      const rect = wrapper.getBoundingClientRect();
+      tooltip.value.x = e.clientX - rect.left+12;
+      tooltip.value.y = e.clientY - rect.top +12;
+      tooltip.value.visible = true;
+    }
+  }
+}
+function onPieMouseLeave() {
+  tooltip.value.visible = false;
+}
 const center = 60;
 const radius = 44;
 const thickness = 18;
 const circumference = 2 * Math.PI * radius;
-
+      
 const total = computed(() => props.data.reduce((sum, d) => sum + d.value, 0));
 const slices = computed(() => {
   let offset = 0;
@@ -73,6 +105,7 @@ const slices = computed(() => {
   align-items: center;
   justify-content: center;
   margin-top: var(--space-xl);
+  position: relative;
 }
 .pie-chart {
   width: 240px;
@@ -102,9 +135,25 @@ const slices = computed(() => {
   border-radius: 50%;
   display: inline-block;
 }
-  .pie-chart {
-    width: 220px;
-    height: 220px;
-    margin-bottom: var(--space-sm);
-  }
+/* Remove duplicate .pie-chart style block that may affect layout */
+/* Floating tooltip for pie chart sector */
+.pie-thumbnail-tooltip {
+  position: absolute;
+  z-index: 9999;
+  pointer-events: none;
+  background: var(--card-bg, #fff);
+  transition: left 0.08s, top 0.08s;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-xs) var(--space-sm);
+  width: fit-content;
+}
+.pie-thumbnail-value {
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-bold);
+  color: var(--navy-100);
+  white-space: nowrap;
+ 
+}
+
 </style>
