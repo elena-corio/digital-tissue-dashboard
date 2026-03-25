@@ -1,4 +1,3 @@
-
 <template>
   <div class="workspace-root">
     <div class="workspace-header">
@@ -19,18 +18,34 @@
       </div>
     </div>
     <div class="workspace-content">
-      <router-view />
+      <div v-if="loading" class="workspace-loading">
+        <div class="spinner"></div>
+        <p>Loading workspace data...</p>
+      </div>
+      <div v-else-if="error" class="workspace-error">
+        <p>Error loading data: {{ error.message }}</p>
+      </div>
+      <div v-else>
+        <router-view
+          :tissueExpansion="tissueExpansion"
+          :kpisOnTargetPercent="kpisOnTargetPercent"
+          :bodyBalance="bodyBalance"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+
 import HeaderBar from '../components/workspace/HeaderBar.vue';
 import StatusIndicator from '../components/workspace/StatusIndicator.vue';
 import { useWorkspaceUI } from '../composables/useWorkspaceUI.js';
 import { useSpeckleData } from '../composables/useSpeckleData';
-import { onMounted, watch } from 'vue';
-import * as uiText from '../uiText.js';
+import { onMounted, watch, computed } from 'vue';
+import { METRICS } from '../benchmarks.js';
+import { SITE } from '../uiText.js';
+
 
 export default {
   name: 'Workspace',
@@ -47,24 +62,91 @@ export default {
       statusDescription,
       statusValue,
       kpiStatus,
-      kpisOnTargetPercent
     } = useWorkspaceUI();
-      const { data: speckleData, loading, error, kpiStatus: getKpiStatus } = useSpeckleData();
-      const { calculateKPIStatus } = useWorkspaceUI();
+    // Fetch data at the parent level
+    const { data: speckleData, loading, error, kpiStatus: getKpiStatus } = useSpeckleData();
 
-      // Watch for speckleData changes and update kpiStatus in useWorkspaceUI
-      watch(
-        () => speckleData.value?.latest?.data?.properties,
-        (properties) => {
-          if (properties) {
-            kpiStatus.value = calculateKPIStatus(properties);
-          }
-        },
-        { immediate: true }
-      );
+    // Compute metrics based on fetched data
+    const tissueExpansion = computed(() => {
+      const latest = speckleData.value?.latest;
+      const properties = latest?.data?.properties;
+      console.log('DEBUG tissueExpansion:', { latest, properties });
+      const gfaRaw = properties?.gross_floor_area;
+      const gfa = typeof gfaRaw === 'string' ? parseFloat(gfaRaw) : gfaRaw;
+      const target = 1000000;
+      if (!gfa || !target || isNaN(gfa)) return 0;
+      return Math.round((gfa / target) * 100);
+    });
 
+    function toSnakeCase(str) {
+      return str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
+    }
+    function calculateKPIStatus(properties) {
+      if (!properties) return [];
+      const result = [];
+      for (const [metricKey, { left, right, benchmark }] of Object.entries(METRICS)) {
+        const snakeKey = toSnakeCase(metricKey);
+        const value = properties[snakeKey];
+        if (typeof value !== 'number' || isNaN(value)) {
+          result.push({ name: metricKey, value: undefined, onTarget: false });
+          continue;
+        }
+        let onTarget = false;
+        if (left < right) {
+          onTarget = value >= benchmark;
+        } else {
+          onTarget = value <= benchmark;
+        }
+        result.push({ name: metricKey, value, onTarget });
+      }
+      return result;
+    }
+    const kpisOnTargetPercent = computed(() => {
+      const latest = speckleData.value?.latest;
+      const properties = latest?.data?.properties;
+      console.log('DEBUG kpisOnTargetPercent:', { latest, properties });
+      const kpis = calculateKPIStatus(properties);
+      if (!kpis || !kpis.length) return 0;
+      let onTargetCount = 0;
+      let total = 0;
+      for (const [metricKey, { left, right, benchmark }] of Object.entries(METRICS)) {
+        const kpi = kpis.find(k => k.name === metricKey);
+        if (!kpi || typeof kpi.value !== 'number' || isNaN(kpi.value)) continue;
+        let onTarget = false;
+        if (left < right) {
+          onTarget = kpi.value >= benchmark;
+        } else {
+          onTarget = kpi.value <= benchmark;
+        }
+        if (onTarget) onTargetCount++;
+        total++;
+      }
+      if (total === 0) return 0;
+      return Math.round((onTargetCount / total) * 100);
+    });
 
+    const bodyBalance = computed(() => {
+      const totalArea = SITE.hypersArea.hb01 + SITE.hypersArea.hb02 + SITE.hypersArea.hb03;
+      if (!totalArea) return 0;
+      const areaPercents = [
+        (SITE.hypersArea.hb01 / totalArea) * 100,
+        (SITE.hypersArea.hb02 / totalArea) * 100,
+        (SITE.hypersArea.hb03 / totalArea) * 100
+      ];
+      const maxDeviation = Math.round(Math.max(...areaPercents.map(p => Math.abs(p - 33))));
+      return 1 - maxDeviation / 100;
+    });
 
+    // Watch for speckleData changes and update kpiStatus in useWorkspaceUI
+    watch(
+      () => speckleData.value?.latest?.data?.properties,
+      (properties) => {
+        if (properties) {
+          kpiStatus.value = calculateKPIStatus(properties);
+        }
+      },
+      { immediate: true }
+    );
 
     return {
       title,
@@ -75,13 +157,48 @@ export default {
       statusValue,
       speckleData,
       loading,
-      error
+      error,
+      tissueExpansion,
+      kpisOnTargetPercent,
+      bodyBalance
     };
   }
 };
 </script>
 
 <style scoped>
+  .workspace-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  font-size: 1.2rem;
+  color: var(--navy-100);
+}
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #4697e3;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+.workspace-error {
+  color: red;
+  text-align: center;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
 .workspace-root {
   display: flex;
   flex-direction: column;

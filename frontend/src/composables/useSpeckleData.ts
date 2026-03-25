@@ -32,18 +32,18 @@ export function useSpeckleData() {
   }
 
   const fetchVersions = async () => {
-  const result = await executeVersionQuery()
-  if (result.error.value) throw new Error(`Version fetch failed: ${result.error.value.message}`)
-  const model = result.data.value?.project?.model
-  const versions = model?.versions?.items
-  if (!versions || versions.length === 0) throw new Error('No versions found')
-  // Attach modelId/modelName to each version
-  return versions.slice().reverse().map(v => ({
-    ...v,
-    modelId: model.id,
-    modelName: model.name
-  }))
-}
+    const result = await executeVersionQuery()
+    if (result.error.value) throw new Error(`Version fetch failed: ${result.error.value.message}`)
+    const model = result.data.value?.project?.model
+    const versions = model?.versions?.items
+    if (!versions || versions.length === 0) return [] // Gracefully handle no versions
+    // Attach modelId/modelName to each version
+    return versions.slice().reverse().map(v => ({
+      ...v,
+      modelId: model.id,
+      modelName: model.name
+    }))
+  }
 
   const fetchObject = async (objectId: string) => {
     const result = await speckleClient.query<RootObjectResponse>(
@@ -103,6 +103,12 @@ export function useSpeckleData() {
 
   try {
     const versions = await fetchVersions() // oldest to newest
+    if (!versions || versions.length === 0) {
+      // No versions found, return empty cacheHistory
+      cacheHistory.value = { versions: [], history: [], latest: null }
+      lastFetched.value = new Date()
+      return cacheHistory.value
+    }
     const versionDataArr = await Promise.all(
       versions.map(async (version) => {
         const rootData = await fetchObject(version.referencedObject)
@@ -126,7 +132,10 @@ export function useSpeckleData() {
     return cacheHistory.value
   } catch (err) {
     error.value = err as Error
-    console.error('useSpeckleData fetchDataTree error:', err)
+    // Only log unexpected errors
+    if (!String(err).includes('No versions found')) {
+      console.error('useSpeckleData fetchDataTree error:', err)
+    }
     return null
   } finally {
     loading.value = false

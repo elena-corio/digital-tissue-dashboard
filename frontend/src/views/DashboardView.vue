@@ -22,7 +22,11 @@
     <section class="dashboard-right dashboard-col">
       <div class="dashboard-right-stack">
         <div class="dashboard-vitality-wrapper">
-          <VitalityCard :tissueExpansion="tissueExpansion" />
+          <VitalityCard
+            :tissueExpansion="tissueExpansion"
+            :kpisOnTargetPercent="kpisOnTargetPercent"
+            :bodyBalance="bodyBalance"
+          />
         </div>
         <div class="dashboard-detail-wrapper">
           <div class="dashboard-detail-left">
@@ -49,9 +53,15 @@ import VitalityCard from '../components/dashboard/VitalityCard.vue';
 import GrowthPhases from '../components/dashboard/GrowthPhases.vue';
 import IssueFound from '../components/dashboard/LastUpdate.vue';
 import TeamList from '../components/dashboard/TeamList.vue';
+import { METRICS } from '../benchmarks.js';
 
 export default {
   name: 'DashboardView',
+  props: {
+    tissueExpansion: { type: Number, required: false },
+    kpisOnTargetPercent: { type: Number, required: false },
+    bodyBalance: { type: Number, required: false }
+  },
   components: {
     TissueCanvas,
     OrganSelector,
@@ -60,16 +70,8 @@ export default {
     IssueFound,
     TeamList
   },
-  setup() {
-    const {
-      title,
-      subtitle,
-      statusIcon,
-      statusLabel,
-      statusDescription,
-      statusValue,
-      kpisOnTargetPercent
-    } = useWorkspaceUI();
+  setup(props) {
+    const { title, subtitle, statusIcon, statusLabel, statusDescription, statusValue } = useWorkspaceUI();
     const { data: speckleData, loading, error } = useSpeckleData();
     // Compute latest update date from speckleData
     const latestUpdate = computed(() => {
@@ -82,26 +84,22 @@ export default {
       return !!(latest && latest.data && latest.data.properties && Object.keys(latest.data.properties).length > 0);
     });
 
-    // Compute tissueExpansion from dashboard's speckleData
-    const tissueExpansion = computed(() => {
-      const latest = speckleData.value?.latest;
-      console.log('[DashboardView] Computing tissueExpansion from speckleData:', speckleData.value);
-      const properties = latest?.data?.properties;
-      const gfaRaw = properties?.gross_floor_area;
-      const gfa = typeof gfaRaw === 'string' ? parseFloat(gfaRaw) : gfaRaw;
-      const target = 1000000;
-      if (!gfa || !target || isNaN(gfa)) return 0;
-      return Math.round((gfa / target) * 100);
-    });
     onMounted(() => {
       title.value = TABS.overview.title;
       subtitle.value = TABS.overview.subtitle;
       statusIcon.value = TABS.overview.statusIcon;
       statusLabel.value = TABS.overview.statusLabel;
       statusDescription.value = TABS.overview.statusDescription;
-      statusValue.value = kpisOnTargetPercent.value;
     });
-    return { latestUpdate, loading, error, speckleData, dataReady, tissueExpansion  };
+
+    // Expose props to template
+    return {
+      latestUpdate, loading, error, speckleData, dataReady,
+      title, subtitle, statusIcon, statusLabel, statusDescription, statusValue,
+      tissueExpansion: props.tissueExpansion,
+      kpisOnTargetPercent: props.kpisOnTargetPercent,
+      bodyBalance: props.bodyBalance
+    };
   }
 };
 </script>

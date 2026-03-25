@@ -22,14 +22,16 @@
 import * as uiText from '../../uiText.js'
 import ArrowButton from '../workspace/ArrowButton.vue'
 
-import { useWorkspaceUI } from '../../composables/useWorkspaceUI.js';
-const { bodyBalance, kpisOnTargetPercent } = useWorkspaceUI();
-const props = defineProps({ tissueExpansion: { type: Number, required: false } });
+const props = defineProps({
+  tissueExpansion: { type: Number, required: false },
+  kpisOnTargetPercent: { type: Number, required: false },
+  bodyBalance: { type: Number, required: false },
+});
 
 const vitalityCards = [
   {
     ...uiText.VITALITY.cards.body,
-    value: bodyBalance.value / 100, // normalize to 0-1 for percent calc
+    value: props.bodyBalance ?? 0,
   },
   {
     ...uiText.VITALITY.cards.tissue,
@@ -37,7 +39,7 @@ const vitalityCards = [
   },
   {
     ...uiText.VITALITY.cards.metabolism,
-    value: kpisOnTargetPercent.value, // pass the percentage directly (0-100)
+    value: props.kpisOnTargetPercent ?? 0,
   }
 ];
 const cardRoutes = ['/workspace/site', '/workspace/project', '/workspace/metrics']; // order matches cards

@@ -1,5 +1,4 @@
 import { ref, computed } from 'vue';
-import { TABS, SITE, VITALITY } from '../uiText.js';
 import { useSpeckleData } from './useSpeckleData';
 
 
@@ -44,13 +43,6 @@ function calculateKPIStatus(properties) {
   }
   return result;
 }
-const bodyBalanceData = ref(null); // This should be updated by SiteView or a data provider
-
-// --- KPI On Target Percent: Copy logic from MetricsView ---
-
-function toSnakeCase(str) {
-  return str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
-}
 
 const kpisOnTargetPercent = computed(() => {
   const kpis = kpiStatus.value;
@@ -74,46 +66,8 @@ const kpisOnTargetPercent = computed(() => {
   return Math.round((onTargetCount / total) * 100);
 });
 
-// Body Balance: Calculate max deviation from 33% for area distribution (copied from SiteView)
-const bodyBalance = computed(() => {
-  const totalArea = SITE.hypersArea.hb01 + SITE.hypersArea.hb02 + SITE.hypersArea.hb03;
-  if (!totalArea) return 0;
-  const areaPercents = [
-    (SITE.hypersArea.hb01 / totalArea) * 100,
-    (SITE.hypersArea.hb02 / totalArea) * 100,
-    (SITE.hypersArea.hb03 / totalArea) * 100
-  ];
-  const maxDeviation = Math.round(Math.max(...areaPercents.map(p => Math.abs(p - 33))));
-  return 100 - maxDeviation;
-});
-
 export function useWorkspaceUI() {
-  // Use the same Speckle data source as MetricsView for tissueExpansion
-  // This ensures reactivity and consistency
-  const { data: speckleData } = useSpeckleData();
-  const tissueExpansion = computed(() => {
-    // Access speckleData directly, not .value, to match MetricsView
-    console.log('[tissueExpansion] speckleData:', speckleData);
-    const latest = speckleData?.latest;
-    console.log('[tissueExpansion] latest object:', latest);
-    const properties = latest?.data?.properties;
-    if (properties && typeof properties === 'object') {
-      console.log('[tissueExpansion] Available property keys:', Object.keys(properties));
-    } else {
-      console.log('[tissueExpansion] No properties object found.');
-    }
-    const gfaRaw = properties?.gross_floor_area;
-    const gfa = typeof gfaRaw === 'string' ? parseFloat(gfaRaw) : gfaRaw;
-    const target = 1000000;
-    console.log('[tissueExpansion] gfaRaw:', gfaRaw, 'gfa:', gfa, 'target:', target);
-    if (!gfa || !target || isNaN(gfa)) {
-      console.log('[tissueExpansion] Returning 0% due to missing or invalid value.');
-      return 0;
-    }
-    const percent = Math.round((gfa / target) * 100);
-    console.log('[tissueExpansion] Computed percent:', percent);
-    return percent;
-  });
+
   return {
     title,
     subtitle,
@@ -122,10 +76,7 @@ export function useWorkspaceUI() {
     statusDescription,
     statusValue,
     kpiStatus, // expose for updating
-    bodyBalanceData, // expose for updating
     kpisOnTargetPercent,
-    bodyBalance,
     calculateKPIStatus,
-    tissueExpansion
   };
 }
