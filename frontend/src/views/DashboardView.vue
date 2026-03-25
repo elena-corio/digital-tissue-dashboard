@@ -60,7 +60,8 @@ export default {
   props: {
     tissueExpansion: { type: Number, required: false },
     kpisOnTargetPercent: { type: Number, required: false },
-    bodyBalance: { type: Number, required: false }
+    bodyBalance: { type: Number, required: false },
+    latestUpdate: { type: [String, null], required: false }
   },
   components: {
     TissueCanvas,
@@ -73,12 +74,7 @@ export default {
   setup(props) {
     const { title, subtitle, statusIcon, statusLabel, statusDescription, statusValue } = useWorkspaceUI();
     const { data: speckleData, loading, error } = useSpeckleData();
-    // Compute latest update date from speckleData
-    const latestUpdate = computed(() => {
-      const latest = speckleData.value?.latest;
-      // Try createdAt, fallback to null
-      return latest?.createdAt || null;
-    });
+    // Use latestUpdate from props (passed from Workspace.vue)
     const dataReady = computed(() => {
       const latest = speckleData.value?.latest;
       return !!(latest && latest.data && latest.data.properties && Object.keys(latest.data.properties).length > 0);
@@ -103,7 +99,7 @@ export default {
     });
 
     return {
-      latestUpdate, loading, error, speckleData, dataReady,
+      latestUpdate: props.latestUpdate, loading, error, speckleData, dataReady,
       title, subtitle, statusIcon, statusLabel, statusDescription, statusValue,
       tissueExpansion: props.tissueExpansion,
       kpisOnTargetPercent: props.kpisOnTargetPercent,

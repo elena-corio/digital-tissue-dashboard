@@ -13,7 +13,7 @@
           :icon="statusIcon"
           :label="statusLabel"
           :description="statusDescription"
-          :value="statusValue"
+          :value="loading || statusValue == null || isNaN(statusValue) ? 0 : statusValue"
         />
       </div>
     </div>
@@ -36,6 +36,7 @@
           :statusLabel="statusLabel"
           :statusDescription="statusDescription"
           :statusValue="statusValue"
+          :latestUpdate="latestUpdate"
         />
       </div>
     </div>
@@ -133,16 +134,12 @@ export default {
       return Math.round((onTargetCount / total) * 100);
     });
 
+    // Replace bodyBalance with percent of HB03
+    // Pass raw fraction (0-1) for HB03
     const bodyBalance = computed(() => {
       const totalArea = SITE.hypersArea.hb01 + SITE.hypersArea.hb02 + SITE.hypersArea.hb03;
       if (!totalArea) return 0;
-      const areaPercents = [
-        (SITE.hypersArea.hb01 / totalArea) * 100,
-        (SITE.hypersArea.hb02 / totalArea) * 100,
-        (SITE.hypersArea.hb03 / totalArea) * 100
-      ];
-      const maxDeviation = Math.round(Math.max(...areaPercents.map(p => Math.abs(p - 33))));
-      return 1 - maxDeviation / 100;
+      return SITE.hypersArea.hb03 / totalArea;
     });
 
     // Watch for speckleData changes and update kpiStatus in useWorkspaceUI
@@ -167,19 +164,25 @@ export default {
           statusIcon.value = TABS.site.statusIcon;
           statusLabel.value = TABS.site.statusLabel;
           statusDescription.value = TABS.site.statusDescription;
-          statusValue.value = Math.round(bodyBalance.value * 100);
+          statusValue.value = bodyBalance.value;
         } else if (name === 'Dashboard' || name === 'Overview') {
           title.value = TABS.overview.title;
           subtitle.value = TABS.overview.subtitle;
           statusIcon.value = TABS.overview.statusIcon;
           statusLabel.value = TABS.overview.statusLabel;
           statusDescription.value = TABS.overview.statusDescription;
-          statusValue.value = Math.round((bodyBalance.value * 100 + tissueExpansion.value + kpisOnTargetPercent.value) / 3);
+          statusValue.value = Math.round((bodyBalance.value + tissueExpansion.value + kpisOnTargetPercent.value) / 3);
         }
         // Add more tabs as needed
       },
       { immediate: true }
     );
+
+    // Compute latest update date from speckleData
+    const latestUpdate = computed(() => {
+      const latest = speckleData.value?.latest;
+      return latest?.createdAt || null;
+    });
 
     return {
       title,
@@ -193,7 +196,8 @@ export default {
       error,
       tissueExpansion,
       kpisOnTargetPercent,
-      bodyBalance
+      bodyBalance,
+      latestUpdate
     };
   }
 };

@@ -9,7 +9,7 @@
         <span class="vitality-label">{{ card.title }}</span>
         <div class="vitality-child-content">
           <div class="vitality-info-inline">
-            <span :class="['vitality-percent', percentColor(getPercent(card.value, card.goal, idx))]">{{ getPercent(card.value, card.goal, idx) }}%</span>
+            <span :class="['vitality-percent', percentColor(getPercent(card.value, card.goal, idx), idx)]">{{ getPercent(card.value, card.goal, idx) }}%</span>
             <span class="vitality-desc">{{ card.description }}</span>
           </div>
         </div>
@@ -46,13 +46,35 @@ const cardRoutes = ['/workspace/site', '/workspace/project', '/workspace/metrics
 
 // idx must be passed as third argument
 function getPercent(value, goal, idx) {
+  // idx 0 (bodyBalance) is a fraction (0-1), display as percent
+  if (idx === 0) return Math.round(value * 100);
   // idx 1 (tissue) and 2 (metabolism) are both direct percentages
   if (idx === 1 || idx === 2) return Math.round(value);
   if (!goal || isNaN(value) || isNaN(goal)) return 0;
   return Math.round((value / goal) * 100);
 }
 
-function percentColor(percent) {
+function percentColor(percent, idx) {
+  // idx 0: body balance (HB03 %), error if too far from 33%
+  if (idx === 0) {
+    // Error if <23% or >43% (±10% from 33%)
+    if (percent < 23 || percent > 43) return 'error';
+    if (percent < 28 || percent > 38) return 'warning';
+    return 'success';
+  }
+  // idx 1: tissue expansion, error if <75%
+  if (idx === 1) {
+    if (percent < 75) return 'error';
+    if (percent < 90) return 'warning';
+    return 'success';
+  }
+  // idx 2: kpis on target, error if <75%
+  if (idx === 2) {
+    if (percent < 75) return 'error';
+    if (percent < 90) return 'warning';
+    return 'success';
+  }
+  // fallback
   if (percent >= 75) return 'success';
   if (percent >= 50) return 'warning';
   return 'error';
@@ -137,7 +159,7 @@ function percentColor(percent) {
   font-weight: var(--font-weight-bold);
 }
 .vitality-desc {
-  color: var(--navy-100);
-  font-size: var(--font-size-body);
+  color: var(--navy-50);
+  font-size: var(--font-size-caption);
 }
 </style>

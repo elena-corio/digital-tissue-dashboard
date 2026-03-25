@@ -77,7 +77,7 @@ export const TABS = {
     title: 'Building Viewer',
     subtitle: 'Key indicators for your project\'s growth',
     statusLabel: 'Tissue Expansion',
-    statusDescription: 'Gross Floor Area compared to target',
+    statusDescription: 'GFA compared to 1.000.000 m² target',
     statusIcon: '🧬' 
   },
   metrics: {
@@ -144,9 +144,9 @@ export const ORGANS = {
 export const VITALITY = {
   sectionTitle: 'Organ Vitality',
   cards: {
-    body: { title: 'Body Balance', value: 0.85, goal:1, description: "Floor Area Ratio" },
-    tissue: { title: 'Tissue Expansion', value: 0.6, goal:1, description: "Gross Floor Area" },
-    metabolism: { title: 'Metabolic Health', value: 7, goal:8, description: "KPIs on Target"},
+    body: { title: 'HB03 Plot Share', value: 0.85, goal:1, description: "Body Balance" },
+    tissue: { title: 'GFA / 1.000.000 m²', value: 0.6, goal:1, description: "Tissue Expansion" },
+    metabolism: { title: 'KPIs on Target', value: 7, goal:8, description: "Metabolic Health"},
     
   },
 };
