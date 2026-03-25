@@ -98,8 +98,15 @@ export default {
       const result = [];
       for (const group of KPIS.kpis) {
         for (const metric of group.metrics) {
+          const camelKey = metric.name;
           const snakeKey = toSnakeCase(metric.name);
-          const value = properties[snakeKey];
+          let value = undefined;
+          // Prefer camelCase, fallback to snake_case
+          if (typeof properties[camelKey] === 'number') {
+            value = properties[camelKey];
+          } else if (typeof properties[snakeKey] === 'number') {
+            value = properties[snakeKey];
+          }
           const meta = METRICS[metric.name] || {};
           let onTarget = false;
           if (typeof value === 'number' && !isNaN(value)) {
@@ -164,7 +171,9 @@ export default {
       () => speckleData.value?.latest?.data?.properties,
       (properties) => {
         if (properties) {
-          kpiStatus.value = calculateKPIStatus(properties);
+          const status = calculateKPIStatus(properties);
+          console.log('DEBUG kpiStatus computed:', status, 'from properties:', properties);
+          kpiStatus.value = status;
         }
       },
       { immediate: true }
@@ -235,7 +244,8 @@ export default {
       kpisOnTargetPercent,
       bodyBalance,
       latestUpdate,
-      kpiStatus: kpiStatusUnwrapped
+      kpiStatus: kpiStatusUnwrapped,
+      kpiStatusUnwrapped
     };
   }
 };
