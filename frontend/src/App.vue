@@ -10,13 +10,20 @@ const { isLoaded, isSignedIn } = useClerk()
 const router = useRouter()
 const route = useRoute()
 
+// Restore last visited workspace tab on app load
 watchEffect(() => {
   if (
     isLoaded.value &&
     isSignedIn.value &&
     route.path === '/'
   ) {
-    router.replace('/workspace')
+    // Try to restore last visited workspace tab
+    const lastTab = localStorage.getItem('lastWorkspaceTab');
+    if (lastTab && lastTab.startsWith('/workspace/')) {
+      router.replace(lastTab);
+    } else {
+      router.replace('/workspace');
+    }
   }
 })
 </script>

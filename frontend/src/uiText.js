@@ -65,27 +65,32 @@ export const TABS = {
   subtitle: 'A quick pulse check of your project',
   statusLabel: 'Pulse Check',
   statusDescription: 'Recent activity and model updates',
-  statusIcon: '💓'},
+  statusIcon: '💓',
+  hint: '1. Move the mouse hover cells to check performance. \n 2. Click on grow phases to explore the roadmap. 3. Use the top navigation bar or the shortcuts to explore other tabs.',
+},
   site: {
     title: 'Site Analysis',
     subtitle: 'A close look at the site as a holistic system',
     statusLabel: 'Body Balance',
     statusDescription: 'HB03 Plot Share - target 33%',
-    statusIcon: '🧘' 
+    statusIcon: '🧘',
+    hint: '1. Toggle hyperbuildings on and off in the 3D viewer. \n 2. Move the mouse hover the site areas to highlight the corresponding building in the 3D viewer.',
   },
   project: {
     title: 'Building Viewer',
     subtitle: 'Key indicators for your project\'s growth',
     statusLabel: 'Tissue Expansion',
     statusDescription: 'GFA / 1.000.000 - target 100%',
-    statusIcon: '🧬' 
+    statusIcon: '🧬' ,
+    hint: '1. Toggle towers on and off in the 3D viewer. \n 2. Explore insights on towers, program distribution and material breakdown and see the color-coded 3D visualization.',
   },
   metrics: {
     title: 'Metrics Dashboard',
     subtitle: 'A cell-level view of your project\'s health',
     statusLabel: 'Metabolic Health',
     statusDescription: 'KPIs on Target - target 100%',
-    statusIcon: '🦠'
+    statusIcon: '🦠',
+    hint: '1. Flip the Global value card to see the KPI formula. \n 2. In the KPIs Overview, select one KPI to see the corresponding charts and 3D visualization.',  
   }
 };
 export const KPIS = {

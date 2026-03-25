@@ -13,7 +13,7 @@
       <polyline :points="linePoints" fill="none" stroke="var(--navy-100)" stroke-width="3" />
       <!-- Circles -->
       <g v-for="(pt, i) in points" :key="i">
-        <circle :cx="pt.x" :cy="pt.y" r="6" fill="var(--navy-100)" @mouseenter="hoveredIdx = i" @mouseleave="hoveredIdx = null" />
+        <circle :cx="pt.x" :cy="pt.y" r="6" fill="var(--navy-100)" @mouseenter="hoveredIdx = i" @mouseleave="hoveredIdx = null" style="cursor: pointer;" />
       </g>
       <!-- X axis labels -->
       <g v-for="(pt, i) in points" :key="'year-' + i">
@@ -186,12 +186,14 @@ export default {
   box-shadow: var(--shadow-card);
   padding: var(--space-xs) var(--space-sm);
   width: fit-content;
+   z-index: 600;
 }
 .history-tooltip-value {
   font-size: var(--font-size-body);
   font-weight: var(--font-weight-bold);
   color: var(--navy-100);
   white-space: nowrap;
+ 
 }
 .axis-label {
   font-weight: var(--font-weight-regular);

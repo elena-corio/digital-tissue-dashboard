@@ -1,23 +1,39 @@
 <template>
   <nav class="nav-tabs-root">
     <div class="nav-tabs-list">
-      <router-link
-        v-for="tab in tabs"
-        :key="tab.label"
-        :to="tab.route"
-        class="nav-tab"
-        :class="{ active: $route.name === tab.name }"
-      >
-        {{ tab.label }}
-      </router-link>
+			<router-link
+				v-for="tab in tabs"
+				:key="tab.label"
+				:to="tab.route"
+				class="nav-tab"
+				:class="{ active: $route.name === tab.name, disabled: loading }"
+				:tabindex="loading ? -1 : 0"
+				:aria-disabled="loading ? 'true' : 'false'"
+				@click.native="onTabClick($event, tab)"
+				:style="loading ? 'pointer-events: none; opacity: 0.5;' : ''"
+			>
+				{{ tab.label }}
+			</router-link>
     </div>
   </nav>
 </template>
 
 <script setup>
-import { useRoute } from 'vue-router';
-const props = defineProps({ tabs: Array });
+
+import { useRoute, useRouter } from 'vue-router';
+const props = defineProps({ tabs: Array, loading: Boolean });
 const $route = useRoute();
+const router = useRouter();
+
+function onTabClick(event, tab) {
+	if (props.loading) {
+		event.preventDefault();
+		event.stopImmediatePropagation && event.stopImmediatePropagation();
+		return;
+	}
+	// Save last visited tab to localStorage
+	localStorage.setItem('lastWorkspaceTab', tab.route);
+}
 </script>
 
 <style>
