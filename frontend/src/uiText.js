@@ -64,27 +64,27 @@ export const TABS = {
 {  title: 'Project Overview',
   subtitle: 'A quick pulse check of your project',
   statusLabel: 'Pulse Check',
-  statusDescription: 'Average Organ Vitality',
+  statusDescription: 'Recent activity and model updates',
   statusIcon: '💓'},
   site: {
     title: 'Site Analysis',
     subtitle: 'A close look at the site as a holistic system',
     statusLabel: 'Body Balance',
-    statusDescription: 'How evenly the site area is distributed among hypers',
+    statusDescription: 'HB03 Plot Share - target 33%',
     statusIcon: '🧘' 
   },
   project: {
     title: 'Building Viewer',
     subtitle: 'Key indicators for your project\'s growth',
     statusLabel: 'Tissue Expansion',
-    statusDescription: 'GFA compared to 1.000.000 m² target',
+    statusDescription: 'GFA / 1.000.000 - target 100%',
     statusIcon: '🧬' 
   },
   metrics: {
     title: 'Metrics Dashboard',
     subtitle: 'A cell-level view of your project\'s health',
     statusLabel: 'Metabolic Health',
-    statusDescription: 'How many KPIs are on target',
+    statusDescription: 'KPIs on Target - target 100%',
     statusIcon: '🦠'
   }
 };

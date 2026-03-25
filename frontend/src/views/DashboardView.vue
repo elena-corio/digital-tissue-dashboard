@@ -87,7 +87,6 @@ export default {
       statusIcon.value = TABS.overview.statusIcon;
       statusLabel.value = TABS.overview.statusLabel;
       statusDescription.value = TABS.overview.statusDescription;
-      statusValue.value = vitalityAverage.value;
     });
 
     // Compute average of the three vitality metrics (all as percent)

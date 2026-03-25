@@ -10,15 +10,18 @@ import { TABS } from '../uiText.js';
 
 export default {
   name: 'ProjectView',
-  setup() {
+  props: {
+    kpiStatus: Array,
+    kpisOnTargetPercent: Number
+  },
+  setup(props) {
     const {
       title,
       subtitle,
       statusIcon,
       statusLabel,
       statusDescription,
-      statusValue,
-      kpisOnTargetPercent
+      statusValue
     } = useWorkspaceUI();
     onMounted(() => {
       title.value = TABS.project.title;
@@ -26,8 +29,9 @@ export default {
       statusIcon.value = TABS.project.statusIcon;
       statusLabel.value = TABS.project.statusLabel;
       statusDescription.value = TABS.project.statusDescription;
-      statusValue.value = kpisOnTargetPercent.value;
+      statusValue.value = props.kpisOnTargetPercent;
     });
+    // ...existing code...
   }
 };
 </script>

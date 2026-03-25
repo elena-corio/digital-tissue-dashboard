@@ -54,7 +54,7 @@ const props = defineProps({
 const vitalityCards = [
   {
     ...uiText.VITALITY.cards.body,
-    value: props.bodyBalance ?? 0,
+    value: props.bodyBalance ?? 0, // Already percent, do not multiply by 100
   },
   {
     ...uiText.VITALITY.cards.tissue,
@@ -69,8 +69,8 @@ const cardRoutes = ['/workspace/site', '/workspace/project', '/workspace/metrics
 
 // idx must be passed as third argument
 function getPercent(value, goal, idx) {
-  // idx 0 (bodyBalance) is a fraction (0-1), display as percent
-  if (idx === 0) return Math.round(value * 100);
+  // idx 0 (bodyBalance) is already percent
+  if (idx === 0) return Math.round(value);
   // idx 1 (tissue) and 2 (metabolism) are both direct percentages
   if (idx === 1 || idx === 2) return Math.round(value);
   if (!goal || isNaN(value) || isNaN(goal)) return 0;

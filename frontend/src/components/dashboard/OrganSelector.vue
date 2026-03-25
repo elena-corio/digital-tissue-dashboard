@@ -22,7 +22,7 @@ import { ref } from 'vue'
 import BtnCard from '../workspace/ToggleButton.vue'
 import { ORGANS } from '../../uiText.js'
 
-const selected = ref('Spine')
+const selected = ref('HB03')
 const selectOrgan = (label) => {
   selected.value = label
 }

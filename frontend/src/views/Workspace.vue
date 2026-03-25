@@ -27,17 +27,17 @@
       </div>
       <div v-else>
         <router-view
-          :tissueExpansion="tissueExpansion"
-          :kpisOnTargetPercent="kpisOnTargetPercent"
-          :bodyBalance="bodyBalance"
-          :title="title"
-          :subtitle="subtitle"
-          :statusIcon="statusIcon"
-          :statusLabel="statusLabel"
-          :statusDescription="statusDescription"
-          :statusValue="statusValue"
-          :latestUpdate="latestUpdate"
-          :kpiStatus="kpiStatus" 
+          :tissueExpansion="tissueExpansion ?? 0"
+          :kpisOnTargetPercent="kpisOnTargetPercent ?? 0"
+          :bodyBalance="bodyBalance ?? 0"
+          :title="title ?? ''"
+          :subtitle="subtitle ?? ''"
+          :statusIcon="statusIcon ?? ''"
+          :statusLabel="statusLabel ?? ''"
+          :statusDescription="statusDescription ?? ''"
+          :statusValue="statusValue ?? 0"
+          :latestUpdate="latestUpdate ?? ''"
+          :kpiStatus="kpiStatusUnwrapped ?? []"
         />
       </div>
     </div>
@@ -50,9 +50,9 @@ import HeaderBar from '../components/workspace/HeaderBar.vue';
 import StatusIndicator from '../components/workspace/StatusIndicator.vue';
 import { useWorkspaceUI } from '../composables/useWorkspaceUI.js';
 import { useSpeckleData } from '../composables/useSpeckleData';
-import { watch, computed } from 'vue';
+import { watch, computed, ref } from 'vue';
 import { METRICS } from '../benchmarks.js';
-import { TABS, SITE } from '../uiText.js';
+import { TABS, SITE, KPIS } from '../uiText.js';
     import { useRoute } from 'vue-router';
 
 
@@ -70,9 +70,10 @@ export default {
       statusIcon,
       statusLabel,
       statusDescription,
-      statusValue,
-      kpiStatus,
+      statusValue
     } = useWorkspaceUI();
+    // Local kpiStatus ref for Workspace
+    const kpiStatus = ref([]);
     // Fetch data at the parent level
     const { data: speckleData, loading, error, kpiStatus: getKpiStatus } = useSpeckleData();
 
@@ -91,23 +92,25 @@ export default {
     function toSnakeCase(str) {
       return str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
     }
+    // Use KPIS config to generate kpiStatus with exact metric names
     function calculateKPIStatus(properties) {
       if (!properties) return [];
       const result = [];
-      for (const [metricKey, { left, right, benchmark }] of Object.entries(METRICS)) {
-        const snakeKey = toSnakeCase(metricKey);
-        const value = properties[snakeKey];
-        if (typeof value !== 'number' || isNaN(value)) {
-          result.push({ name: metricKey, value: undefined, onTarget: false });
-          continue;
+      for (const group of KPIS.kpis) {
+        for (const metric of group.metrics) {
+          const snakeKey = toSnakeCase(metric.name);
+          const value = properties[snakeKey];
+          const meta = METRICS[metric.name] || {};
+          let onTarget = false;
+          if (typeof value === 'number' && !isNaN(value)) {
+            if (meta.left < meta.right) {
+              onTarget = value >= meta.benchmark;
+            } else {
+              onTarget = value <= meta.benchmark;
+            }
+          }
+          result.push({ name: metric.name, value, onTarget });
         }
-        let onTarget = false;
-        if (left < right) {
-          onTarget = value >= benchmark;
-        } else {
-          onTarget = value <= benchmark;
-        }
-        result.push({ name: metricKey, value, onTarget });
       }
       return result;
     }
@@ -140,15 +143,23 @@ export default {
     const bodyBalance = computed(() => {
       const totalArea = SITE.hypersArea.hb01 + SITE.hypersArea.hb02 + SITE.hypersArea.hb03;
       if (!totalArea) return 0;
-      return SITE.hypersArea.hb03 / totalArea;
+      // Return rounded percent for StatusIndicator
+      return Math.round((SITE.hypersArea.hb03 / totalArea) * 100);
     });
+
 
     // Always unwrap kpiStatus if it's a ref
     const kpiStatusUnwrapped = computed(() => {
       return kpiStatus && typeof kpiStatus.value !== 'undefined' ? kpiStatus.value : kpiStatus;
     });
 
-    // Watch for speckleData changes and update kpiStatus in useWorkspaceUI
+    // Compute latest update date from speckleData
+    const latestUpdate = computed(() => {
+      const latest = speckleData.value?.latest;
+      return latest?.createdAt || null;
+    });
+
+    // Watch for speckleData changes and update local kpiStatus
     watch(
       () => speckleData.value?.latest?.data?.properties,
       (properties) => {
@@ -161,34 +172,54 @@ export default {
 
     // Watch route and update workspace UI state for each tab
     const route = useRoute();
+    function updateStatusForTab(name) {
+      if (name === 'Site') {
+        title.value = TABS.site.title;
+        subtitle.value = TABS.site.subtitle;
+        statusIcon.value = TABS.site.statusIcon;
+        statusLabel.value = TABS.site.statusLabel;
+        statusDescription.value = TABS.site.statusDescription;
+        statusValue.value = bodyBalance.value;
+      } else if (name === 'Dashboard' || name === 'Overview') {
+        title.value = TABS.overview.title;
+        subtitle.value = TABS.overview.subtitle;
+        statusIcon.value = TABS.overview.statusIcon;
+        statusLabel.value = TABS.overview.statusLabel;
+        statusDescription.value = TABS.overview.statusDescription;
+        // Pulse check logic based on latestUpdate
+        const now = new Date();
+        const last = latestUpdate.value ? new Date(latestUpdate.value) : null;
+        let pulse = 20;
+        if (last) {
+          const diffHours = (now - last) / (1000 * 60 * 60);
+          if (diffHours < 24) pulse = 100;
+          else if (diffHours < 48) pulse = 80;
+          else if (diffHours < 72) pulse = 60;
+          else if (diffHours < 96) pulse = 40;
+          else pulse = 20;
+        }
+        statusValue.value = pulse;
+      }
+      // Add more tabs as needed
+    }
+
     watch(
       () => route.name,
       (name) => {
-        if (name === 'Site') {
-          title.value = TABS.site.title;
-          subtitle.value = TABS.site.subtitle;
-          statusIcon.value = TABS.site.statusIcon;
-          statusLabel.value = TABS.site.statusLabel;
-          statusDescription.value = TABS.site.statusDescription;
-          statusValue.value = bodyBalance.value;
-        } else if (name === 'Dashboard' || name === 'Overview') {
-          title.value = TABS.overview.title;
-          subtitle.value = TABS.overview.subtitle;
-          statusIcon.value = TABS.overview.statusIcon;
-          statusLabel.value = TABS.overview.statusLabel;
-          statusDescription.value = TABS.overview.statusDescription;
-          statusValue.value = Math.round((bodyBalance.value + tissueExpansion.value + kpisOnTargetPercent.value) / 3);
-        }
-        // Add more tabs as needed
+        updateStatusForTab(name);
       },
       { immediate: true }
     );
 
-    // Compute latest update date from speckleData
-    const latestUpdate = computed(() => {
-      const latest = speckleData.value?.latest;
-      return latest?.createdAt || null;
-    });
+    // Watch latestUpdate and update pulse if on dashboard/overview
+    watch(
+      () => latestUpdate.value,
+      () => {
+        if (route.name === 'Dashboard' || route.name === 'Overview') {
+          updateStatusForTab(route.name);
+        }
+      }
+    );
 
     return {
       title,
