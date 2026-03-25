@@ -41,7 +41,13 @@
         :key="slice.label"
         class="legend-item"
         :class="{ 'legend-item-col2': true }"
-        :style="{ gridColumn: (idx % 2) + 1 }"
+        :style="{
+          gridColumn: (idx % 2) + 1,
+          opacity: hovered === null || hovered === idx ? 1 : 0.3,
+          transition: 'opacity 0.2s'
+        }"
+        @mouseenter="() => onLegendEnter(idx)"
+        @mouseleave="onLegendLeave"
       >
         <span class="legend-color" :style="{ background: slice.color }"></span>
         <span class="legend-label">{{ slice.label }} </span>
@@ -58,25 +64,35 @@ const props = defineProps({
 });
 const hovered = ref(null);
 const tooltip = ref({ x: 0, y: 0, visible: false });
+const legendHover = ref(false);
 // Mouse move handler for pie chart
 function onPieMouseMove(e) {
-  if (hovered.value !== null) {
+  if (hovered.value !== null && !legendHover.value) {
     // Find the bounding rect of the wrapper for correct offset
     const wrapper = e.currentTarget.closest('.pie-chart-wrapper');
     if (wrapper) {
       const rect = wrapper.getBoundingClientRect();
-      tooltip.value.x = e.clientX - rect.left+12;
-      tooltip.value.y = e.clientY - rect.top +12;
+      tooltip.value.x = e.clientX - rect.left + 12;
+      tooltip.value.y = e.clientY - rect.top + 12;
       tooltip.value.visible = true;
     }
   }
 }
 function onPieMouseLeave() {
   tooltip.value.visible = false;
+  if (!legendHover.value) hovered.value = null;
+}
+function onLegendEnter(idx) {
+  legendHover.value = true;
+  hovered.value = idx;
+}
+function onLegendLeave() {
+  legendHover.value = false;
+  hovered.value = null;
 }
 const center = 60;
-const radius = 44;
-const thickness = 18;
+const radius = 38;
+const thickness = 24;
 const circumference = 2 * Math.PI * radius;
       
 const total = computed(() => props.data.reduce((sum, d) => sum + d.value, 0));
@@ -111,7 +127,6 @@ const slices = computed(() => {
   width: 240px;
   height: 240px;
   margin-top: var(--space-xl);
-  margin-bottom: var(--space-sm);
 }
 .pie-slice {
   stroke-linecap: butt;
