@@ -26,7 +26,7 @@ const props = defineProps({
   showStats: { type: Boolean, default: false }, // Show FPS/performance stats
   verbose: { type: Boolean, default: false },    // Console logging
   authToken: { type: String, default: '' },      // Speckle personal access token
-  filterConfig: { type: Object, default: null }  // { key, left, right } for color mapping
+  filterConfig: { type: Object, default: null }
 });
 
 const emit = defineEmits(['viewer-ready', 'model-loaded', 'error', 'object-clicked']);
@@ -138,9 +138,17 @@ watch(() => props.modelUrls, (newUrls) => {
 // ── Color helpers ──────────────────────────────────────────────
 const ERROR_COLOR   = '#e7882f';
 const SUCCESS_COLOR = '#4697e3';
+
+// Hardcoded hex codes for categorical coloring (matches programPalette.js)
 const CATEGORICAL_PALETTE = [
-  '#4697e3', '#e7882f', '#f0b43a', '#6ecb8a', '#c65fa0',
-  '#5bb8d4', '#e06060', '#a3c96e', '#b07cd6', '#f2c96e'
+  '#f0b43a',   // yellow
+  '#7d81ac',   // navy
+  '#007423',   // green
+  '#e9268c',   // fucsia
+  '#3b479f',   // blue
+  '#4697e3',   // light-blue
+  '#e7882f',   // orange
+  '#dadad9'    // grey (for support)
 ];
 
 const lerpColor = (hex1, hex2, t) => {

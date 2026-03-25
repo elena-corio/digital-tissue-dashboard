@@ -28,7 +28,7 @@
         <div v-else>No cluster data available</div>
       </template>
       <template v-else-if="selected === 'program'">
-        <span>Program chart content</span>
+        <ProgramPieChart :data="programData" />
       </template>
       <template v-else-if="selected === 'structure'">
         <span>Structure chart content</span>
@@ -40,6 +40,28 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { useSpeckleData } from '../../composables/useSpeckleData';
+import ProgramPieChart from './ProgramPieChart.vue';
+import { programPalette } from './programPalette.js';
+
+// Compute program distribution
+const programData = computed(() => {
+  const latest = speckleData.value?.latest;
+  if (!latest?.data?.elements) return [];
+  // Flatten all elements in all clusters
+  const allElements = latest.data.elements.flatMap(cluster => Array.isArray(cluster.elements) ? cluster.elements : []);
+  // Count by program (use el.properties.program)
+  const counts = {};
+  allElements.forEach(el => {
+    const program = el?.properties?.program || 'Unknown';
+    counts[program] = (counts[program] || 0) + 1;
+  });
+  // Map to array with color
+  return Object.entries(counts).map(([label, value], idx) => ({
+    label,
+    value,
+    color: programPalette[idx % programPalette.length]
+  }));
+});
 const selected = ref('data');
 
 // Get clusters (towers) and their floor counts
@@ -104,7 +126,7 @@ const barColors = [
   font-size: 1.15rem;
   font-weight: 600;
   color: var(--navy-100, #222);
-  margin-bottom: var(--space-md);
+  margin-bottom: var(--space-xl);
   text-align: left;
   width: 100%;
 }
