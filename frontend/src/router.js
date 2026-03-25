@@ -24,9 +24,9 @@ const routes = [
       component: () => import('@/views/SiteView.vue')
     },
     {
-      path: 'project',
-      name: 'Project',
-      component: () => import('@/views/ProjectView.vue')
+      path: 'building',
+      name: 'Building',
+      component: () => import('@/views/BuildingView.vue')
     },
     {
       path: 'metrics',

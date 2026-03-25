@@ -37,7 +37,7 @@ const props = defineProps({ loading: Boolean });
 const navTabs = [
   { label: 'Overview', route: '/workspace/overview', name: 'Overview' },
   { label: 'Site', route: '/workspace/site', name: 'Site' },
-  { label: 'Project', route: '/workspace/project', name: 'Project' },
+  { label: 'Building', route: '/workspace/building', name: 'Building' },
   { label: 'Metrics', route: '/workspace/metrics', name: 'Metrics' }
 ];
 

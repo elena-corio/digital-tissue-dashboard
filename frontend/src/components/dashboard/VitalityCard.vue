@@ -65,7 +65,7 @@ const vitalityCards = [
     value: props.kpisOnTargetPercent ?? 0,
   }
 ];
-const cardRoutes = ['/workspace/site', '/workspace/project', '/workspace/metrics']; // order matches cards
+const cardRoutes = ['/workspace/site', '/workspace/building', '/workspace/metrics']; // order matches cards
 
 // idx must be passed as third argument
 function getPercent(value, goal, idx) {

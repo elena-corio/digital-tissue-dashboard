@@ -76,11 +76,11 @@ export const TABS = {
     statusIcon: '🧘',
     hint: '1. Toggle hyperbuildings on and off in the 3D viewer. \n 2. Move the mouse hover the site areas to highlight the corresponding building in the 3D viewer.',
   },
-  project: {
+  building: {
     title: 'Building Viewer',
     subtitle: 'Key indicators for your project\'s growth',
     statusLabel: 'Tissue Expansion',
-    statusDescription: 'GFA / 1.000.000 - target 100%',
+    statusDescription: 'GFA / 1M m² - target 100%',
     statusIcon: '🧬' ,
     hint: '1. Toggle towers on and off in the 3D viewer. \n 2. Explore insights on towers, program distribution and material breakdown and see the color-coded 3D visualization.',
   },
@@ -150,7 +150,7 @@ export const VITALITY = {
   sectionTitle: 'Organ Vitality',
   cards: {
     body: { title: 'HB03 Plot Share', value: 0.85, goal:1, description: "Body Balance \n target 33%" },
-    tissue: { title: 'GFA / 1.000.000 m²', value: 0.6, goal:1, description: "Tissue Expansion \n target 100%" },
+    tissue: { title: 'GFA / 1M m²', value: 0.6, goal:1, description: "Tissue Expansion \n target 100%" },
     metabolism: { title: 'KPIs on Target', value: 7, goal:8, description: "Metabolic Health \n target 100%"},
     
   },
