@@ -10,23 +10,8 @@
     <div class="card-title">Key Insights</div>
     <div class="chart-placeholder">
       <template v-if="selected === 'data'">
-        <div v-if="clusters.length" class="bar-chart">
-          <div class="bar" v-for="(cluster, idx) in clusters" :key="cluster.id">
-            <div class="bar-value">{{ cluster.count }} floors</div>
-            <div class="bar-outer">
-              <div
-                class="bar-inner"
-                :style="{
-                  height: (maxFloors ? Math.round((cluster.count / maxFloors) * 200) : 0) + 'px',
-                  background: barColors[idx % barColors.length]
-                }"
-              ></div>
-            </div>
-            <div class="bar-label">{{ cluster.name.replace(/^Cluster/i, 'Tower') }}</div>
-          </div>
-        </div>
-        <div v-else>No cluster data available</div>
-      </template>
+        <DataBarChart :clusters="clusters" :maxFloors="maxFloors" />
+        </template>
       <template v-else-if="selected === 'program'">
         <ProgramPieChart :data="programData" />
       </template>
@@ -39,7 +24,8 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-import { useSpeckleData } from '../../composables/useSpeckleData';
+import { useSpeckleData } from '../../composables/useSpeckleData.js';
+import DataBarChart from './DataBarChart.vue';
 import ProgramPieChart from './ProgramPieChart.vue';
 import { programPalette } from './programPalette.js';
 
@@ -69,6 +55,7 @@ const { data: speckleData } = useSpeckleData();
 const clusters = computed(() => {
   const latest = speckleData.value?.latest;
   if (!latest?.data?.elements) return [];
+  // Always return an array, never undefined or 1
   return latest.data.elements.map(cluster => ({
     id: cluster.id,
     name: cluster.name,
@@ -80,13 +67,6 @@ const maxFloors = computed(() => {
   if (!clusters.value.length) return 1;
   return Math.max(...clusters.value.map(c => c.count), 1);
 });
-// Bar colors: blue, light-blue, orange, yellow
-const barColors = [
-  'var(--blue-100)',
-  'var(--light-blue-100)',
-  'var(--orange-100)',
-  'var(--yellow-100)'
-];
 </script>
 
 <style scoped>
