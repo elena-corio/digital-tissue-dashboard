@@ -3,11 +3,11 @@ Last visited tab persist when refreshing
 Navigation tab inactive until data is available
 ? with contextual instructions
 Thumbnail in metrics history above benchmark line
+Pointer/cursor in Site Plan View
 
 Legend in Speckle Viewer
 
-Pointer/cursor in Site Plan View
-Pointer/cursor in MEtrics history
+Pointer/cursor in Metrics history
 Pointer/cursor logic in Tissue Canvas
 Remove annoying thumbnail
 Refactor Tissue Canvas cell naming and look

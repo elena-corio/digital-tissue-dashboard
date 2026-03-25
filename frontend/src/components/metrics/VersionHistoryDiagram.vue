@@ -13,7 +13,7 @@
       <polyline :points="linePoints" fill="none" stroke="var(--navy-100)" stroke-width="3" />
       <!-- Circles -->
       <g v-for="(pt, i) in points" :key="i">
-        <circle :cx="pt.x" :cy="pt.y" r="6" fill="var(--navy-100)" @mouseenter="hoveredIdx = i" @mouseleave="hoveredIdx = null" />
+        <circle :cx="pt.x" :cy="pt.y" r="6" fill="var(--navy-100)" @mouseenter="hoveredIdx = i" @mouseleave="hoveredIdx = null" style="cursor: pointer;" />
       </g>
       <!-- X axis labels -->
       <g v-for="(pt, i) in points" :key="'year-' + i">
