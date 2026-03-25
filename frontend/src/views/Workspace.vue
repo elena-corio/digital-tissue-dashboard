@@ -30,6 +30,12 @@
           :tissueExpansion="tissueExpansion"
           :kpisOnTargetPercent="kpisOnTargetPercent"
           :bodyBalance="bodyBalance"
+          :title="title"
+          :subtitle="subtitle"
+          :statusIcon="statusIcon"
+          :statusLabel="statusLabel"
+          :statusDescription="statusDescription"
+          :statusValue="statusValue"
         />
       </div>
     </div>
@@ -44,7 +50,9 @@ import { useWorkspaceUI } from '../composables/useWorkspaceUI.js';
 import { useSpeckleData } from '../composables/useSpeckleData';
 import { onMounted, watch, computed } from 'vue';
 import { METRICS } from '../benchmarks.js';
-import { SITE } from '../uiText.js';
+import { TABS, SITE } from '../uiText.js';
+    import { useRoute } from 'vue-router';
+
 
 
 export default {
@@ -144,6 +152,31 @@ export default {
         if (properties) {
           kpiStatus.value = calculateKPIStatus(properties);
         }
+      },
+      { immediate: true }
+    );
+
+    // Watch route and update workspace UI state for each tab
+    const route = useRoute();
+    watch(
+      () => route.name,
+      (name) => {
+        if (name === 'Site') {
+          title.value = TABS.site.title;
+          subtitle.value = TABS.site.subtitle;
+          statusIcon.value = TABS.site.statusIcon;
+          statusLabel.value = TABS.site.statusLabel;
+          statusDescription.value = TABS.site.statusDescription;
+          statusValue.value = Math.round(bodyBalance.value * 100);
+        } else if (name === 'Dashboard' || name === 'Overview') {
+          title.value = TABS.overview.title;
+          subtitle.value = TABS.overview.subtitle;
+          statusIcon.value = TABS.overview.statusIcon;
+          statusLabel.value = TABS.overview.statusLabel;
+          statusDescription.value = TABS.overview.statusDescription;
+          statusValue.value = Math.round((bodyBalance.value * 100 + tissueExpansion.value + kpisOnTargetPercent.value) / 3);
+        }
+        // Add more tabs as needed
       },
       { immediate: true }
     );

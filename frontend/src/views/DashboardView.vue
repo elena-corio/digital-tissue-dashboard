@@ -90,15 +90,25 @@ export default {
       statusIcon.value = TABS.overview.statusIcon;
       statusLabel.value = TABS.overview.statusLabel;
       statusDescription.value = TABS.overview.statusDescription;
+      statusValue.value = vitalityAverage.value;
     });
 
-    // Expose props to template
+    // Compute average of the three vitality metrics (all as percent)
+    const vitalityAverage = computed(() => {
+      // bodyBalance is 0-1, others are percent
+      const body = typeof props.bodyBalance === 'number' ? props.bodyBalance * 100 : 0;
+      const tissue = typeof props.tissueExpansion === 'number' ? props.tissueExpansion : 0;
+      const metabolism = typeof props.kpisOnTargetPercent === 'number' ? props.kpisOnTargetPercent : 0;
+      return Math.round((body + tissue + metabolism) / 3);
+    });
+
     return {
       latestUpdate, loading, error, speckleData, dataReady,
       title, subtitle, statusIcon, statusLabel, statusDescription, statusValue,
       tissueExpansion: props.tissueExpansion,
       kpisOnTargetPercent: props.kpisOnTargetPercent,
-      bodyBalance: props.bodyBalance
+      bodyBalance: props.bodyBalance,
+      vitalityAverage
     };
   }
 };
