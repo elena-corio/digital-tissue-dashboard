@@ -31,8 +31,6 @@
           :tissueExpansion="tissueExpansion ?? 0"
           :kpisOnTargetPercent="kpisOnTargetPercent ?? 0"
           :bodyBalance="bodyBalance ?? 0"
-          :title="title ?? ''"
-          :subtitle="subtitle ?? ''"
           :statusIcon="statusIcon ?? ''"
           :statusLabel="statusLabel ?? ''"
           :statusDescription="statusDescription ?? ''"
