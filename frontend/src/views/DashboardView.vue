@@ -1,5 +1,14 @@
-<template>
-  <div class="dashboard-main">
+<template><div v-if="loading" class="dashboard-loading">
+    <div class="spinner"></div>
+    <p>Loading data...</p>
+  </div>
+  <div v-else-if="error" class="dashboard-error">
+    <p>Error loading data: {{ error.message }}</p>
+  </div>
+  <div v-else-if="!speckleData || !speckleData.latest" class="dashboard-nodata">
+    <p>No data available.</p>
+  </div>
+  <div v-else class="dashboard-main">
     <!-- Left Column -->
     <section class="dashboard-left dashboard-col">
       <div class="dashboard-left-stack">
@@ -13,7 +22,11 @@
     <section class="dashboard-right dashboard-col">
       <div class="dashboard-right-stack">
         <div class="dashboard-vitality-wrapper">
-          <VitalityCard />
+          <VitalityCard
+            :tissueExpansion="tissueExpansion"
+            :kpisOnTargetPercent="kpisOnTargetPercent"
+            :bodyBalance="bodyBalance"
+          />
         </div>
         <div class="dashboard-detail-wrapper">
           <div class="dashboard-detail-left">
@@ -21,7 +34,7 @@
           </div>
           <div class="dashboard-detail-right">
             <GrowthPhases />
-            <IssueFound />
+            <IssueFound :lastUpdate="latestUpdate" />
           </div>
         </div>
       </div>
@@ -30,18 +43,26 @@
 </template>
 
 <script>
-import { onMounted } from 'vue';
+import { onMounted, computed } from 'vue';
 import { useWorkspaceUI } from '../composables/useWorkspaceUI.js';
 import { TABS } from '../uiText.js';
+import { useSpeckleData } from '../composables/useSpeckleData';
 import TissueCanvas from '../components/dashboard/TissueCanvas.vue';
 import OrganSelector from '../components/dashboard/OrganSelector.vue';
 import VitalityCard from '../components/dashboard/VitalityCard.vue';
 import GrowthPhases from '../components/dashboard/GrowthPhases.vue';
 import IssueFound from '../components/dashboard/LastUpdate.vue';
 import TeamList from '../components/dashboard/TeamList.vue';
+import { METRICS } from '../benchmarks.js';
 
 export default {
   name: 'DashboardView',
+  props: {
+    tissueExpansion: { type: Number, required: false },
+    kpisOnTargetPercent: { type: Number, required: false },
+    bodyBalance: { type: Number, required: false },
+    latestUpdate: { type: [String, null], required: false }
+  },
   components: {
     TissueCanvas,
     OrganSelector,
@@ -50,23 +71,41 @@ export default {
     IssueFound,
     TeamList
   },
-  setup() {
-    const {
-      title,
-      subtitle,
-      statusIcon,
-      statusLabel,
-      statusDescription,
-      statusValue
-    } = useWorkspaceUI();
+  setup(props) {
+    const { title, subtitle, statusIcon, statusLabel, statusDescription, statusValue } = useWorkspaceUI();
+    const { data: speckleData, loading, error } = useSpeckleData();
+    // Use latestUpdate from props (passed from Workspace.vue)
+    const dataReady = computed(() => {
+      const latest = speckleData.value?.latest;
+      return !!(latest && latest.data && latest.data.properties && Object.keys(latest.data.properties).length > 0);
+    });
+
     onMounted(() => {
       title.value = TABS.overview.title;
       subtitle.value = TABS.overview.subtitle;
       statusIcon.value = TABS.overview.statusIcon;
       statusLabel.value = TABS.overview.statusLabel;
       statusDescription.value = TABS.overview.statusDescription;
-      statusValue.value = 80; // Example value, replace with real data if available
+      statusValue.value = vitalityAverage.value;
     });
+
+    // Compute average of the three vitality metrics (all as percent)
+    const vitalityAverage = computed(() => {
+      // bodyBalance is 0-1, others are percent
+      const body = typeof props.bodyBalance === 'number' ? props.bodyBalance * 100 : 0;
+      const tissue = typeof props.tissueExpansion === 'number' ? props.tissueExpansion : 0;
+      const metabolism = typeof props.kpisOnTargetPercent === 'number' ? props.kpisOnTargetPercent : 0;
+      return Math.round((body + tissue + metabolism) / 3);
+    });
+
+    return {
+      latestUpdate: props.latestUpdate, loading, error, speckleData, dataReady,
+      title, subtitle, statusIcon, statusLabel, statusDescription, statusValue,
+      tissueExpansion: props.tissueExpansion,
+      kpisOnTargetPercent: props.kpisOnTargetPercent,
+      bodyBalance: props.bodyBalance,
+      vitalityAverage
+    };
   }
 };
 </script>
@@ -147,5 +186,27 @@ export default {
   min-height: 0;
  gap: var(--space-md);
    margin-bottom: var(--space-lg);
+}
+.dashboard-loading, .dashboard-error, .dashboard-nodata {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  font-size: 1.2rem;
+  color: var(--navy-100);
+}
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #4697e3;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 </style>

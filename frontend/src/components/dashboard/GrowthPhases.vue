@@ -1,6 +1,7 @@
 <template>
   <div class="card growth-cycles">
     <div class="card-title">{{ uiText.GROWTH_PHASES.title }}</div>
+    <div class="card-title">{{ uiText.GROWTH_PHASES.stitle }}</div>
     <div class="growth-nails">
       <div
         v-for="(phase, idx) in uiText.GROWTH_PHASES.phases"

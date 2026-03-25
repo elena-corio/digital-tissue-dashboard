@@ -48,15 +48,28 @@
   </div>
 </template>
 
+
 <script setup>
-import { ref, computed, onMounted } from 'vue';
-import { useWorkspaceUI } from '../composables/useWorkspaceUI.js';
+import { ref, computed } from 'vue';
 import { TABS, SITE } from '../uiText.js';
 import ToggleButton from '../components/workspace/ToggleButton.vue';
 import SiteViewer from '../components/siteView/SiteViewer.vue';
 import SiteInfoList from '../components/siteView/SiteInfoList.vue';
 import SitePlanView from '../components/siteView/SitePlanView.vue';
 import { speckleModels, speckleServerUrl, speckleToken } from '../config/speckleConfig.js';
+
+// Accept props from Workspace.vue
+const props = defineProps({
+  title: String,
+  subtitle: String,
+  statusIcon: String,
+  statusLabel: String,
+  statusDescription: String,
+  statusValue: [Number, String],
+  tissueExpansion: Number,
+  kpisOnTargetPercent: Number,
+  bodyBalance: Number
+});
 
 const toggleStates = ref([false, false, true]);
 const hoveredArea = ref(null); // { areaKey, idx } or null
@@ -85,35 +98,7 @@ const activeModelUrls = computed(() => {
   return urls;
 });
 
-const {
-  title,
-  subtitle,
-  statusIcon,
-  statusLabel,
-  statusDescription,
-  statusValue
-} = useWorkspaceUI();
 
-// Calculate max deviation from 33% for area distribution
-const totalArea = SITE.hypersArea.hb01 + SITE.hypersArea.hb02 + SITE.hypersArea.hb03;
-const areaPercents = [
-  (SITE.hypersArea.hb01 / totalArea) * 100,
-  (SITE.hypersArea.hb02 / totalArea) * 100,
-  (SITE.hypersArea.hb03 / totalArea) * 100
-];
-
-
-const maxDeviation = Math.round(Math.max(...areaPercents.map(p => Math.abs(p - 33))));
-const balanceScore = 100 - maxDeviation;
-
-onMounted(() => {
-  title.value = TABS.site.title;
-  subtitle.value = TABS.site.subtitle;
-  statusIcon.value = TABS.site.statusIcon;
-  statusLabel.value = TABS.site.statusLabel;
-  statusDescription.value = TABS.site.statusDescription;
-  statusValue.value = `${balanceScore}`;
-});
 </script>
 
 <style scoped>

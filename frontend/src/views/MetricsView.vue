@@ -1,6 +1,7 @@
 <template>
   <div v-if="loading" class="metrics-loading">Loading Speckle data...</div>
   <div v-else-if="error" class="metrics-error">Error loading Speckle data: {{ error.message }}</div>
+  <div v-else-if="!speckleData || !speckleData.latest">No data available</div>  
   <div v-else class="metrics-main">
     <!-- Left Column -->
     <section class="metrics-left metrics-col">
@@ -28,14 +29,14 @@
     <section class="metrics-right metrics-col">
       <div class="metrics-right-stack">
         <div class="metrics-kpis-wrapper">
-          <KPIsOverview @selectKPI="onSelectKPI" :selectedKPI="selectedKPI" :speckleData="speckleData" />
+          <KPIsOverview @selectKPI="onSelectKPI" :selectedKPI="selectedKPI" :speckleData="speckleData.latest" />
         </div>
         <div class="metrics-detail-wrapper">
           <div class="metrics-detail-left">
-            <TowerMetrics :selectedMetric="selectedMetric" :speckleData="speckleData" />
+            <TowerMetrics :selectedMetric="selectedMetric" :speckleData="speckleData.latest" />
           </div>
           <div class="metrics-detail-right">
-            <VersionMetrics :selectedMetric="selectedMetric" :value="selectedMetricValue" />
+            <VersionMetrics :selectedMetric="selectedMetric" :value="selectedMetricValue" :history="metricHistory" />
           </div>
         </div>
       </div>
@@ -55,7 +56,7 @@ import ViewerPanel from '../components/metrics/ViewerPanel.vue';
 import { useSpeckleData } from '../composables/useSpeckleData';
 import { speckleModels, speckleToken } from '../config/speckleConfig.js';
 import * as uiText from '../uiText.js';
-import { onMounted } from 'vue';
+import { onMounted, watch, computed } from 'vue';
 import { useWorkspaceUI } from '../composables/useWorkspaceUI.js';
 import { METRICS } from '../benchmarks.js';
 
@@ -70,18 +71,19 @@ export default {
     ViewerPanel,
   },
   data() {
-    const { data: speckleData, loading, error, refresh } = useSpeckleData();
+    const { data: speckleData, loading, error, refresh, kpiStatus } = useSpeckleData();
     return {
       uiText,
       selectedKPI: uiText.KPIS.kpis[0]?.metrics[0]?.name || null,
       projectId: speckleModels.metrics.projectId,
       inputModelId: [speckleModels.metrics.modelId],
       speckleToken: speckleToken,
-      globalScore: 8.0, // Placeholder, update with actual calculation if needed
       speckleData,
       loading,
       error,
-      refresh
+      refresh,
+      kpiStatus
+
     };
   },
   computed: {
@@ -97,11 +99,21 @@ export default {
       return null;
     },
     selectedMetricValue() {
-      // Extract the value for the selected metric from speckleData (root level)
-      if (!this.selectedMetric || !this.speckleData || !this.speckleData.data || !this.speckleData.data.properties) return undefined;
+      // Use the latest version's properties
+      console.log('[MetricsView] speckleData:', this.speckleData);
+      if (!this.selectedMetric || !this.speckleData || !this.speckleData.latest || !this.speckleData.latest.data) return undefined;
+      console.log('[MetricsView] speckleData.latest.data:', this.speckleData.latest.data);
+      if (!this.speckleData.latest.data.properties) return undefined;
       const metricName = this.selectedMetric.name;
       const snakeKey = metricName ? metricName.replace(/[A-Z]/g, l => `_${l.toLowerCase()}`) : '';
-      return this.speckleData.data.properties[snakeKey];
+      return this.speckleData.latest.data.properties[snakeKey];
+    },
+    metricHistory() {
+      if (!this.selectedMetric || !this.speckleData || !this.speckleData.versions) return [];
+      const key = this.selectedMetric.name.replace(/[A-Z]/g, l => `_${l.toLowerCase()}`);
+      return this.speckleData.versions
+        .map(v => v.data?.properties?.[key])
+        .filter(v => typeof v === 'number' && !isNaN(v));
     },
     selectedFilterConfig() {
       const m = this.selectedMetric;
@@ -122,18 +134,25 @@ export default {
     }
   }
     ,
-    setup() {
-      const { title, subtitle, statusIcon, statusLabel, statusDescription, statusValue } = useWorkspaceUI();
-      onMounted(() => {
-        title.value = uiText.TABS.metrics.title;
-        subtitle.value = uiText.TABS.metrics.subtitle;
-        statusIcon.value = uiText.TABS.metrics.statusIcon;
-        statusLabel.value = uiText.TABS.metrics.statusLabel;
-        statusDescription.value = uiText.TABS.metrics.statusDescription;
-        statusValue.value = 90; // Example value, replace with real data if available
-      });
-      return {};
-    }
+    mounted() {
+  const { title, subtitle, statusIcon, statusLabel, statusDescription, statusValue,  kpiStatus, kpisOnTargetPercent } = useWorkspaceUI();
+  title.value = uiText.TABS.metrics.title;
+  subtitle.value = uiText.TABS.metrics.subtitle;
+  statusIcon.value = uiText.TABS.metrics.statusIcon;
+  statusLabel.value = uiText.TABS.metrics.statusLabel;
+  statusDescription.value = uiText.TABS.metrics.statusDescription;
+  kpiStatus.value = this.kpiStatus();
+  statusValue.value = kpisOnTargetPercent.value;
+
+  this.$watch(
+    () => this.kpiStatus(),
+    (newVal) => {
+      kpiStatus.value = newVal;
+      statusValue.value = kpisOnTargetPercent.value;
+    },
+    { immediate: true, deep: true }
+  );
+}
 };
 </script>
 

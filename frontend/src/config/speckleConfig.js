@@ -12,8 +12,8 @@ export const speckleModels = {
   site: {
     projectId: '3d70848e9c',
     contextModelId: 'ad7100fabd',
-    hb01ModelId: 'ae49122ea5',
-    hb02ModelId: '86650fd3e5',
+    hb01ModelId: '77c3aa335b',
+    hb02ModelId: 'cafc7ce6bf',
     hb03ModelId: '388ce2bacf',
   }
 };

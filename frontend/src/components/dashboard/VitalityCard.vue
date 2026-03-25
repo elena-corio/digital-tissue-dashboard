@@ -1,6 +1,5 @@
 <template>
   <div class="card vitality-card-parent">
-    <div class="card-title">{{ uiText.VITALITY.sectionTitle }}</div>
     <div class="vitality-children-wrapper">
       <div class="card vitality-card-child" v-for="(card, idx) in vitalityCards" :key="card.title">
         <router-link :to="cardRoutes[idx]" class="arrow-btn">
@@ -9,7 +8,31 @@
         <span class="vitality-label">{{ card.title }}</span>
         <div class="vitality-child-content">
           <div class="vitality-info-inline">
-            <span :class="['vitality-percent', percentColor(getPercent(card.value, card.goal))]">{{ getPercent(card.value, card.goal) }}%</span>
+            <span class="vitality-circle-wrapper">
+              <svg :width="72" :height="72" class="vitality-circle">
+                <circle
+                  :stroke-width="getCircleProps(getPercent(card.value, card.goal, idx)).stroke"
+                  :r="getCircleProps(getPercent(card.value, card.goal, idx)).radius"
+                  :cx="36"
+                  :cy="36"
+                  fill="none"
+                  class="vitality-circle-bg"
+                />
+                <circle
+                  :stroke-width="getCircleProps(getPercent(card.value, card.goal, idx)).stroke"
+                  :r="getCircleProps(getPercent(card.value, card.goal, idx)).radius"
+                  :cx="36"
+                  :cy="36"
+                  fill="none"
+                  :stroke-dasharray="getCircleProps(getPercent(card.value, card.goal, idx)).circumference"
+                  :stroke-dashoffset="getCircleProps(getPercent(card.value, card.goal, idx)).offset"
+                  :class="['vitality-circle-bar', percentColor(getPercent(card.value, card.goal, idx), idx)]"
+                />
+                <text x="36" y="38" text-anchor="middle" font-size="22" :class="['vitality-circle-text', percentColor(getPercent(card.value, card.goal, idx), idx)]">
+                  {{ getPercent(card.value, card.goal, idx) }}%
+                </text>
+              </svg>
+            </span>
             <span class="vitality-desc">{{ card.description }}</span>
           </div>
         </div>
@@ -22,18 +45,73 @@
 import * as uiText from '../../uiText.js'
 import ArrowButton from '../workspace/ArrowButton.vue'
 
-const vitalityCards = Object.values(uiText.VITALITY.cards)
-const cardRoutes = ['/workspace/site', '/workspace/project', '/workspace/metrics'] // order matches cards
+const props = defineProps({
+  tissueExpansion: { type: Number, required: false },
+  kpisOnTargetPercent: { type: Number, required: false },
+  bodyBalance: { type: Number, required: false },
+});
 
-function getPercent(value, goal) {
+const vitalityCards = [
+  {
+    ...uiText.VITALITY.cards.body,
+    value: props.bodyBalance ?? 0,
+  },
+  {
+    ...uiText.VITALITY.cards.tissue,
+    value: props.tissueExpansion ?? 0,
+  },
+  {
+    ...uiText.VITALITY.cards.metabolism,
+    value: props.kpisOnTargetPercent ?? 0,
+  }
+];
+const cardRoutes = ['/workspace/site', '/workspace/project', '/workspace/metrics']; // order matches cards
+
+// idx must be passed as third argument
+function getPercent(value, goal, idx) {
+  // idx 0 (bodyBalance) is a fraction (0-1), display as percent
+  if (idx === 0) return Math.round(value * 100);
+  // idx 1 (tissue) and 2 (metabolism) are both direct percentages
+  if (idx === 1 || idx === 2) return Math.round(value);
   if (!goal || isNaN(value) || isNaN(goal)) return 0;
   return Math.round((value / goal) * 100);
 }
 
-function percentColor(percent) {
+function percentColor(percent, idx) {
+  // idx 0: body balance (HB03 %), error if too far from 33%
+  if (idx === 0) {
+    // Error if <23% or >43% (±10% from 33%)
+    if (percent < 23 || percent > 43) return 'error';
+    if (percent < 28 || percent > 38) return 'warning';
+    return 'success';
+  }
+  // idx 1: tissue expansion, error if <75%
+  if (idx === 1) {
+    if (percent < 75) return 'error';
+    if (percent < 90) return 'warning';
+    return 'success';
+  }
+  // idx 2: kpis on target, error if <75%
+  if (idx === 2) {
+    if (percent < 75) return 'error';
+    if (percent < 90) return 'warning';
+    return 'success';
+  }
+  // fallback
   if (percent >= 75) return 'success';
   if (percent >= 50) return 'warning';
   return 'error';
+}
+
+// Update getCircleProps for larger circle
+function getCircleProps(percent) {
+  const radius = 36; 
+  const stroke = 6;
+  const normalizedRadius = radius - stroke / 2;
+  const circumference = 2 * Math.PI * normalizedRadius;
+  const progress = Math.max(0, Math.min(percent, 100));
+  const offset = circumference - (progress / 100) * circumference;
+  return { radius: normalizedRadius, circumference, offset, stroke };
 }
 </script>
 
@@ -106,7 +184,7 @@ function percentColor(percent) {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 0.5rem;
+  gap: 1.25rem;
 }
 .vitality-label {
   color: var(--navy-100);
@@ -115,7 +193,52 @@ function percentColor(percent) {
   font-weight: var(--font-weight-bold);
 }
 .vitality-desc {
-  color: var(--navy-100);
-  font-size: var(--font-size-body);
+  color: var(--navy-50);
+  font-size: var(--font-size-caption);
+  font-weight: 500;
+  margin-left: 0.2rem;
+  max-width: 120px;
+}
+
+/* Add styles for the circle */
+.vitality-circle-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+}
+.vitality-circle-bg {
+  stroke: #e0e0e0;
+}
+.vitality-circle-bar {
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+  transition: stroke-dashoffset 0.5s;
+}
+.vitality-circle-bar.success {
+  stroke: var(--color-success, #4caf50);
+}
+.vitality-circle-bar.warning {
+  stroke: var(--color-warning, #ff9800);
+}
+.vitality-circle-bar.error {
+  stroke: var(--color-error, #f44336);
+}
+.vitality-circle-text {
+  dominant-baseline: middle;
+  font-weight: bold;
+  font-family: inherit;
+  /* color is set by .success/.warning/.error */
+  font-size: 18px;
+}
+.vitality-circle-text.success {
+  fill: var(--color-success, #4caf50);
+}
+.vitality-circle-text.warning {
+  fill: var(--color-warning, #ff9800);
+}
+.vitality-circle-text.error {
+  fill: var(--color-error, #f44336);
 }
 </style>

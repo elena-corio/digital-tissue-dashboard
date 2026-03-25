@@ -77,14 +77,14 @@ export const TABS = {
     title: 'Building Viewer',
     subtitle: 'Key indicators for your project\'s growth',
     statusLabel: 'Tissue Expansion',
-    statusDescription: 'Gross Floor Area compared to target',
+    statusDescription: 'GFA compared to 1.000.000 m² target',
     statusIcon: '🧬' 
   },
   metrics: {
     title: 'Metrics Dashboard',
     subtitle: 'A cell-level view of your project\'s health',
     statusLabel: 'Metabolic Health',
-    statusDescription: 'KPIs on Target',
+    statusDescription: 'How many KPIs are on target',
     statusIcon: '🦠'
   }
 };
@@ -144,9 +144,9 @@ export const ORGANS = {
 export const VITALITY = {
   sectionTitle: 'Organ Vitality',
   cards: {
-    body: { title: 'Body Balance', value: 0.85, goal:1, description: "Floor Area Ratio" },
-    tissue: { title: 'Tissue Expansion', value: 0.6, goal:1, description: "Gross Floor Area" },
-    metabolism: { title: 'Metabolic Health', value: 7, goal:8, description: "KPIs on Target"},
+    body: { title: 'HB03 Plot Share', value: 0.85, goal:1, description: "Body Balance \n target 33%" },
+    tissue: { title: 'GFA / 1.000.000 m²', value: 0.6, goal:1, description: "Tissue Expansion \n target 100%" },
+    metabolism: { title: 'KPIs on Target', value: 7, goal:8, description: "Metabolic Health \n target 100%"},
     
   },
 };
@@ -182,7 +182,7 @@ export const GROWTH_PHASES = {
 
 export const UPDATES = {
   title: 'Regeneration Cycle',
-  lastUpdate: '3/1/2026 7:26:54 PM',
+  subtitle: 'Last Update',
   issueFound: 'The last update was more than 24 hours ago. Publish your latest design iteration to keep the tissue healthy.',
   allGood: 'The latest update was published recently. Keep up the good work to maintain tissue vitality!',
 };
