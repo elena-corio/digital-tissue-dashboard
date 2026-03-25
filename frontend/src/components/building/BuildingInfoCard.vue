@@ -3,8 +3,8 @@
   <div class="card-title">Building Info</div>
   <ul class="building-info-list">
     <li class="building-info-list-item"><span class="info-label">Name</span> <span class="info-value">{{ name }}</span></li>
-    <li class="building-info-list-item"><span class="info-label">Number of Floors</span> <span class="info-value">{{ numberOfFloors }} floors</span></li>
-    <li class="building-info-list-item"><span class="info-label">Number of Towers</span> <span class="info-value">{{ numberOfTowers }} towers</span></li>
+    <li class="building-info-list-item"><span class="info-label">Floors Count</span> <span class="info-value">{{ numberOfFloors }} floors</span></li>
+    <li class="building-info-list-item"><span class="info-label">Towers Count</span> <span class="info-value">{{ numberOfTowers }} towers</span></li>
     <li class="building-info-list-item"><span class="info-label">Gross Floor Area</span> <span class="info-value">{{ grossFloorArea.toLocaleString() }} m²</span></li>
   </ul>
 </template>

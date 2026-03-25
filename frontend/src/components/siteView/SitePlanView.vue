@@ -1,5 +1,3 @@
-
-
 <template>
   <div class="site-plan-view">
     <div class="card-title">Plan View</div>

@@ -82,7 +82,7 @@ export const TABS = {
     statusLabel: 'Tissue Expansion',
     statusDescription: 'GFA / 1M m² - target 100%',
     statusIcon: '🧬' ,
-    hint: '1. Toggle towers on and off in the 3D viewer. \n 2. Explore insights on towers, program and material and see the color-coded 3D visualization.',
+    hint: '1. Toggle towers on and off in the 3D viewer. \n 2. Explore key insights from data, program and structure and see the color-coded 3D visualization.',
   },
   metrics: {
     title: 'Metrics Dashboard',

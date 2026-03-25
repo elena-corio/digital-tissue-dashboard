@@ -12,7 +12,7 @@
         />
       </div>
       <div class="card card-flex-fill card-flex-center">
-        <BuildingChartPlaceholder />
+        <BuildingChart />
       </div>
     </div>
     <!-- Right Column: 2/3 width -->
@@ -32,7 +32,7 @@ import { onMounted } from 'vue';
 import { useWorkspaceUI } from '../composables/useWorkspaceUI.js';
 import { TABS } from '../uiText.js';
 import BuildingInfoCard from '../components/building/BuildingInfoCard.vue';
-import BuildingChartPlaceholder from '../components/building/BuildingChartPlaceholder.vue';
+import BuildingChart from '../components/building/BuildingChart.vue';
 import BuildingViewerPlaceholder from '../components/building/BuildingViewerPlaceholder.vue';
 import BuildingToggleRow from '../components/building/BuildingToggleRow.vue';
 import { BUILDING } from '../uiText.js';
