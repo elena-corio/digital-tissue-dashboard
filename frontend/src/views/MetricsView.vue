@@ -1,5 +1,8 @@
 <template>
-  <div v-if="loading" class="metrics-loading">Loading Speckle data...</div>
+  <div v-if="loading" class="metrics-loading">
+    <div class="spinner"></div>
+    <p>Loading Speckle data...</p>
+  </div>
   <div v-else-if="error" class="metrics-error">Error loading Speckle data: {{ error.message }}</div>
   <div v-else-if="!speckleData || !speckleData.latest">No data available</div>  
   <div v-else class="metrics-main">
@@ -154,6 +157,29 @@ export default {
   gap: var(--space-md);
   width: 100%;
   flex: 0 0 auto;
+}
+
+.metrics-loading, .metrics-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  font-size: 1.2rem;
+  color: var(--navy-100);
+}
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #4697e3;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 .metrics-top-row > * {
   flex: 1 1 0%;
