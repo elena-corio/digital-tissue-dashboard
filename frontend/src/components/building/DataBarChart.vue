@@ -1,36 +1,63 @@
 <template>
-        <div v-if="clusters.length" class="bar-chart">
-          <div class="bar" v-for="(cluster, idx) in clusters" :key="cluster.id">
-            <div class="bar-value">{{ cluster.count }} floors</div>
-            <div class="bar-outer">
-              <div
-                class="bar-inner"
-                :style="{
-                  height: (maxFloors ? Math.round((cluster.count / maxFloors) * 200) : 0) + 'px',
-                  background: barColors[idx % barColors.length]
-                }"
-              ></div>
-            </div>
-            <div class="bar-label">{{ cluster.name.replace(/^Cluster/i, 'Tower') }}</div>
-          </div>
-        </div>
-        <div v-else>No cluster data available</div>
+<div v-if="clusters.length" class="bar-chart" style="position:relative;">
+  <div
+    class="bar"
+    v-for="(cluster, idx) in clusters"
+    :key="cluster.id"
+    :style="{ opacity: hovered === null || hovered === idx ? 1 : 0.35, transition: 'opacity 0.2s' }"
+    @mousemove="(e) => onBarEnter(idx, e)"
+    @mouseleave="onBarLeave"
+  >
+    <div class="bar-value">{{ (cluster.count * 4.5 ).toFixed(1) }} m</div>
+    <div class="bar-outer">
+      <div
+        class="bar-inner"
+        :style="{
+          height: (maxFloors ? Math.round((cluster.count / maxFloors) * 200) : 0) + 'px',
+          background: barColors[idx % barColors.length]
+        }"
+      ></div>
+    </div>
+    <div class="bar-label">{{ cluster.name.replace(/^Cluster/i, 'Tower') }}</div>
+    <!-- Tooltip -->
+    <div v-if="hovered === idx && tooltip.visible" class="bar-tooltip pie-thumbnail-tooltip" :style="{ left: tooltip.x + 'px', top: tooltip.y + 'px' }">
+      <span class="pie-thumbnail-value">{{ cluster.count }} floors</span>
+    </div>
+  </div>
+</div>
+<div v-else>No cluster data available</div>
       </template>
       
 
 <script setup>
-
+import { ref } from 'vue';
 const props = defineProps({
-  clusters: { type: Array, required: true }, // [{ clusters, maxFloors }]
+  clusters: { type: Array, required: true },
   maxFloors: { type: Number, required: true }
 });
-// Bar colors: blue, light-blue, orange, yellow
+const hovered = ref(null);
+const tooltip = ref({ x: 0, y: 0, visible: false });
 const barColors = [
   'var(--blue-100)',
   'var(--light-blue-100)',
   'var(--orange-100)',
   'var(--yellow-100)'
 ];
+function onBarEnter(idx, e) {
+  hovered.value = idx;
+  // Tooltip position: follow mouse, like pie chart
+  const chart = e.currentTarget.closest('.bar-chart');
+  if (chart) {
+    const rect = chart.getBoundingClientRect();
+    tooltip.value.x = e.clientX - rect.left + 12;
+    tooltip.value.y = e.clientY - rect.top + 12;
+    tooltip.value.visible = true;
+  }
+}
+function onBarLeave() {
+  hovered.value = null;
+  tooltip.value.visible = false;
+}
 </script>
 
 <style scoped>
@@ -84,5 +111,23 @@ const barColors = [
   font-size: var(--font-size-value);
   color: var(--navy-50);
   margin-bottom: var(--space-sm);
+}
+/* Tooltip styles (copied from ProgramPieChart.vue) */
+.pie-thumbnail-tooltip {
+  position: absolute;
+  z-index: 9999;
+  pointer-events: none;
+  background: var(--card-bg, #fff);
+  transition: left 0.08s, top 0.08s;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-xs) var(--space-sm);
+  width: fit-content;
+}
+.pie-thumbnail-value {
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-bold);
+  color: var(--navy-100);
+  white-space: nowrap;
 }
 </style>
