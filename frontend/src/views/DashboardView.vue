@@ -13,7 +13,7 @@
     <section class="dashboard-left dashboard-col">
       <div class="dashboard-left-stack">
         <div class="tissue-organ-wrapper">
-          <TissueCanvas />
+          <TissueCanvas :kpiStatus="kpiStatus" />
           <OrganSelector class="dashboard-organs" />
         </div>
       </div>
@@ -61,7 +61,8 @@ export default {
     tissueExpansion: { type: Number, required: false },
     kpisOnTargetPercent: { type: Number, required: false },
     bodyBalance: { type: Number, required: false },
-    latestUpdate: { type: [String, null], required: false }
+    latestUpdate: { type: [String, null], required: false },
+    kpiStatus: { type: Array, required: false, default: () => [] }
   },
   components: {
     TissueCanvas,
@@ -104,7 +105,8 @@ export default {
       tissueExpansion: props.tissueExpansion,
       kpisOnTargetPercent: props.kpisOnTargetPercent,
       bodyBalance: props.bodyBalance,
-      vitalityAverage
+      vitalityAverage,
+      kpiStatus: props.kpiStatus
     };
   }
 };

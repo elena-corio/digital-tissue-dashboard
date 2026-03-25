@@ -37,6 +37,7 @@
           :statusDescription="statusDescription"
           :statusValue="statusValue"
           :latestUpdate="latestUpdate"
+          :kpiStatus="kpiStatus" 
         />
       </div>
     </div>
@@ -49,7 +50,7 @@ import HeaderBar from '../components/workspace/HeaderBar.vue';
 import StatusIndicator from '../components/workspace/StatusIndicator.vue';
 import { useWorkspaceUI } from '../composables/useWorkspaceUI.js';
 import { useSpeckleData } from '../composables/useSpeckleData';
-import { onMounted, watch, computed } from 'vue';
+import { watch, computed } from 'vue';
 import { METRICS } from '../benchmarks.js';
 import { TABS, SITE } from '../uiText.js';
     import { useRoute } from 'vue-router';
@@ -142,6 +143,11 @@ export default {
       return SITE.hypersArea.hb03 / totalArea;
     });
 
+    // Always unwrap kpiStatus if it's a ref
+    const kpiStatusUnwrapped = computed(() => {
+      return kpiStatus && typeof kpiStatus.value !== 'undefined' ? kpiStatus.value : kpiStatus;
+    });
+
     // Watch for speckleData changes and update kpiStatus in useWorkspaceUI
     watch(
       () => speckleData.value?.latest?.data?.properties,
@@ -197,7 +203,8 @@ export default {
       tissueExpansion,
       kpisOnTargetPercent,
       bodyBalance,
-      latestUpdate
+      latestUpdate,
+      kpiStatus: kpiStatusUnwrapped
     };
   }
 };

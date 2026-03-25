@@ -94,29 +94,29 @@ export const KPIS = {
     {
       name: 'Liveability',
       metrics: [
-        { name: 'greenSpaceDistance', label: 'Green Space Distance', filter: 'green_space_distance', value: 'health', unit: 'm' , 'action': 'Decrease distance from green spaces.'},
-        { name: 'daylightPotential', label: 'Daylight Potential', filter: 'daylight_potential', value: 'risk', unit: '' , 'action': 'Increase windows area.'}
+        { name: 'greenSpaceDistance', label: 'Green Space Distance', filter: 'green_space_distance', unit: 'm' , 'action': 'Decrease distance from green spaces.'},
+        { name: 'daylightPotential', label: 'Daylight Potential', filter: 'daylight_potential', unit: '' , 'action': 'Increase windows area.'}
       ]
     },
     {
       name: 'Interconnection',
       metrics: [
-        { name: 'programDiversityIndex', label: 'Program Diversity Index', filter: 'program', value: 'health', unit: '', 'action': 'Increase diversity of programs.' },
-        { name: 'circulationEfficiency', label: 'Circulation Efficiency', filter: 'circulation_efficiency', value: 'risk', unit: '', 'action': 'Decrease circulation area.' }
+        { name: 'programDiversityIndex', label: 'Program Diversity Index', filter: 'program', unit: '', 'action': 'Increase diversity of programs.' },
+        { name: 'circulationEfficiency', label: 'Circulation Efficiency', filter: 'circulation_efficiency', unit: '', 'action': 'Decrease circulation area.' }
       ]
     },
     {
       name: 'Adaptability',
       metrics: [
-        { name: 'netFloorAreaRatio', label: 'Net Floor Area Ratio', filter: 'net_floor_area_ratio', value: 'health', unit: '' , 'action': 'Optimize net-floor-area ratio.'},
-        { name: 'usableAreaRatio', label: 'Usable Area Ratio', filter: 'usable_area_ratio', value: 'risk', unit: '', 'action': 'Increase usable area.' }
+        { name: 'netFloorAreaRatio', label: 'Net Floor Area Ratio', filter: 'net_floor_area_ratio', unit: '' , 'action': 'Optimize net-floor-area ratio.'},
+        { name: 'usableAreaRatio', label: 'Usable Area Ratio', filter: 'usable_area_ratio', unit: '', 'action': 'Increase usable area.' }
       ]
     },
         {
       name: 'Sustainability',
       metrics: [
-        { name: 'carbonIntensity', label: 'Carbon Intensity', filter: 'carbon_intensity', value: 'health', unit: 'kgCO2/m2' , 'action': 'Reduce carbon intensity.'},
-        { name: 'volumeToEnvelope', label: 'Volume to Envelope', filter: 'volume_to_envelope', value: 'risk', unit: 'm3/m2' , 'action': 'Optimize volume to envelope ratio.'}
+        { name: 'carbonIntensity', label: 'Carbon Intensity', filter: 'carbon_intensity', unit: 'kgCO2/m2' , 'action': 'Reduce carbon intensity.'},
+        { name: 'volumeToEnvelope', label: 'Volume to Envelope', filter: 'volume_to_envelope', unit: 'm3/m2' , 'action': 'Optimize volume to envelope ratio.'}
       ]
     }
   ]
