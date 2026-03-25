@@ -215,8 +215,10 @@ const applyColorFilter = async (config) => {
     // Numeric: gradient from error to success using normalize (handles inverted benchmarks)
     const groups = {};
     for (const node of nodes) {
-      const val = node.model.raw.properties?.[propName];
+      let val = node.model.raw.properties?.[propName];
       if (val === undefined || val === null) continue;
+      // Use rounded value for color assignment
+      val = Math.round(val * 1000) / 1000; // round to 3 decimals
       const t = Math.max(0, Math.min(1, normalize(val, clampedLeft, clampedRight)));
       const color = lerpColor(ERROR_COLOR, SUCCESS_COLOR, t);
       if (!groups[color]) groups[color] = [];

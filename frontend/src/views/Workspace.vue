@@ -8,13 +8,14 @@
         <h2 class="h2">{{ title }}</h2>
         <div class="subtitle">{{ subtitle }}</div>
       </div>
-      <div class="workspace-status-indicator">
+      <div class="workspace-status-indicator" style="display: flex; align-items: center;">
         <StatusIndicator
           :icon="statusIcon"
           :label="statusLabel"
           :description="statusDescription"
           :value="loading || statusValue == null || isNaN(statusValue) ? 0 : statusValue"
         />
+        <HelperButton />
       </div>
     </div>
     <div class="workspace-content">
@@ -48,6 +49,7 @@
 
 import HeaderBar from '../components/workspace/HeaderBar.vue';
 import StatusIndicator from '../components/workspace/StatusIndicator.vue';
+import HelperButton from '../components/workspace/HelperButton.vue';
 import { useWorkspaceUI } from '../composables/useWorkspaceUI.js';
 import { useSpeckleData } from '../composables/useSpeckleData';
 import { watch, computed, ref } from 'vue';
@@ -61,7 +63,8 @@ export default {
   name: 'Workspace',
   components: {
     HeaderBar,
-    StatusIndicator
+    StatusIndicator,
+    HelperButton
   },
   setup() {
     const {
