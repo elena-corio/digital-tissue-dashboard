@@ -12,7 +12,8 @@ export default {
   name: 'ProjectView',
   props: {
     kpiStatus: Array,
-    kpisOnTargetPercent: Number
+    kpisOnTargetPercent: Number,
+    tissueExpansion: Number
   },
   setup(props) {
     const {
@@ -29,7 +30,7 @@ export default {
       statusIcon.value = TABS.project.statusIcon;
       statusLabel.value = TABS.project.statusLabel;
       statusDescription.value = TABS.project.statusDescription;
-      statusValue.value = props.kpisOnTargetPercent;
+      statusValue.value = props.tissueExpansion ?? 0;
     });
     // ...existing code...
   }
