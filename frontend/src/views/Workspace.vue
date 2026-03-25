@@ -49,8 +49,19 @@ export default {
       kpiStatus,
       kpisOnTargetPercent
     } = useWorkspaceUI();
-    const { data: speckleData, loading, error, kpiStatus: getKpiStatus } = useSpeckleData();
+      const { data: speckleData, loading, error, kpiStatus: getKpiStatus } = useSpeckleData();
+      const { calculateKPIStatus } = useWorkspaceUI();
 
+      // Watch for speckleData changes and update kpiStatus in useWorkspaceUI
+      watch(
+        () => speckleData.value?.latest?.data?.properties,
+        (properties) => {
+          if (properties) {
+            kpiStatus.value = calculateKPIStatus(properties);
+          }
+        },
+        { immediate: true }
+      );
 
 
 

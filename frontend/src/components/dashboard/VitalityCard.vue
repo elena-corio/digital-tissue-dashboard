@@ -9,7 +9,7 @@
         <span class="vitality-label">{{ card.title }}</span>
         <div class="vitality-child-content">
           <div class="vitality-info-inline">
-            <span :class="['vitality-percent', percentColor(getPercent(card.value, card.goal))]">{{ getPercent(card.value, card.goal) }}%</span>
+            <span :class="['vitality-percent', percentColor(getPercent(card.value, card.goal, idx))]">{{ getPercent(card.value, card.goal, idx) }}%</span>
             <span class="vitality-desc">{{ card.description }}</span>
           </div>
         </div>
@@ -21,9 +21,9 @@
 <script setup>
 import * as uiText from '../../uiText.js'
 import ArrowButton from '../workspace/ArrowButton.vue'
-import { useWorkspaceUI } from '../../composables/useWorkspaceUI.js';
 
-const { bodyBalance } = useWorkspaceUI();
+import { useWorkspaceUI } from '../../composables/useWorkspaceUI.js';
+const { bodyBalance, kpisOnTargetPercent } = useWorkspaceUI();
 
 const vitalityCards = [
   {
@@ -36,12 +36,14 @@ const vitalityCards = [
   },
   {
     ...uiText.VITALITY.cards.metabolism,
-    // TODO: wire kpisOnTargetPercent here if available
+    value: kpisOnTargetPercent.value, // pass the percentage directly (0-100)
   }
 ];
 const cardRoutes = ['/workspace/site', '/workspace/project', '/workspace/metrics']; // order matches cards
 
-function getPercent(value, goal) {
+// idx must be passed as third argument
+function getPercent(value, goal, idx) {
+  if (idx === 2) return Math.round(value);
   if (!goal || isNaN(value) || isNaN(goal)) return 0;
   return Math.round((value / goal) * 100);
 }
