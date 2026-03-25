@@ -1,7 +1,7 @@
 <template>
   <div class="workspace-root">
     <div class="workspace-header">
-      <HeaderBar />
+      <HeaderBar :loading="loading" />
     </div>
     <div class="workspace-title-row">
       <div class="workspace-title-block">

@@ -5,7 +5,7 @@
         <span class="digital">digital</span>.<span class="tissue">tissue</span>
       </h3>
     </div>
-    <NavTabs :tabs="navTabs" />
+    <NavTabs :tabs="navTabs" :loading="loading" />
     <div class="header-right">
       <div class="avatar-dropdown-wrapper">
         <div class="avatar-circle" >
@@ -33,6 +33,7 @@ import { useClerk } from '../../composables/useClerk.js'
 import * as uiText from '../../uiText.js'
 import NavTabs from './NavTabs.vue'
 
+const props = defineProps({ loading: Boolean });
 const navTabs = [
   { label: 'Overview', route: '/workspace/overview', name: 'Overview' },
   { label: 'Site', route: '/workspace/site', name: 'Site' },
