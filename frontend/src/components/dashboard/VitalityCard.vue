@@ -24,6 +24,7 @@ import ArrowButton from '../workspace/ArrowButton.vue'
 
 import { useWorkspaceUI } from '../../composables/useWorkspaceUI.js';
 const { bodyBalance, kpisOnTargetPercent } = useWorkspaceUI();
+const props = defineProps({ tissueExpansion: { type: Number, required: false } });
 
 const vitalityCards = [
   {
@@ -32,7 +33,7 @@ const vitalityCards = [
   },
   {
     ...uiText.VITALITY.cards.tissue,
-    // TODO: wire tissueExpansion here if available
+    value: props.tissueExpansion ?? 0,
   },
   {
     ...uiText.VITALITY.cards.metabolism,
@@ -43,7 +44,8 @@ const cardRoutes = ['/workspace/site', '/workspace/project', '/workspace/metrics
 
 // idx must be passed as third argument
 function getPercent(value, goal, idx) {
-  if (idx === 2) return Math.round(value);
+  // idx 1 (tissue) and 2 (metabolism) are both direct percentages
+  if (idx === 1 || idx === 2) return Math.round(value);
   if (!goal || isNaN(value) || isNaN(goal)) return 0;
   return Math.round((value / goal) * 100);
 }

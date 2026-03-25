@@ -1,4 +1,7 @@
 <script setup>
+// Ensure Speckle data is loaded globally on app load
+import { useSpeckleData } from './composables/useSpeckleData';
+useSpeckleData();
 import './main.css'
 import { useClerk } from '@/composables/useClerk.js'
 import { useRouter, useRoute } from 'vue-router'

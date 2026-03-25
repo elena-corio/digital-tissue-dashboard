@@ -1,5 +1,7 @@
 import { ref, computed } from 'vue';
-import { TABS, SITE } from '../uiText.js';
+import { TABS, SITE, VITALITY } from '../uiText.js';
+import { useSpeckleData } from './useSpeckleData';
+
 
 const title = ref('');
 const subtitle = ref('');
@@ -86,6 +88,32 @@ const bodyBalance = computed(() => {
 });
 
 export function useWorkspaceUI() {
+  // Use the same Speckle data source as MetricsView for tissueExpansion
+  // This ensures reactivity and consistency
+  const { data: speckleData } = useSpeckleData();
+  const tissueExpansion = computed(() => {
+    // Access speckleData directly, not .value, to match MetricsView
+    console.log('[tissueExpansion] speckleData:', speckleData);
+    const latest = speckleData?.latest;
+    console.log('[tissueExpansion] latest object:', latest);
+    const properties = latest?.data?.properties;
+    if (properties && typeof properties === 'object') {
+      console.log('[tissueExpansion] Available property keys:', Object.keys(properties));
+    } else {
+      console.log('[tissueExpansion] No properties object found.');
+    }
+    const gfaRaw = properties?.gross_floor_area;
+    const gfa = typeof gfaRaw === 'string' ? parseFloat(gfaRaw) : gfaRaw;
+    const target = 1000000;
+    console.log('[tissueExpansion] gfaRaw:', gfaRaw, 'gfa:', gfa, 'target:', target);
+    if (!gfa || !target || isNaN(gfa)) {
+      console.log('[tissueExpansion] Returning 0% due to missing or invalid value.');
+      return 0;
+    }
+    const percent = Math.round((gfa / target) * 100);
+    console.log('[tissueExpansion] Computed percent:', percent);
+    return percent;
+  });
   return {
     title,
     subtitle,
@@ -96,7 +124,8 @@ export function useWorkspaceUI() {
     kpiStatus, // expose for updating
     bodyBalanceData, // expose for updating
     kpisOnTargetPercent,
-    bodyBalance
-    ,calculateKPIStatus
+    bodyBalance,
+    calculateKPIStatus,
+    tissueExpansion
   };
 }

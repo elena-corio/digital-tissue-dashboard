@@ -22,7 +22,7 @@
     <section class="dashboard-right dashboard-col">
       <div class="dashboard-right-stack">
         <div class="dashboard-vitality-wrapper">
-          <VitalityCard />
+          <VitalityCard :tissueExpansion="tissueExpansion" />
         </div>
         <div class="dashboard-detail-wrapper">
           <div class="dashboard-detail-left">
@@ -77,6 +77,22 @@ export default {
       // Try createdAt, fallback to null
       return latest?.createdAt || null;
     });
+    const dataReady = computed(() => {
+      const latest = speckleData.value?.latest;
+      return !!(latest && latest.data && latest.data.properties && Object.keys(latest.data.properties).length > 0);
+    });
+
+    // Compute tissueExpansion from dashboard's speckleData
+    const tissueExpansion = computed(() => {
+      const latest = speckleData.value?.latest;
+      console.log('[DashboardView] Computing tissueExpansion from speckleData:', speckleData.value);
+      const properties = latest?.data?.properties;
+      const gfaRaw = properties?.gross_floor_area;
+      const gfa = typeof gfaRaw === 'string' ? parseFloat(gfaRaw) : gfaRaw;
+      const target = 1000000;
+      if (!gfa || !target || isNaN(gfa)) return 0;
+      return Math.round((gfa / target) * 100);
+    });
     onMounted(() => {
       title.value = TABS.overview.title;
       subtitle.value = TABS.overview.subtitle;
@@ -85,7 +101,7 @@ export default {
       statusDescription.value = TABS.overview.statusDescription;
       statusValue.value = kpisOnTargetPercent.value;
     });
-    return { latestUpdate, loading, error, speckleData };
+    return { latestUpdate, loading, error, speckleData, dataReady, tissueExpansion  };
   }
 };
 </script>

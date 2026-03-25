@@ -100,7 +100,10 @@ export default {
     },
     selectedMetricValue() {
       // Use the latest version's properties
-      if (!this.selectedMetric || !this.speckleData || !this.speckleData.latest || !this.speckleData.latest.data || !this.speckleData.latest.data.properties) return undefined;
+      console.log('[MetricsView] speckleData:', this.speckleData);
+      if (!this.selectedMetric || !this.speckleData || !this.speckleData.latest || !this.speckleData.latest.data) return undefined;
+      console.log('[MetricsView] speckleData.latest.data:', this.speckleData.latest.data);
+      if (!this.speckleData.latest.data.properties) return undefined;
       const metricName = this.selectedMetric.name;
       const snakeKey = metricName ? metricName.replace(/[A-Z]/g, l => `_${l.toLowerCase()}`) : '';
       return this.speckleData.latest.data.properties[snakeKey];
