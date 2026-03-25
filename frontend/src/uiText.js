@@ -144,9 +144,9 @@ export const ORGANS = {
 export const VITALITY = {
   sectionTitle: 'Organ Vitality',
   cards: {
-    body: { title: 'HB03 Plot Share', value: 0.85, goal:1, description: "Body Balance" },
-    tissue: { title: 'GFA / 1.000.000 m²', value: 0.6, goal:1, description: "Tissue Expansion" },
-    metabolism: { title: 'KPIs on Target', value: 7, goal:8, description: "Metabolic Health"},
+    body: { title: 'HB03 Plot Share', value: 0.85, goal:1, description: "Body Balance \n target 33%" },
+    tissue: { title: 'GFA / 1.000.000 m²', value: 0.6, goal:1, description: "Tissue Expansion \n target 100%" },
+    metabolism: { title: 'KPIs on Target', value: 7, goal:8, description: "Metabolic Health \n target 100%"},
     
   },
 };

@@ -2,7 +2,7 @@
   <div :class="['card', 'last-update-card', messageClass]">
     <div class="card-title">{{ updates.title }}</div>
     <div class="last-update-row">
-      <span class="last-update-label">Last update</span>
+      <span class="last-update-label">{{ updates.subtitle }}</span>
       <span class="last-update-value">{{ lastUpdateDisplay }}</span>
     </div>
     <div class="last-update-divider"></div>

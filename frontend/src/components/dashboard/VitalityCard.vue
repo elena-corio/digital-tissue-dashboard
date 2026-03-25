@@ -1,6 +1,5 @@
 <template>
   <div class="card vitality-card-parent">
-    <div class="card-title">{{ uiText.VITALITY.sectionTitle }}</div>
     <div class="vitality-children-wrapper">
       <div class="card vitality-card-child" v-for="(card, idx) in vitalityCards" :key="card.title">
         <router-link :to="cardRoutes[idx]" class="arrow-btn">
@@ -9,7 +8,31 @@
         <span class="vitality-label">{{ card.title }}</span>
         <div class="vitality-child-content">
           <div class="vitality-info-inline">
-            <span :class="['vitality-percent', percentColor(getPercent(card.value, card.goal, idx), idx)]">{{ getPercent(card.value, card.goal, idx) }}%</span>
+            <span class="vitality-circle-wrapper">
+              <svg :width="72" :height="72" class="vitality-circle">
+                <circle
+                  :stroke-width="getCircleProps(getPercent(card.value, card.goal, idx)).stroke"
+                  :r="getCircleProps(getPercent(card.value, card.goal, idx)).radius"
+                  :cx="36"
+                  :cy="36"
+                  fill="none"
+                  class="vitality-circle-bg"
+                />
+                <circle
+                  :stroke-width="getCircleProps(getPercent(card.value, card.goal, idx)).stroke"
+                  :r="getCircleProps(getPercent(card.value, card.goal, idx)).radius"
+                  :cx="36"
+                  :cy="36"
+                  fill="none"
+                  :stroke-dasharray="getCircleProps(getPercent(card.value, card.goal, idx)).circumference"
+                  :stroke-dashoffset="getCircleProps(getPercent(card.value, card.goal, idx)).offset"
+                  :class="['vitality-circle-bar', percentColor(getPercent(card.value, card.goal, idx), idx)]"
+                />
+                <text x="36" y="38" text-anchor="middle" font-size="22" :class="['vitality-circle-text', percentColor(getPercent(card.value, card.goal, idx), idx)]">
+                  {{ getPercent(card.value, card.goal, idx) }}%
+                </text>
+              </svg>
+            </span>
             <span class="vitality-desc">{{ card.description }}</span>
           </div>
         </div>
@@ -78,6 +101,17 @@ function percentColor(percent, idx) {
   if (percent >= 75) return 'success';
   if (percent >= 50) return 'warning';
   return 'error';
+}
+
+// Update getCircleProps for larger circle
+function getCircleProps(percent) {
+  const radius = 36; 
+  const stroke = 6;
+  const normalizedRadius = radius - stroke / 2;
+  const circumference = 2 * Math.PI * normalizedRadius;
+  const progress = Math.max(0, Math.min(percent, 100));
+  const offset = circumference - (progress / 100) * circumference;
+  return { radius: normalizedRadius, circumference, offset, stroke };
 }
 </script>
 
@@ -150,7 +184,7 @@ function percentColor(percent, idx) {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 0.5rem;
+  gap: 1.25rem;
 }
 .vitality-label {
   color: var(--navy-100);
@@ -161,5 +195,50 @@ function percentColor(percent, idx) {
 .vitality-desc {
   color: var(--navy-50);
   font-size: var(--font-size-caption);
+  font-weight: 500;
+  margin-left: 0.2rem;
+  max-width: 120px;
+}
+
+/* Add styles for the circle */
+.vitality-circle-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+}
+.vitality-circle-bg {
+  stroke: #e0e0e0;
+}
+.vitality-circle-bar {
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+  transition: stroke-dashoffset 0.5s;
+}
+.vitality-circle-bar.success {
+  stroke: var(--color-success, #4caf50);
+}
+.vitality-circle-bar.warning {
+  stroke: var(--color-warning, #ff9800);
+}
+.vitality-circle-bar.error {
+  stroke: var(--color-error, #f44336);
+}
+.vitality-circle-text {
+  dominant-baseline: middle;
+  font-weight: bold;
+  font-family: inherit;
+  /* color is set by .success/.warning/.error */
+  font-size: 18px;
+}
+.vitality-circle-text.success {
+  fill: var(--color-success, #4caf50);
+}
+.vitality-circle-text.warning {
+  fill: var(--color-warning, #ff9800);
+}
+.vitality-circle-text.error {
+  fill: var(--color-error, #f44336);
 }
 </style>
