@@ -82,7 +82,7 @@ export const TABS = {
     statusLabel: 'Tissue Expansion',
     statusDescription: 'GFA / 1M m² - target 100%',
     statusIcon: '🧬' ,
-    hint: '1. Toggle towers on and off in the 3D viewer. \n 2. Explore insights on towers, program distribution and material breakdown and see the color-coded 3D visualization.',
+    hint: '1. Toggle towers on and off in the 3D viewer. \n 2. Explore insights on towers, program and material and see the color-coded 3D visualization.',
   },
   metrics: {
     title: 'Metrics Dashboard',
@@ -201,3 +201,7 @@ export const SITE = {
   siteArea: 85460, // in m2
   hypersArea: {hb01: 30630, hb02: 26635, hb03: 28195}, // in m2
 };
+
+export const BUILDING = {
+  name: 'Hyperbuilding 03',
+  towers: ['T01', 'T02', 'T03', 'T04'],}

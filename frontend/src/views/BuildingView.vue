@@ -4,7 +4,12 @@
     <!-- Left Column: 1/3 width -->
     <div class="left-col">
       <div class="card" style="margin-bottom: 1rem;">
-        <BuildingInfoCard />
+        <BuildingInfoCard
+          :name="buildingName"
+          :number-of-floors="numberOfFloors"
+          :number-of-towers="numberOfTowers"
+          :gross-floor-area="grossFloorArea"
+        />
       </div>
       <div class="card card-flex-fill card-flex-center">
         <BuildingChartPlaceholder />
@@ -30,6 +35,27 @@ import BuildingInfoCard from '../components/building/BuildingInfoCard.vue';
 import BuildingChartPlaceholder from '../components/building/BuildingChartPlaceholder.vue';
 import BuildingViewerPlaceholder from '../components/building/BuildingViewerPlaceholder.vue';
 import BuildingToggleRow from '../components/building/BuildingToggleRow.vue';
+import { BUILDING } from '../uiText.js';
+import { useSpeckleData } from '../composables/useSpeckleData';
+import { computed } from 'vue';
+
+const props = defineProps({
+  tissueExpansion: { type: Number, required: false },
+});
+
+const { data: speckleData } = useSpeckleData();
+const buildingName = computed(() => BUILDING?.buildingName || 'Hyperbuilding 03');
+const numberOfFloors = computed(() => {
+  const latest = speckleData.value?.latest;
+  if (!latest?.data?.elements) return 0;
+  return latest.data.elements.reduce((sum, cluster) => sum + (cluster.elements?.length || 0), 0);
+});
+const numberOfTowers = 4;
+const grossFloorArea = computed(() => {
+  const latest = speckleData.value?.latest;
+  const gfa = latest?.data?.properties?.gross_floor_area;
+  return typeof gfa === 'string' ? parseFloat(gfa) : gfa || 0;
+});
 
 const { title, subtitle, statusIcon, statusLabel, statusDescription, statusValue } = useWorkspaceUI();
 onMounted(() => {
@@ -38,7 +64,7 @@ onMounted(() => {
   statusIcon.value = TABS.building.statusIcon;
   statusLabel.value = TABS.building.statusLabel;
   statusDescription.value = TABS.building.statusDescription;
-  statusValue.value = 0;
+  statusValue.value = props.tissueExpansion ?? 0;
 });
 </script>
 /* Workspace title row styles (copied from Workspace.vue) */
