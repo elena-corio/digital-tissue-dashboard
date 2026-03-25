@@ -64,27 +64,27 @@ export const TABS = {
 {  title: 'Project Overview',
   subtitle: 'A quick pulse check of your project',
   statusLabel: 'Pulse Check',
-  statusDescription: 'Average Organ Vitality',
+  statusDescription: 'Recent activity and model updates',
   statusIcon: '💓'},
   site: {
     title: 'Site Analysis',
     subtitle: 'A close look at the site as a holistic system',
     statusLabel: 'Body Balance',
-    statusDescription: 'How evenly the site area is distributed among hypers',
+    statusDescription: 'HB03 Plot Share - target 33%',
     statusIcon: '🧘' 
   },
   project: {
     title: 'Building Viewer',
     subtitle: 'Key indicators for your project\'s growth',
     statusLabel: 'Tissue Expansion',
-    statusDescription: 'GFA compared to 1.000.000 m² target',
+    statusDescription: 'GFA / 1.000.000 - target 100%',
     statusIcon: '🧬' 
   },
   metrics: {
     title: 'Metrics Dashboard',
     subtitle: 'A cell-level view of your project\'s health',
     statusLabel: 'Metabolic Health',
-    statusDescription: 'How many KPIs are on target',
+    statusDescription: 'KPIs on Target - target 100%',
     statusIcon: '🦠'
   }
 };
@@ -94,29 +94,29 @@ export const KPIS = {
     {
       name: 'Liveability',
       metrics: [
-        { name: 'greenSpaceDistance', label: 'Green Space Distance', filter: 'green_space_distance', value: 'health', unit: 'm' , 'action': 'Decrease distance from green spaces.'},
-        { name: 'daylightPotential', label: 'Daylight Potential', filter: 'daylight_potential', value: 'risk', unit: '' , 'action': 'Increase windows area.'}
+        { name: 'greenSpaceDistance', label: 'Green Space Distance', filter: 'green_space_distance', unit: 'm' , 'formula': 'Distance to closest Green Area', 'action': 'Decrease distance from green spaces.'},
+        { name: 'daylightPotential', label: 'Daylight Potential', filter: 'daylight_potential', unit: '' , 'formula': 'Window Area / Floor Area', 'action': 'Increase windows area.'}
       ]
     },
     {
       name: 'Interconnection',
       metrics: [
-        { name: 'programDiversityIndex', label: 'Program Diversity Index', filter: 'program', value: 'health', unit: '', 'action': 'Increase diversity of programs.' },
-        { name: 'circulationEfficiency', label: 'Circulation Efficiency', filter: 'circulation_efficiency', value: 'risk', unit: '', 'action': 'Decrease circulation area.' }
+        { name: 'programDiversityIndex', label: 'Program Diversity Index', filter: 'program', unit: '', 'formula': '1 - (Program Frequencies / Program Units Count²)', 'action': 'Increase diversity of programs.' },
+        { name: 'circulationEfficiency', label: 'Circulation Efficiency', filter: 'circulation_efficiency', unit: '', 'formula': '1 - (Circulation Area / Total Area)', 'action': 'Decrease circulation area.' }
       ]
     },
     {
       name: 'Adaptability',
       metrics: [
-        { name: 'netFloorAreaRatio', label: 'Net Floor Area Ratio', filter: 'net_floor_area_ratio', value: 'health', unit: '' , 'action': 'Optimize net-floor-area ratio.'},
-        { name: 'usableAreaRatio', label: 'Usable Area Ratio', filter: 'usable_area_ratio', value: 'risk', unit: '', 'action': 'Increase usable area.' }
+        { name: 'netFloorAreaRatio', label: 'Net Floor Area Ratio', filter: 'net_floor_area_ratio', unit: '' , 'formula': 'Net Floor Area / Gross Floor Area', 'action': 'Optimize net-floor-area ratio.'},
+        { name: 'usableAreaRatio', label: 'Usable Area Ratio', filter: 'usable_area_ratio', unit: '', 'formula': 'Usable Area / Total Area', 'action': 'Increase usable area.' }
       ]
     },
         {
       name: 'Sustainability',
       metrics: [
-        { name: 'carbonIntensity', label: 'Carbon Intensity', filter: 'carbon_intensity', value: 'health', unit: 'kgCO2/m2' , 'action': 'Reduce carbon intensity.'},
-        { name: 'volumeToEnvelope', label: 'Volume to Envelope', filter: 'volume_to_envelope', value: 'risk', unit: 'm3/m2' , 'action': 'Optimize volume to envelope ratio.'}
+        { name: 'carbonIntensity', label: 'Carbon Intensity', filter: 'carbon_intensity', unit: 'kgCO2/m2' , 'formula': 'Embodied Carbon / Gross Floor Area', 'action': 'Reduce carbon intensity.'},
+        { name: 'volumeToEnvelope', label: 'Volume to Envelope', filter: 'volume_to_envelope', unit: 'm3/m2' , 'formula': 'Building Volume / Envelope Area', 'action': 'Optimize volume to envelope ratio.'}
       ]
     }
   ]

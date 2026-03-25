@@ -70,6 +70,11 @@ export default {
     GlobalScore,
     ViewerPanel,
   },
+  props: {
+    kpiStatus: Array,
+    kpisOnTargetPercent: Number,
+    calculateKPIStatus: Function
+  },
   data() {
     const { data: speckleData, loading, error, refresh, kpiStatus } = useSpeckleData();
     return {
@@ -83,7 +88,6 @@ export default {
       error,
       refresh,
       kpiStatus
-
     };
   },
   computed: {
@@ -100,9 +104,7 @@ export default {
     },
     selectedMetricValue() {
       // Use the latest version's properties
-      console.log('[MetricsView] speckleData:', this.speckleData);
       if (!this.selectedMetric || !this.speckleData || !this.speckleData.latest || !this.speckleData.latest.data) return undefined;
-      console.log('[MetricsView] speckleData.latest.data:', this.speckleData.latest.data);
       if (!this.speckleData.latest.data.properties) return undefined;
       const metricName = this.selectedMetric.name;
       const snakeKey = metricName ? metricName.replace(/[A-Z]/g, l => `_${l.toLowerCase()}`) : '';
@@ -132,27 +134,16 @@ export default {
     onSelectKPI(name) {
       this.selectedKPI = name;
     }
+  },
+  mounted() {
+    const { title, subtitle, statusIcon, statusLabel, statusDescription, statusValue } = useWorkspaceUI();
+    title.value = uiText.TABS.metrics.title;
+    subtitle.value = uiText.TABS.metrics.subtitle;
+    statusIcon.value = uiText.TABS.metrics.statusIcon;
+    statusLabel.value = uiText.TABS.metrics.statusLabel;
+    statusDescription.value = uiText.TABS.metrics.statusDescription;
+    statusValue.value = this.kpisOnTargetPercent;
   }
-    ,
-    mounted() {
-  const { title, subtitle, statusIcon, statusLabel, statusDescription, statusValue,  kpiStatus, kpisOnTargetPercent } = useWorkspaceUI();
-  title.value = uiText.TABS.metrics.title;
-  subtitle.value = uiText.TABS.metrics.subtitle;
-  statusIcon.value = uiText.TABS.metrics.statusIcon;
-  statusLabel.value = uiText.TABS.metrics.statusLabel;
-  statusDescription.value = uiText.TABS.metrics.statusDescription;
-  kpiStatus.value = this.kpiStatus();
-  statusValue.value = kpisOnTargetPercent.value;
-
-  this.$watch(
-    () => this.kpiStatus(),
-    (newVal) => {
-      kpiStatus.value = newVal;
-      statusValue.value = kpisOnTargetPercent.value;
-    },
-    { immediate: true, deep: true }
-  );
-}
 };
 </script>
 

@@ -28,10 +28,10 @@
         <div class="kpi-name">{{ KPIS.kpis[idx % KPIS.kpis.length].name }}</div>
         <div class="kpi-card">
           <div class="kpi-metrics">
-            <span v-for="(metric, m) in KPIS.kpis[idx % KPIS.kpis.length].metrics" :key="m" class="kpi-metric-row">
+            <span v-for="(metric, m) in getKpiMetrics(idx)" :key="m" class="kpi-metric-row">
               <span class="metric-label">{{ metric.label }}</span>
-              <span :class="['metric-pill', metric.value === 'risk' ? 'error' : 'success']">
-                {{ metric.value.replace('%','') }}
+              <span :class="['metric-pill', metric.pillType]">
+                {{ metric.pillType === 'success' ? 'health' : 'risk' }}
               </span>
             </span>
           </div>
@@ -84,6 +84,33 @@ function resizeCanvas() {
       cell.style = `left: calc(${cell.x}% - ${cell.r/2}px); top: calc(${cell.y}% - ${cell.r/2}px); width: ${cell.r*2}px; height: ${cell.r*2}px; box-shadow: 0 0 10px 0 ${cell.color}, 0 2px 8px 0 rgba(10,26,47,0.06); background: radial-gradient(circle at 60% 40%, #fff 0%, ${cell.color} 80%); animation: breathe 6s infinite;`;
     })
   }
+}
+const props = defineProps({
+  kpiStatus: { type: Array, required: false, default: () => [] }
+})
+
+// Returns both metrics for the group, with real values from kpiStatus
+function getKpiMetrics(idx) {
+  const group = KPIS.kpis[idx % KPIS.kpis.length]
+  if (!group) return []
+  // Debug: log kpiStatus and metric names
+  console.log('getKpiMetrics', {
+    idx,
+    group,
+    kpiStatus: props.kpiStatus
+  })
+  return group.metrics.map(metric => {
+    const kpi = props.kpiStatus.find(k => k.name === metric.name)
+    console.log('Matching metric', metric.name, 'against kpiStatus', props.kpiStatus.map(k => k.name), 'Found:', kpi)
+    let value = kpi && typeof kpi.value === 'number' ? kpi.value : '--'
+    if (value !== '--' && metric.unit) value = value + ' ' + metric.unit
+    const pillType = kpi && kpi.onTarget ? 'success' : 'error'
+    return {
+      label: metric.label,
+      value: value,
+      pillType: pillType
+    }
+  })
 }
 function showCard(idx) {
   if (cells[idx].large) cells[idx].showCard = true
