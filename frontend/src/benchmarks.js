@@ -5,7 +5,7 @@ export const METRICS = {
     circulationEfficiency: {left: 0.50, right: 1.00, benchmark: 0.75},
     usableAreaRatio: {left: 0.50, right: 1.00, benchmark: 0.75},
     netFloorAreaRatio: {left: 0.50, right: 1.00, benchmark: 0.75},
-    carbonIntensity: {left: 500.00, right: 0.00, benchmark: 250.00},
+    carbonIntensity: {left: 800.00, right: 200.00, benchmark: 500.00},
     volumeToEnvelope: {left: 5.00, right: 15.00, benchmark: 10.0},
 }
 

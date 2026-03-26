@@ -1,8 +1,5 @@
 FRONTEND
-Tower height: level of last floor
-Material breakdown chart
-§d model toggles towers
-Sort programs by name so color are consistent
+3d model toggles towers
 
 MODEL
 New model with 3d elements

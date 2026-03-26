@@ -141,14 +141,14 @@ const SUCCESS_COLOR = '#4697e3';
 
 // Hardcoded hex codes for categorical coloring (matches programPalette.js)
 const CATEGORICAL_PALETTE = [
-  '#f0b43a',   // yellow
-  '#7d81ac',   // navy
-  '#007423',   // green
-  '#e9268c',   // fucsia
-  '#3b479f',   // blue
-  '#4697e3',   // light-blue
-  '#e7882f',   // orange
-  '#dadad9'    // grey (for support)
+'#f0b43a',   // yellow
+'#d8d9ed',   // lila
+'#7d81ac',   // navy
+'#e9268c',   // fucsia
+'#e7882f',   // orange
+'#3b479f',   // blue
+'#dadad9',  // grey 
+'#4697e3'   // light-blue
 ];
 
 const lerpColor = (hex1, hex2, t) => {
@@ -200,19 +200,33 @@ const applyColorFilter = async (config) => {
   const nodes = tree.findAll((node) => node.model?.raw?.properties !== undefined);
 
   if (propInfo.type === 'string') {
-    // Categorical: assign palette color per unique value
+    // Categorical: assign palette color per unique value, using exact logic from program chart
+    // 1. Count by program (use el.properties.program)
+    const counts = {};
+    nodes.forEach(node => {
+      const program = String(node.model.raw.properties?.[propName] || 'Unknown');
+      counts[program] = (counts[program] || 0) + 1;
+    });
+    // 2. Map to array and sort alphabetically
+    let sortedPrograms = Object.entries(counts)
+      .map(([label]) => label);
+    // Move 'Unknown' to the end if present
+    sortedPrograms = sortedPrograms.filter(v => v !== 'Unknown').sort((a, b) => a.localeCompare(b));
+    if (Object.keys(counts).includes('Unknown')) sortedPrograms.push('Unknown');
+    // Log the sorted program list
+    console.log('[SpeckleViewer] Sorted programs:', sortedPrograms);
+    // 3. Assign palette colors in order
     const valueToColor = {};
-    let colorIndex = 0;
+    sortedPrograms.forEach((label, idx) => {
+      valueToColor[label] = CATEGORICAL_PALETTE[idx % CATEGORICAL_PALETTE.length];
+    });
+    // Log the color assignments
+    console.log('[SpeckleViewer] Program color mapping:', sortedPrograms.map((label, idx) => ({ label, color: CATEGORICAL_PALETTE[idx % CATEGORICAL_PALETTE.length] })));
+    // 4. Group object ids by color
     const groups = {};
     for (const node of nodes) {
-      const val = node.model.raw.properties?.[propName];
-      if (val === undefined || val === null) continue;
-      const strVal = String(val);
-      if (!valueToColor[strVal]) {
-        valueToColor[strVal] = CATEGORICAL_PALETTE[colorIndex % CATEGORICAL_PALETTE.length];
-        colorIndex++;
-      }
-      const color = valueToColor[strVal];
+      const val = String(node.model.raw.properties?.[propName] || 'Unknown');
+      const color = valueToColor[val];
       if (!groups[color]) groups[color] = [];
       groups[color].push(node.model.id);
     }

@@ -9,6 +9,7 @@
       :filter-config="props.filterConfig"
       :show-stats="false"
       :verbose="false"
+      :program-categories="props.programCategories"
       @viewer-ready="onViewerReady"
       @model-loaded="onModelLoaded"
       @error="onError"
@@ -59,6 +60,10 @@ const props = defineProps({
   filterConfig: {
     type: Object,
     default: null
+  },
+  programCategories: {
+    type: Array,
+    default: () => []
   }
 });
 
