@@ -8,12 +8,12 @@
     @mousemove="(e) => onBarEnter(idx, e)"
     @mouseleave="onBarLeave"
   >
-    <div class="bar-value">{{ (cluster.count * 4.5 ).toFixed(1) }} m</div>
+    <div class="bar-value">{{ animatedNumbers[idx].toFixed(1) }} m</div>
     <div class="bar-outer">
       <div
         class="bar-inner"
         :style="{
-          height: (maxFloors ? Math.round((cluster.count / maxFloors) * 200) : 0) + 'px',
+          height: animatedHeights[idx] + 'px',
           background: barColors[idx % barColors.length]
         }"
       ></div>
@@ -30,7 +30,7 @@
       
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 const props = defineProps({
   clusters: { type: Array, required: true },
   maxFloors: { type: Number, required: true }
@@ -43,6 +43,46 @@ const barColors = [
   'var(--orange-100)',
   'var(--yellow-100)'
 ];
+// Animation state
+const animatedHeights = ref([]);
+const animatedNumbers = ref([]);
+
+function animateBar(idx, targetHeight, targetNumber) {
+  const duration = 900;
+  const startTime = performance.now();
+  function animate(now) {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    animatedHeights.value[idx] = Math.round(targetHeight * progress);
+    animatedNumbers.value[idx] = (targetNumber * progress);
+    if (progress < 1) {
+      requestAnimationFrame(animate);
+    } else {
+      animatedHeights.value[idx] = Math.round(targetHeight);
+      animatedNumbers.value[idx] = targetNumber;
+    }
+  }
+  requestAnimationFrame(animate);
+}
+
+function startAnimation() {
+  animatedHeights.value = props.clusters.map(cluster => 0);
+  animatedNumbers.value = props.clusters.map(cluster => 0);
+  props.clusters.forEach((cluster, idx) => {
+    const targetHeight = props.maxFloors ? Math.round((cluster.count / props.maxFloors) * 200) : 0;
+    const targetNumber = cluster.count * 4.5;
+    animateBar(idx, targetHeight, targetNumber);
+  });
+}
+
+onMounted(() => {
+  startAnimation();
+});
+
+// Re-animate if clusters or maxFloors change
+watch([() => props.clusters, () => props.maxFloors], () => {
+  startAnimation();
+});
 function onBarEnter(idx, e) {
   hovered.value = idx;
   // Tooltip position: follow mouse, like pie chart
