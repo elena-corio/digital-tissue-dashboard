@@ -8,7 +8,7 @@
     @mousemove="(e) => onBarEnter(idx, e)"
     @mouseleave="onBarLeave"
   >
-    <div class="bar-value">{{ animatedNumbers[idx].toFixed(1) }} m</div>
+    <div class="bar-value">{{ (animatedNumbers[idx] ?? 0).toFixed(1) }} m</div>
     <div class="bar-outer">
       <div
         class="bar-inner"
@@ -80,9 +80,12 @@ onMounted(() => {
 });
 
 // Re-animate if clusters or maxFloors change
-watch([() => props.clusters, () => props.maxFloors], () => {
-  startAnimation();
-});
+watch(
+  () => [JSON.stringify(props.clusters), props.maxFloors],
+  () => {
+    startAnimation();
+  }
+);
 function onBarEnter(idx, e) {
   hovered.value = idx;
   // Tooltip position: follow mouse, like pie chart

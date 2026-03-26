@@ -10,8 +10,12 @@
     <div class="card-title">Key Insights</div>
     <div class="chart-placeholder">
       <template v-if="selected === 'data'">
-        <DataBarChart :clusters="clusters" :maxFloors="maxFloors" />
-        </template>
+        <DataBarChart
+          :clusters="clusters"
+          :maxFloors="maxFloors"
+          :key="clustersKey"
+        />
+      </template>
       <template v-else-if="selected === 'program'">
         <ProgramPieChart :data="programData" />
       </template>
@@ -49,6 +53,13 @@ const programData = computed(() => {
   }));
 });
 const selected = ref('data');
+
+// Key for DataBarChart to force remount on data change
+const clustersKey = computed(() => {
+  // Use a hash of clusters and maxFloors for uniqueness
+  const clustersStr = JSON.stringify(clusters.value);
+  return `${clustersStr}-${maxFloors.value}`;
+});
 
 // Get clusters (towers) and their floor counts
 const { data: speckleData } = useSpeckleData();
