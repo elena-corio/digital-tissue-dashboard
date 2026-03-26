@@ -1,19 +1,10 @@
 FRONTEND
-Legend in Speckle Viewer
-Add animation to diagrams
-Improve landing page
-Refactor Tissue Canvas cell naming and look
-Pointer/cursor logic in Tissue Canvas
-
-BACKEND
-Change logic for calculating program diversity index (every n floors)
-Gross floor area of project includes also bridges and cores
-NFA subtract full cross area of elements, while carbon considers th
-Add transparency logic
+Tower height: level of last floor
+Material breakdown chart
+§d model toggles towers
+Sort programs by name so color are consistent
 
 MODEL
-Transparency, slabs with core, columns with real tickness
-Update program (twice)
 New model with 3d elements
 
 
