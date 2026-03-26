@@ -1,17 +1,20 @@
-Spinner in Metrics View
-Last visited tab persist when refreshing
-Navigation tab inactive until data is available
-? with contextual instructions
-Thumbnail in metrics history above benchmark line
-Pointer/cursor in Site Plan View
-Pointer/cursor in Metrics history
-Remove annoying thumbnail
-
+FRONTEND
+Legend in Speckle Viewer
+Add animation to diagrams
+Improve landing page
 Refactor Tissue Canvas cell naming and look
 Pointer/cursor logic in Tissue Canvas
 
-Legend in Speckle Viewer
-Add Project tab content
+BACKEND
+Change logic for calculating program diversity index (every n floors)
+Gross floor area of project includes also bridges and cores
+NFA subtract full cross area of elements, while carbon considers th
+Add transparency logic
+
+MODEL
+Transparency, slabs with core, columns with real tickness
+Update program (twice)
+New model with 3d elements
 
 
 Here’s what I found:

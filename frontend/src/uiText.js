@@ -12,7 +12,7 @@ export const HOMEPAGE = {
     faculty: [
       'Pablo Antuña Molina', 'Cristóbal Ignácio Burgos Sanhueza', 'Hari Krishnan',
     ],
-    learnMore: 'Blog Post'
+    learnMore: 'IAAC Blog'
   },
   cards: [
     {

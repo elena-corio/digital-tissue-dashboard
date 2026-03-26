@@ -1,4 +1,3 @@
-
 <template>
   <div class="siteview-grid">
     <!-- Left Column: 1/3 width -->

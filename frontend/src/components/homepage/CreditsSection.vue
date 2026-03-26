@@ -1,11 +1,14 @@
-
 <template>
   <section class="credits-section">
     <div class="credits-columns">
       <div class="credits-col credits-brand">
-        <h3 class="brand-title">
-				<span class="digital">digital</span>.<span class="tissue">tissue</span>
-			</h3>
+        <div class="brand-title-row">
+          <h3 class="brand-title">
+            <span class="brand-link" @click="handleEnter">
+              <span class="digital">digital</span>.<span class="tissue">tissue</span>
+            </span>
+          </h3>
+        </div>
         <div class="h2">{{ subtitle }}</div>
         <div class="body credits-reserved">{{ credits.allRightsReserved }}</div>
       </div>
@@ -50,13 +53,31 @@
 
 <script setup>
 import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 import * as uiText from '@/uiText.js'
 
 const credits = computed(() => uiText.HOMEPAGE.credits)
 const subtitle = computed(() => uiText.HOMEPAGE.subtitle)
+const router = useRouter()
+function handleEnter() {
+  router.push({ path: '/sign-in', query: { redirect: '/workspace' } })
+}
 </script>
 
 <style scoped>
+.brand-title-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.brand-link {
+  color: var(--light-blue-100,#1976d2);
+  cursor: pointer;
+  transition: color 0.15s;
+}
+.brand-link:hover {
+  color: var(--light-blue-50, #1976d2);
+}
 .credits-section {
   width: 100vw;
   background: var(--grey-50, #f8f8f8);
@@ -122,7 +143,7 @@ const subtitle = computed(() => uiText.HOMEPAGE.subtitle)
   padding-left: 18px;
 }
 .credits-link {
-  color: #1976d2;
+  color:var(--light-blue-100,#1976d2);
   text-decoration: underline;
 }
 .credits-reserved {

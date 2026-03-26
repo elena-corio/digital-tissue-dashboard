@@ -2,8 +2,7 @@
   <div class="auth-container">
     <div class="auth-card">
       <div class="auth-header">
-        <h1 class="h1">Create Account</h1>
-        <p class="h4">Sign up to digital tissue</p>
+        <h2 class="h2">Digital Tissue</h2>
       </div>
       <div ref="signUpContainer" class="body"></div>
     </div>
@@ -23,10 +22,10 @@ onMounted(async () => {
 
   if (clerk.value && signUpContainer.value) {
     const baseUrl = import.meta.env.BASE_URL;
-    const signInUrl = baseUrl + 'sign-in';
+    const signUpUrl = baseUrl + 'sign-up';
     const forceRedirectUrl = baseUrl + 'workspace';
     unmount = clerk.value.mountSignUp(signUpContainer.value, {
-      signInUrl,
+      signUpUrl,
       forceRedirectUrl,
       appearance: {
         variables: {
@@ -68,7 +67,7 @@ onUnmounted(() => {
 
 .auth-header {
   text-align: center;
-  margin-bottom: var(--space-xl);
+  margin-bottom: var(--space-md);
   width: 100%;
 }
 /* Center Clerk widget inside card */
@@ -79,6 +78,4 @@ onUnmounted(() => {
   align-items: center;
   justify-content: center;
 }
-
-
 </style>

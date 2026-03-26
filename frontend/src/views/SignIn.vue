@@ -2,8 +2,7 @@
   <div class="auth-container">
     <div class="auth-card">
       <div class="auth-header">
-        <h1 class="h1">Welcome Back</h1>
-        <p class="h4">Sign in to access your workspace</p>
+        <h2 class="h2">Digital Tissue</h2>
       </div>
       <div ref="signInContainer" class="body"></div>
     </div>
@@ -68,7 +67,7 @@ onUnmounted(() => {
 
 .auth-header {
   text-align: center;
-  margin-bottom: var(--space-xl);
+  margin-bottom: var(--space-md);
   width: 100%;
 }
 /* Center Clerk widget inside card */

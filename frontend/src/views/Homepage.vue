@@ -4,7 +4,9 @@
   <div class="page-container homepage-center">
     <CircleGridBackground />
     <div class="homepage-content homepage-content-centered">
-      <h1 v-html="uiText.HOMEPAGE.title"></h1>
+      <h1 class="homepage-title">
+        A <span class="light-blue">living</span> map of<br>your project's cells
+      </h1>
       <h3>{{ uiText.HOMEPAGE.subtitle }}</h3>
       <button
         class="btn get-started-btn"
@@ -15,7 +17,10 @@
     </div>
   </div>
   <div class="homepage-scroll-content">
-    <div class="h3 homepage-desc-center">{{ uiText.HOMEPAGE.description }}</div>
+    <div class="homepage-desc-block">
+      <div class="homepage-desc-title">REAL-TIME PERFORMANCE ANALYTICS</div>
+      <div class="homepage-desc-center">{{ uiText.HOMEPAGE.description }}</div>
+    </div>
     <AboutSection />
     <CreditsSection />
   </div>
@@ -44,6 +49,9 @@ function handleGetStarted() {
 </script>
 
 <style scoped>
+.homepage-title .light-blue {
+  color: var(--light-blue-100, #4fc3f7);
+}
 .page-container.homepage-center {
   position: relative;
   width: 100vw;
@@ -61,18 +69,28 @@ function handleGetStarted() {
   justify-content: flex-start;
   padding: 0;
 }
-.homepage-desc-center {
+.homepage-desc-block {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
   width: 100%;
-  min-height: 200px;
-  margin-top: 120px;
-  margin-bottom: 120px;
-  margin-left: 50vw;
-  margin-right: 50vw;
   max-width: 500px;
+  margin: 48px auto 32px auto;
+}
+.homepage-desc-title {
+  font-size: var(--font-size-h4);
+  color: var(--navy-50);
+  margin-bottom: 24px;
+  margin-top: 120px;
+  letter-spacing: 0.05em;
+}
+.homepage-desc-center {
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-medium);
+  color: var(--navy-100);
+  margin-bottom: 120px;
 }
 .homepage-content-centered {
   position: absolute;

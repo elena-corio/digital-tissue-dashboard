@@ -19,11 +19,13 @@ defineProps({
 
 <style scoped>
 .text-card {
+  background-color: white;
   padding: var(--space-lg);
   color: var(--navy-100);
   font-weight: var(--font-weight-medium);
   width: 100%;
 }
+
 
 .card-list {
   list-style-type: none;
