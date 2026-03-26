@@ -12,7 +12,7 @@ export const HOMEPAGE = {
     faculty: [
       'Pablo Antuña Molina', 'Cristóbal Ignácio Burgos Sanhueza', 'Hari Krishnan',
     ],
-    learnMore: 'Blog Post'
+    learnMore: 'IAAC Blog'
   },
   cards: [
     {
@@ -76,13 +76,13 @@ export const TABS = {
     statusIcon: '🧘',
     hint: '1. Toggle hyperbuildings on and off in the 3D viewer. \n 2. Move the mouse hover the site areas to highlight the corresponding building in the 3D viewer.',
   },
-  project: {
+  building: {
     title: 'Building Viewer',
     subtitle: 'Key indicators for your project\'s growth',
     statusLabel: 'Tissue Expansion',
-    statusDescription: 'GFA / 1.000.000 - target 100%',
+    statusDescription: 'GFA / 1M m² - target 100%',
     statusIcon: '🧬' ,
-    hint: '1. Toggle towers on and off in the 3D viewer. \n 2. Explore insights on towers, program distribution and material breakdown and see the color-coded 3D visualization.',
+    hint: '1. Toggle towers on and off in the 3D viewer. \n 2. Explore key insights from data, program and structure and see the color-coded 3D visualization.',
   },
   metrics: {
     title: 'Metrics Dashboard',
@@ -150,7 +150,7 @@ export const VITALITY = {
   sectionTitle: 'Organ Vitality',
   cards: {
     body: { title: 'HB03 Plot Share', value: 0.85, goal:1, description: "Body Balance \n target 33%" },
-    tissue: { title: 'GFA / 1.000.000 m²', value: 0.6, goal:1, description: "Tissue Expansion \n target 100%" },
+    tissue: { title: 'GFA / 1M m²', value: 0.6, goal:1, description: "Tissue Expansion \n target 100%" },
     metabolism: { title: 'KPIs on Target', value: 7, goal:8, description: "Metabolic Health \n target 100%"},
     
   },
@@ -201,3 +201,7 @@ export const SITE = {
   siteArea: 85460, // in m2
   hypersArea: {hb01: 30630, hb02: 26635, hb03: 28195}, // in m2
 };
+
+export const BUILDING = {
+  name: 'Hyperbuilding 03',
+  towers: ['T01', 'T02', 'T03', 'T04'],}

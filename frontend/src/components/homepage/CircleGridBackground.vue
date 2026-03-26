@@ -32,7 +32,7 @@ const svgHeight = 700
 const colorPalette = [
   'var(--grey-50)',
   'var(--lila-100)',
-  'var(--blue-50)'
+  'var(--blue-50)',
 ]
 
 const svgWidth = ref(window.innerWidth)
@@ -48,19 +48,26 @@ onMounted(() => {
   window.addEventListener('resize', updateCols)
   updateCols()
 })
-onUnmounted(() => {
-  window.removeEventListener('resize', updateCols)
-})
 
+function seededRandom(row, col) {
+  // Simple hash for repeatable randomness
+  let seed = row * 73856093 ^ col * 19349663;
+  seed = (seed ^ (seed >> 13)) * 0x5bd1e995;
+  return Math.abs(seed);
+}
 function getColor(row, col) {
-  // Diagonal color pattern
-  return colorPalette[(row + col) % colorPalette.length]
+  // Random color per dot, but consistent per dot
+  const idx = seededRandom(row, col) % colorPalette.length;
+  return colorPalette[idx];
 }
 
 // Animation state: Map of active circle keys to activation timestamps
 const activeCircles = ref(new Map())
 let animationTimer = null
 
+// Sinusoidal wave state for all circles
+const waveTime = ref(Date.now())
+let waveTimer = null
 
 function getAnimatedColor(row, col) {
   const key = `${row},${col}`
@@ -71,20 +78,47 @@ function getAnimatedColor(row, col) {
 }
 
 function getAnimatedRadius(row, col) {
+  // Breathing effect for active circles
   const key = `${row},${col}`
+  let baseRadius = radius
   if (activeCircles.value.has(key)) {
-    // Breathing effect: scale up and down based on time since activation
     const start = activeCircles.value.get(key)
     const elapsed = Date.now() - start
     const duration = 900 // ms, must match removal below
-    // Use a sine wave for smooth breathing
     const t = Math.min(elapsed / duration, 1)
     const scale = 1 + 0.5 * Math.sin(Math.PI * t)
-    return radius * scale
+    baseRadius = radius * scale
   }
-  return radius
+  // Apply sinusoidal wave scale to all circles
+  return baseRadius * getWaveScale(row, col)
 }
 
+function getWaveScale(row, col) {
+  // Sinusoidal scale for each circle, with a traveling wave effect
+  const t = waveTime.value / 1000
+  // The wave travels horizontally (col) across the grid
+  const speed = 1.2 // smaller = slower
+  const wavelength = 8 // number of columns per wave
+  const phase = (col / wavelength) - (t / speed)
+  // Range: 0.85 to 1.15 for a smooth, traveling wave
+  return 1 + 0.15 * Math.sin(2 * Math.PI * phase)
+}
+
+
+
+onMounted(() => {
+  window.addEventListener('resize', updateCols)
+  updateCols()
+  animationTimer = setInterval(animateCircles, 60)
+  waveTimer = setInterval(() => {
+    waveTime.value = Date.now()
+  }, 16) // 60fps for smoothness
+})
+onUnmounted(() => {
+  window.removeEventListener('resize', updateCols)
+  if (animationTimer) clearInterval(animationTimer)
+  if (waveTimer) clearInterval(waveTimer)
+})
 
 function animateCircles() {
   const total = rows * cols.value
@@ -113,10 +147,14 @@ onMounted(() => {
   window.addEventListener('resize', updateCols)
   updateCols()
   animationTimer = setInterval(animateCircles, 60)
+  waveTimer = setInterval(() => {
+    waveTime.value = Date.now()
+  }, 16) // 60fps for smoothness
 })
 onUnmounted(() => {
   window.removeEventListener('resize', updateCols)
   if (animationTimer) clearInterval(animationTimer)
+  if (waveTimer) clearInterval(waveTimer)
 })
 </script>
 

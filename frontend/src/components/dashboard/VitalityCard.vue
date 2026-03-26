@@ -11,25 +11,25 @@
             <span class="vitality-circle-wrapper">
               <svg :width="72" :height="72" class="vitality-circle">
                 <circle
-                  :stroke-width="getCircleProps(getPercent(card.value, card.goal, idx)).stroke"
-                  :r="getCircleProps(getPercent(card.value, card.goal, idx)).radius"
+                  :stroke-width="getCircleProps(animatedPercents[idx]).stroke"
+                  :r="getCircleProps(animatedPercents[idx]).radius"
                   :cx="36"
                   :cy="36"
                   fill="none"
                   class="vitality-circle-bg"
                 />
                 <circle
-                  :stroke-width="getCircleProps(getPercent(card.value, card.goal, idx)).stroke"
-                  :r="getCircleProps(getPercent(card.value, card.goal, idx)).radius"
+                  :stroke-width="getCircleProps(animatedPercents[idx]).stroke"
+                  :r="getCircleProps(animatedPercents[idx]).radius"
                   :cx="36"
                   :cy="36"
                   fill="none"
-                  :stroke-dasharray="getCircleProps(getPercent(card.value, card.goal, idx)).circumference"
-                  :stroke-dashoffset="getCircleProps(getPercent(card.value, card.goal, idx)).offset"
-                  :class="['vitality-circle-bar', percentColor(getPercent(card.value, card.goal, idx), idx)]"
+                  :stroke-dasharray="getCircleProps(animatedPercents[idx]).circumference"
+                  :stroke-dashoffset="getCircleProps(animatedPercents[idx]).circumference - (animatedPercents[idx] / 100) * getCircleProps(animatedPercents[idx]).circumference"
+                  :class="['vitality-circle-bar', percentColor(animatedPercents[idx], idx)]"
                 />
-                <text x="36" y="38" text-anchor="middle" font-size="22" :class="['vitality-circle-text', percentColor(getPercent(card.value, card.goal, idx), idx)]">
-                  {{ getPercent(card.value, card.goal, idx) }}%
+                <text x="36" y="38" text-anchor="middle" font-size="22" :class="['vitality-circle-text', percentColor(animatedPercents[idx], idx)]">
+                  {{ Math.round(animatedPercents[idx]) }}%
                 </text>
               </svg>
             </span>
@@ -42,6 +42,8 @@
 </template>
 
 <script setup>
+
+import { ref, onMounted } from 'vue';
 import * as uiText from '../../uiText.js'
 import ArrowButton from '../workspace/ArrowButton.vue'
 
@@ -65,7 +67,34 @@ const vitalityCards = [
     value: props.kpisOnTargetPercent ?? 0,
   }
 ];
-const cardRoutes = ['/workspace/site', '/workspace/project', '/workspace/metrics']; // order matches cards
+
+// Animated percent values for each card
+const animatedPercents = ref([0, 0, 0]);
+
+onMounted(() => {
+  vitalityCards.forEach((card, idx) => {
+    const target = getPercent(card.value, card.goal, idx);
+    animatePercent(idx, target);
+  });
+});
+
+function animatePercent(idx, target) {
+  const duration = 900; // ms
+  const start = 0;
+  const startTime = performance.now();
+  function animate(now) {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    animatedPercents.value[idx] = Math.round(start + (target - start) * progress);
+    if (progress < 1) {
+      requestAnimationFrame(animate);
+    } else {
+      animatedPercents.value[idx] = target;
+    }
+  }
+  requestAnimationFrame(animate);
+}
+const cardRoutes = ['/workspace/site', '/workspace/building', '/workspace/metrics']; // order matches cards
 
 // idx must be passed as third argument
 function getPercent(value, goal, idx) {
