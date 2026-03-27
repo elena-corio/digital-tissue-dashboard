@@ -5,8 +5,10 @@
       :key="organ.name"
       :selected="selected === organ.name"
       :borderColor="organ.color"
-      @update:selected="selectOrgan(organ.name)"
+      :disabled="organ.name !== 'HB03'"
+      @update:selected="organ.name === 'HB03' && selectOrgan(organ.name)"
       class="organ-btn"
+      :style="organ.name !== 'HB03' ? 'opacity: 0.5; cursor: not-allowed;' : ''"
     >
       <template #icon>
         <div class="organ-icon-wrapper">
