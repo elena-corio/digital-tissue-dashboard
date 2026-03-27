@@ -6,6 +6,5 @@ export const programPalette = [
 '#e9268c',   // fucsia
 '#e7882f',   // orange
 '#3b479f',   // blue
-'#dadad9',  // grey 
 '#4697e3'   // light-blue
 ];

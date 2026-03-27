@@ -38,8 +38,9 @@ import { ref, computed } from 'vue';
 import { useSpeckleData } from '../../composables/useSpeckleData.js';
 import DataBarChart from './DataBarChart.vue';
 import ProgramPieChart from './ProgramPieChart.vue';
-import { programPalette } from './programPalette.js';
 import StructurePieChart from './StructurePieChart.vue';
+
+import ViewerPanel from '../metrics/ViewerPanel.vue';
 
 // Compute material type distribution from properties starting with 'materialtype.'
 const structureData = computed(() => {

@@ -19,7 +19,7 @@
     <div class="right-col">
       <div class="card card-16-9-aspect">
         <div class="aspect-ratio-box">
-          <BuildingViewerPlaceholder />
+           <SpeckleViewer :model-urls="modelUrls" :auth-token="speckleToken" />
         </div>
       </div>
       <BuildingToggleRow />
@@ -38,11 +38,23 @@ import BuildingToggleRow from '../components/building/BuildingToggleRow.vue';
 import { BUILDING } from '../uiText.js';
 import { useSpeckleData } from '../composables/useSpeckleData';
 import { computed } from 'vue';
+import { speckleModels, speckleToken } from '../config/speckleConfig.js';
+import SpeckleViewer from '../components/building/SpeckleViewer.vue';
 
 const props = defineProps({
   tissueExpansion: { type: Number, required: false },
 });
-
+const projectId = speckleModels.model.projectId;
+const modelIds = [
+  speckleModels.model.commonModelId,
+  speckleModels.model.t01ModelId,
+  speckleModels.model.t02ModelId,
+  speckleModels.model.t03ModelId,
+  speckleModels.model.t04ModelId
+];
+const modelUrls = modelIds.map(
+  id => `https://app.speckle.systems/projects/${projectId}/models/${id}`
+);
 const { data: speckleData } = useSpeckleData();
 const buildingName = computed(() => BUILDING?.buildingName || 'Hyperbuilding 03');
 const numberOfFloors = computed(() => {
@@ -67,45 +79,16 @@ onMounted(() => {
   statusValue.value = props.tissueExpansion ?? 0;
 });
 </script>
-/* Workspace title row styles (copied from Workspace.vue) */
-.workspace-title-row {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  margin-left: var(--space-lg);
-  margin-right: var(--space-lg);
-  margin-top: var(--space-lg);
-  margin-bottom: var(--space-md);
-}
-.workspace-title-block {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-.h2 {
-  font-size: 2rem;
-  font-weight: 700;
-  margin: 0;
-}
-.subtitle {
-  font-size: 1.1rem;
-  color: var(--navy-50, #888);
-  margin-top: 0.25rem;
-}
-.workspace-status-indicator {
-  display: flex;
-  align-items: center;
-  gap: var(--space-md);
-}
+
 
 <style scoped>
 
 /* Copy layout styles from SiteView for perfect match */
-
 .buildingview-grid {
   display: grid;
   grid-template-columns: 1fr 2fr;
   gap: var(--space-md);
+
   width: 100%;
   align-items: stretch;
   margin-top: var(--space-lg);
@@ -125,6 +108,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
+
   gap: var(--space-md);
   min-height: 0;
 }
@@ -158,5 +142,31 @@ onMounted(() => {
   justify-content: center;
   align-items: center;
 }
+/* Workspace title row styles (copied from Workspace.vue) */
+.workspace-title-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-left: var(--space-lg);
+  margin-right: var(--space-lg);
+  margin-top: var(--space-lg);
+  margin-bottom: var(--space-md);
+}
+.workspace-title-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+}
+         
 
+.workspace-status-indicator {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
 </style>

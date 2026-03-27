@@ -29,15 +29,15 @@
       <!-- Callout lines and tags (hardcoded centroids and tag positions for demo) -->
       <!-- Blue (st0): left horizontal callout -->
       <line class="area-line" x1="35" y1="90" x2="-20" y2="90" />
-      <text class="area-label" x="-20" y="87">HB3</text>
+      <text class="area-label" x="-20" y="87">HB03</text>
       <text class="area-sqm" x="-20" y="97">{{ uiText.SITE.hypersArea.hb03.toLocaleString() }} m²</text>
       <!-- Fucsia (st1): right horizontal callout -->
       <line class="area-line" x1="100" y1="70" x2="160" y2="70" />
-      <text class="area-label" x="160" y="67">HB2</text>
+      <text class="area-label" x="160" y="67">HB02</text>
       <text class="area-sqm" x="160" y="77">{{ uiText.SITE.hypersArea.hb02.toLocaleString() }} m²</text>
       <!-- Yellow (st2): left horizontal callout -->
       <line class="area-line" x1="70" y1="30" x2="-20" y2="30" />
-      <text class="area-label" x="-20" y="27">HB1</text>
+      <text class="area-label" x="-20" y="27">HB01</text>
       <text class="area-sqm" x="-20" y="37">{{ uiText.SITE.hypersArea.hb01.toLocaleString() }} m²</text>
     </svg>
   </div>
