@@ -31,6 +31,7 @@
 
 <script setup>
 import { ref, onMounted, watch } from 'vue';
+import { BUILDING } from '../../uiText.js';
 const props = defineProps({
   clusters: { type: Array, required: true },
   maxFloors: { type: Number, required: true }
@@ -70,9 +71,31 @@ function startAnimation() {
   animatedNumbers.value = props.clusters.map(cluster => 0);
   props.clusters.forEach((cluster, idx) => {
     const targetHeight = props.maxFloors ? Math.round((cluster.count / props.maxFloors) * 200) : 0;
-    const targetNumber = cluster.count * 4.5;
+    const targetNumber = getTowerHeight(cluster, idx);
     animateBar(idx, targetHeight, targetNumber);
   });
+
+// Helper to get tower key (T01, T02, ...) from cluster or index
+function getTowerKey(cluster, idx) {
+  if (cluster && cluster.name) {
+    // Try to extract number from 'Cluster 01', 'Cluster 02', etc.
+    const numMatch = cluster.name.match(/Cluster\s*(\d+)/i);
+    if (numMatch) {
+      return `T${numMatch[1].padStart(2, '0')}`;
+    }
+    // Fallback: look for T01, T02, etc.
+    const tMatch = cluster.name.match(/T\d{2}/);
+    if (tMatch) return tMatch[0];
+  }
+  // fallback to BUILDING.towers order or T01, T02, ...
+  return BUILDING.towers?.[idx] || `T${String(idx+1).padStart(2,'0')}`;
+}
+
+// Helper to get tower height from uitext.js
+function getTowerHeight(cluster, idx) {
+  const key = getTowerKey(cluster, idx);
+  return BUILDING.towerHeights?.[key] || 0;
+}
 }
 
 onMounted(() => {

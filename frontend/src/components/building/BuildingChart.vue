@@ -20,18 +20,66 @@
         <ProgramPieChart :data="programData" />
       </template>
       <template v-else-if="selected === 'structure'">
-        <span>Structure chart content</span>
+        <StructurePieChart :data="structureData" />
       </template>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useSpeckleData } from '../../composables/useSpeckleData.js';
 import DataBarChart from './DataBarChart.vue';
 import ProgramPieChart from './ProgramPieChart.vue';
+import StructurePieChart from './StructurePieChart.vue';
 import { programPalette } from './programPalette.js';
+
+import ViewerPanel from '../metrics/ViewerPanel.vue';
+
+// Compute material type distribution from properties starting with 'materialtype.'
+const structureData = computed(() => {
+  const latest = speckleData.value?.latest;
+  if (!latest?.data?.elements) return [];
+  // Aggregate all materialtype.* properties from all clusters
+  const materialCounts = {};
+  let total = 0;
+  latest.data.elements.forEach(cluster => {
+    if (cluster && cluster.properties) {
+      Object.keys(cluster.properties).forEach(key => {
+        if (key.startsWith('materialtype.')) {
+          const mat = key.split('.')[1];
+          const val = Number(cluster.properties[key]) || 0;
+          if (val > 0) {
+            materialCounts[mat] = (materialCounts[mat] || 0) + val;
+            total += val;
+          }
+        }
+      });
+    }
+  });
+  // Convert to array with percentage and color
+  return Object.entries(materialCounts)
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([label, value], idx) => {
+      let color = barColors[idx % barColors.length];
+      if (label.toLowerCase() === 'concrete') color = '#3b479f'; // blue
+      else if (label.toLowerCase() === 'steel') color = '#bdbdbd'; // grey
+      else if (label.toLowerCase() === 'glass') color = '#7fd8f5'; // light blue
+      return {
+        label,
+        value,
+        percent: total > 0 ? (value / total) * 100 : 0,
+        color
+      };
+    });
+});
+// Use the same colors as DataBarChart (towers)
+const barColors = [
+  'var(--blue-100)',
+  'var(--light-blue-100)',
+  'var(--orange-100)',
+  'var(--yellow-100)'
+];
 
 // Compute program distribution
 const programData = computed(() => {
@@ -46,13 +94,39 @@ const programData = computed(() => {
     counts[program] = (counts[program] || 0) + 1;
   });
   // Map to array with color
-  return Object.entries(counts).map(([label, value], idx) => ({
-    label,
-    value,
-    color: programPalette[idx % programPalette.length]
-  }));
+  return Object.entries(counts)
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([label, value], idx) => ({
+      label,
+      value,
+      color: programPalette[idx % programPalette.length]
+    }));
 });
-const selected = ref('data');
+
+// Sorted program categories for color mapping
+const programCategories = computed(() => {
+  const latest = speckleData.value?.latest;
+  if (!latest?.data?.elements) return [];
+  const allElements = latest.data.elements.flatMap(cluster => Array.isArray(cluster.elements) ? cluster.elements : []);
+  const unique = Array.from(new Set(allElements.map(el => el?.properties?.program || 'Unknown')));
+  // Sort alphabetically, move 'Unknown' to end if present
+  const filtered = unique.filter(v => v !== 'Unknown').sort((a, b) => a.localeCompare(b));
+  if (unique.includes('Unknown')) filtered.push('Unknown');
+  return filtered;
+});
+
+const props = defineProps({
+  modelValue: { type: String, default: 'data' }
+});
+const emit = defineEmits(['update:modelValue']);
+const selected = ref(props.modelValue);
+
+watch(() => props.modelValue, (val) => {
+  selected.value = val;
+});
+watch(selected, (val) => {
+  emit('update:modelValue', val);
+});
 
 // Key for DataBarChart to force remount on data change
 const clustersKey = computed(() => {

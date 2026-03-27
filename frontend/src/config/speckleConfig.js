@@ -15,5 +15,13 @@ export const speckleModels = {
     hb01ModelId: '77c3aa335b',
     hb02ModelId: 'cafc7ce6bf',
     hb03ModelId: '388ce2bacf',
+  },
+  model: {
+    projectId: 'dcca94731b',
+    commonModelId: 'c3ff281db8',
+    t01ModelId: '443852223a',
+    t02ModelId: '8d605ea7a4',
+    t03ModelId: 'd1edbf7055',
+    t04ModelId: '5826b065d4',
   }
 };

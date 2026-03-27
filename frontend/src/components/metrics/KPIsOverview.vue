@@ -14,10 +14,15 @@
              cursor: 'pointer',
              transition: 'opacity 0.2s, border-color 0.2s, border-width 0.2s',
            }"
+           @mouseenter="hoveredKPI = uiText.KPIS.kpis[i]?.metrics[j]?.name"
+           @mouseleave="hoveredKPI = null"
           >
             <div class="kpi-label">
               {{ uiText.KPIS.kpis[i]?.metrics[j]?.label || 'KPI' }}
               <span v-if="uiText.KPIS.kpis[i]?.metrics[j]?.unit" class="kpi-unit">{{ uiText.KPIS.kpis[i]?.metrics[j]?.unit }}</span>
+              <span v-if="hoveredKPI === uiText.KPIS.kpis[i]?.metrics[j]?.name" class="kpi-hover-value">
+                {{ getKPIValue(uiText.KPIS.kpis[i]?.metrics[j]?.name) }}
+              </span>
             </div>
           <div class="kpi-bar-wrapper">
             <div class="kpi-bar">
@@ -44,6 +49,16 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
+const hoveredKPI = ref(null)
+function getKPIValue(metricName) {
+  const metric = METRICS[metricName]
+  const snakeKey = toSnakeCase(metricName)
+  let value = props.speckleData?.data?.properties?.[snakeKey]
+  if (typeof value === 'string') value = Number(value)
+  if (!metric || value === undefined || isNaN(value)) return ''
+  return formatValue(value)
+}
 import { defineEmits } from 'vue'
 const emit = defineEmits(['selectKPI'])
 
@@ -116,6 +131,19 @@ function getDiamondPosition(metricName) {
 </script>
 
 <style scoped>
+.kpi-hover-value {
+  display: inline-block;
+  background: var(--navy-10, #f0f4fa);
+  color: var(--navy-100, #1a2233);
+  border-radius: 6px;
+  padding: 0.1em 0.5em;
+  margin-left: 0.5em;
+  font-size: var(--font-size-value);
+  font-weight: bold;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  position: absolute;
+  z-index: 10;
+}
 .kpis-grid {
   display: flex;
   flex-direction: column;

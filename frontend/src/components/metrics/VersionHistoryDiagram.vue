@@ -13,7 +13,17 @@
       <polyline :points="linePoints" fill="none" stroke="var(--navy-100)" stroke-width="3" />
       <!-- Circles -->
       <g v-for="(pt, i) in points" :key="i">
-        <circle :cx="pt.x" :cy="pt.y" r="6" fill="var(--navy-100)" @mouseenter="hoveredIdx = i" @mouseleave="hoveredIdx = null" style="cursor: pointer;" />
+        <circle
+          :cx="pt.x"
+          :cy="pt.y"
+          :r="i === 3 ? 8 : 6"
+          :fill="i === 3 ? 'white' : 'var(--navy-100)'"
+          :stroke="i === 3 ? 'var(--navy-100)' : 'none'"
+          :stroke-width="i === 3 ? 3 : 0"
+          @mouseenter="hoveredIdx = i"
+          @mouseleave="hoveredIdx = null"
+          style="cursor: pointer; transition: r 0.15s, fill 0.15s, stroke 0.15s;"
+        />
       </g>
       <!-- X axis labels -->
       <g v-for="(pt, i) in points" :key="'year-' + i">
@@ -73,6 +83,8 @@ export default {
       hoveredIdx: null
     };
   },
+
+  // No need to track selectedIdx or watch history anymore
   computed: {
     kpiUnit() {
       return this.selectedMetric?.unit || '';
@@ -161,6 +173,12 @@ export default {
       const tooltipH = this.tooltipRef?.offsetHeight || 36;
       this.tooltipX = x + 12 + tooltipW > rect.width ? x - tooltipW - 12 : x + 12;
       this.tooltipY = y + 12 + tooltipH > rect.height ? y - tooltipH - 12 : y + 12;
+    },
+    selectPoint(i) {
+      // Only allow selecting the latest version (selectedIdx === 3)
+      if (i === 3) {
+        this.selectedIdx = i;
+      }
     }
   }
 };

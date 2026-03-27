@@ -204,4 +204,6 @@ export const SITE = {
 
 export const BUILDING = {
   name: 'Hyperbuilding 03',
-  towers: ['T01', 'T02', 'T03', 'T04'],}
+  towers: ['T01', 'T02', 'T03', 'T04'],
+  towerHeights: {T01: 288, T02: 378, T03: 558, T04: 468}, // shoud not be hardcoded but whatever, we are in a rush
+};

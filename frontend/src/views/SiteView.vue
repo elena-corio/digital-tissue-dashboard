@@ -12,9 +12,6 @@
           @area-leave="onAreaLeave"
         />
       </div>
-
-
-    
     </div>
     <!-- Right Column: 2/3 width -->
     <div class="right-col">
@@ -25,19 +22,19 @@
       </div>
       <div class="toggle-row">
         <ToggleButton
-          label="HB1"
+          label="HB01"
           :selected="toggleStates[0]"
           borderColor="var(--yellow-100)"
           @update:selected="toggleStates[0] = !toggleStates[0]"
         />
         <ToggleButton
-          label="HB2"
+          label="HB02"
           :selected="toggleStates[1]"
           borderColor="var(--fucsia-100)"
           @update:selected="toggleStates[1] = !toggleStates[1]"
         />
         <ToggleButton
-          label="HB3"
+          label="HB03"
           :selected="toggleStates[2]"
           borderColor="var(--light-blue-100)"
           @update:selected="toggleStates[2] = !toggleStates[2]"
@@ -144,15 +141,6 @@ const activeModelUrls = computed(() => {
   align-items: center;
   gap: var(--space-md);
   min-height: 0;
-}
-.card-16-9 {
-  aspect-ratio: 16 / 9;
-  width: 100%;
-  max-height: 70vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
 }
 .toggle-row {
   display: flex;

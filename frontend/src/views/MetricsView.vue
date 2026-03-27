@@ -19,8 +19,9 @@
           <div class="metrics-explorer-card card" style="position:relative;">
             <div class="card-title" style="position:relative;">
               <span v-if="selectedKPI">3D Viewer </span>
-              <ViewerLegend v-if="legendItems && legendItems.length" :items="legendItems" />
-
+            </div>
+            <div class="body" style="position:relative;">
+              <span v-if="selectedKPI">Latest Version </span>
             </div>
             <ViewerPanel
               v-model:modelIds="inputModelId"
@@ -58,7 +59,6 @@ import VersionMetrics from '../components/metrics/VersionMetrics.vue';
 import ActionRequired from '../components/metrics/ActionRequired.vue';
 import GlobalScore from '../components/metrics/GlobalScore.vue';
 import ViewerPanel from '../components/metrics/ViewerPanel.vue';
-import ViewerLegend from '../components/metrics/ViewerLegend.vue';
 import { useSpeckleData } from '../composables/useSpeckleData';
 import { speckleModels, speckleToken } from '../config/speckleConfig.js';
 import * as uiText from '../uiText.js';
@@ -76,7 +76,6 @@ export default {
     ActionRequired,
     GlobalScore,
     ViewerPanel,
-    ViewerLegend
   },
   props: {
     kpiStatus: Array,
@@ -85,54 +84,7 @@ export default {
   },
 
   computed: {
-    legendItems() {
-      const metric = this.selectedMetric;
-      if (!metric) return [];
-      // Categorical (program): show color for each category
-      if (metric.filter === 'program') {
-        // Use the same palette as in SpeckleViewer
-        const palette = [
-          '#4697e3', '#e7882f', '#f0b43a', '#6ecb8a', '#c65fa0',
-          '#5bb8d4', '#e06060', '#a3c96e', '#b07cd6', '#f2c96e'
-        ];
-        // Collect unique program names from latest data
-        const elements = this.speckleData?.latest?.data?.elements;
-        if (!Array.isArray(elements) || elements.length === 0) return [];
-        const programs = [...new Set(elements.map(e => e?.properties?.program).filter(Boolean))];
-        return programs.map((prog, i) => ({ color: palette[i % palette.length], label: prog }));
-      } else {
-        // Numeric: show min, benchmark, max
-        const left = metric.left;
-        const right = metric.right;
-        const benchmark = metric.benchmark;
-        // Use same colors as in SpeckleViewer
-        const ERROR_COLOR = '#e7882f';
-        const SUCCESS_COLOR = '#4697e3';
-        const items = [];
-        if (typeof left === 'number') {
-          items.push({ color: ERROR_COLOR, label: left.toFixed(2) });
-        } else if (left !== undefined) {
-          items.push({ color: ERROR_COLOR, label: left });
-        }
-        if (typeof benchmark === 'number') {
-          // Interpolate color for benchmark
-          const t = (typeof left === 'number' && typeof right === 'number') ? Math.max(0, Math.min(1, (benchmark - left) / (right - left))) : 0.5;
-          const lerpColor = (hex1, hex2, t) => {
-            const r1 = parseInt(hex1.slice(1,3),16), g1 = parseInt(hex1.slice(3,5),16), b1 = parseInt(hex1.slice(5,7),16);
-            const r2 = parseInt(hex2.slice(1,3),16), g2 = parseInt(hex2.slice(3,5),16), b2 = parseInt(hex2.slice(5,7),16);
-            const r = Math.round(r1+(r2-r1)*t), g = Math.round(g1+(g2-g1)*t), b = Math.round(b1+(b2-b1)*t);
-            return `#${r.toString(16).padStart(2,'0')}${g.toString(16).padStart(2,'0')}${b.toString(16).padStart(2,'0')}`;
-          };
-          items.push({ color: lerpColor(ERROR_COLOR, SUCCESS_COLOR, t), label: benchmark.toFixed(2) });
-        }
-        if (typeof right === 'number') {
-          items.push({ color: SUCCESS_COLOR, label: right.toFixed(2) });
-        } else if (right !== undefined) {
-          items.push({ color: SUCCESS_COLOR, label: right });
-        }
-        return items;
-      }
-    },
+    
     selectedMetric() {
       for (const section of uiText.KPIS.kpis) {
         for (const metric of section.metrics) {
@@ -241,8 +193,6 @@ export default {
     statusDescription.value = uiText.TABS.metrics.statusDescription;
     statusValue.value = this.kpisOnTargetPercent;
     if (import.meta.env.DEV) {
-      // eslint-disable-next-line no-console
-      console.log('legendItems:', this.legendItems);
       // eslint-disable-next-line no-console
       console.log('selectedMetric:', this.selectedMetric);
       // eslint-disable-next-line no-console
@@ -362,7 +312,7 @@ export default {
   overflow: hidden;
 }
 .metrics-explorer-card .card-title {
-  margin-bottom: var(--space-sm);
+  margin-bottom: 0.0rem;
 }
 .speckle-viewer-card {
   width: 100%;
