@@ -98,38 +98,57 @@ const applyColorFilter = async (config) => {
     valueToColor[String(val).toUpperCase()] = (config.colors ? config.colors[idx % config.colors.length] : BAR_COLORS[idx % BAR_COLORS.length]);
   });
 
-  // Helper: find parent cluster node for a given node
-  function findParentCluster(node) {
-    let parent = node.parent;
-    while (parent) {
-      if (parent.model?.raw?.properties && Object.keys(parent.model.raw.properties).some(k => k.startsWith('materialtype.'))) {
-        return parent;
+  // For program filtering: isolate only objects with a matching program property
+  if (propName === 'program') {
+    const programSet = new Set((config.values || []).map(v => String(v).toUpperCase()));
+    const matchingNodes = allNodes.filter(node => {
+      const props = node.model?.raw?.properties;
+      const val = props && props.hasOwnProperty('program') ? String(props['program']).toUpperCase() : undefined;
+      return val && programSet.has(val);
+    });
+    filtering.isolateObjects(matchingNodes.map(node => node.model.id));
+    // Also apply coloring to the matching nodes
+    const groups = {};
+    for (const node of matchingNodes) {
+      const props = node.model?.raw?.properties;
+      let val = undefined;
+      if (props && Object.prototype.hasOwnProperty.call(props, propName)) {
+        val = props[propName];
       }
-      parent = parent.parent;
+      const hasValue = val !== undefined && val !== null && String(val).trim() !== '';
+      let color = 'rgba(255,255,255,0)'; // fully transparent white by default
+      if (hasValue) {
+        const normVal = String(val).toUpperCase();
+        color = valueToColor[normVal] || color;
+      }
+      if (!groups[color]) groups[color] = [];
+      groups[color].push(node.model.id);
     }
-    return null;
+    filtering.setUserObjectColors(
+      Object.entries(groups).map(([color, objectIds]) => ({ objectIds, color }))
+    );
+  } else {
+    // Assign color or transparent
+    const groups = {};
+    for (const node of allNodes) {
+      const props = node.model?.raw?.properties;
+      let val = undefined;
+      if (props && Object.prototype.hasOwnProperty.call(props, propName)) {
+        val = props[propName];
+      }
+      const hasValue = val !== undefined && val !== null && String(val).trim() !== '';
+      let color = 'rgba(255,255,255,0)'; // fully transparent white by default
+      if (hasValue) {
+        const normVal = String(val).toUpperCase();
+        color = valueToColor[normVal] || color;
+      }
+      if (!groups[color]) groups[color] = [];
+      groups[color].push(node.model.id);
+    }
+    filtering.setUserObjectColors(
+      Object.entries(groups).map(([color, objectIds]) => ({ objectIds, color }))
+    );
   }
-
-  // Assign color or transparent
-  const groups = {};
-  for (const node of allNodes) {
-    const props = node.model?.raw?.properties;
-    let val = undefined;
-    if (props && Object.prototype.hasOwnProperty.call(props, propName)) {
-      val = props[propName];
-    }
-    const hasValue = val !== undefined && val !== null && String(val).trim() !== '';
-    let color = 'rgba(255,255,255,0)'; // fully transparent white by default
-    if (hasValue) {
-      const normVal = String(val).toUpperCase();
-      color = valueToColor[normVal] || color;
-    }
-    if (!groups[color]) groups[color] = [];
-    groups[color].push(node.model.id);
-  }
-  filtering.setUserObjectColors(
-    Object.entries(groups).map(([color, objectIds]) => ({ objectIds, color }))
-  );
 };
 
 onMounted(initViewer);
@@ -156,6 +175,8 @@ watch(() => props.modelUrls, (newUrls) => {
   height: 600px;
   background: #f8f9fa;
   position: relative;
+  border-radius: var(--radius-md);
+  overflow: hidden;
 }
 .error-overlay {
   position: absolute;
