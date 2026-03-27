@@ -1,7 +1,14 @@
 <template>
-  <div ref="viewerContainer" class="speckle-viewer-container">
+  <div ref="viewerContainer" class="speckle-viewer-container" @mousemove="onMouseMove">
     <div v-if="error" class="error-overlay">
       <p>{{ error }}</p>
+    </div>
+    <div
+      v-if="selectedProperties && props.filterConfig"
+      class="pie-thumbnail-tooltip"
+      :style="{ left: mouseX + 8 + 'px', top: mouseY + 8 + 'px' }"
+    >
+      <span class="pie-thumbnail-value">{{ infoValue }}</span>
     </div>
   </div>
 </template>
@@ -9,7 +16,7 @@
 <script setup>
 import { ref, onMounted, watch, nextTick } from 'vue';
 import { Viewer, DefaultViewerParams, SpeckleLoader, UrlHelper, CameraController, SelectionExtension, FilteringExtension, ViewerEvent } from '@speckle/viewer';
-
+import { computed } from 'vue';
 const props = defineProps({
   modelUrls: { type: Array, required: true },
   authToken: { type: String, default: '' },
@@ -22,6 +29,47 @@ const viewerContainer = ref(null);
 const error = ref(null);
 let viewer = null;
 let filtering = null;
+const selectedProperties = ref(null);
+const mouseX = ref(0);
+const mouseY = ref(0);
+
+// Mouse move handler for info tag
+function onMouseMove(e) {
+  const rect = viewerContainer.value?.getBoundingClientRect();
+  if (rect) {
+    mouseX.value = e.clientX - rect.left;
+    mouseY.value = e.clientY - rect.top;
+  }
+}
+
+// Info label and value for floating tag
+const infoLabel = computed(() => {
+  if (!props.filterConfig) return '';
+  const key = props.filterConfig.key;
+  if (key === 'tower') return 'Tower';
+  if (key === 'program') return 'Program';
+  if (key === 'material') return 'Material';
+  return key.charAt(0).toUpperCase() + key.slice(1);
+});
+const infoValue = computed(() => {
+  if (!selectedProperties.value || !props.filterConfig) return '—';
+  const key = props.filterConfig.key;
+  let val;
+  if (key === 'tower') {
+    // Try both 'tower' and 'cluster_id' properties
+    val = selectedProperties.value.tower || selectedProperties.value.cluster_id;
+    if (!val) return '—';
+    return `T${val}`;
+  }
+  val = selectedProperties.value[key];
+  if (!val) return '—';
+  // For program, remove 'Program' prefix if present (e.g., 'ProgramLIVING' -> 'Living')
+  if (key === 'program' && typeof val === 'string') {
+    val = val.replace(/^Program/i, '');
+    val = val.charAt(0).toUpperCase() + val.slice(1).toLowerCase();
+  }
+  return val;
+});
 
 // Bar colors for towers (same as DataBarChart)
 const BAR_COLORS = [
@@ -50,8 +98,10 @@ const initViewer = async () => {
     viewer.on(ViewerEvent.ObjectClicked, (selectionData) => {
       if (selectionData && selectionData.hits?.length > 0) {
         const raw = selectionData.hits[0].node.model.raw;
+        selectedProperties.value = raw?.properties ?? null;
         emit('object-clicked', raw?.properties ?? null);
       } else {
+        selectedProperties.value = null;
         emit('object-clicked', null);
       }
     });
@@ -189,5 +239,54 @@ watch(() => props.modelUrls, (newUrls) => {
   font-weight: bold;
   font-size: 1.2rem;
   z-index: 10;
+}
+.object-info-tag {
+  position: absolute;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  background: #ffffff;
+  border-radius: var(--radius-md);
+  padding: var(--space-xs) var(--space-sm);
+  box-shadow: var(--shadow-card);
+  pointer-events: none;
+  white-space: nowrap;
+  min-width: 120px;
+  top: 0;
+  left: 0;
+}
+.object-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-xs) 0;
+  font-size: var(--font-size-body, 1rem);
+  gap: var(--space-sm, 0.5rem);
+}
+.object-info-tag-label {
+  font-weight: 600;
+  color: var(--navy-100, #222);
+}
+.object-info-tag-value {
+  color: var(--navy-100, #222);
+}
+/* Floating tooltip for pie chart sector (copied from ProgramPieChart.vue) */
+.pie-thumbnail-tooltip {
+  position: absolute;
+  z-index: 9999;
+  pointer-events: none;
+  background: var(--card-bg, #fff);
+  transition: left 0.08s, top 0.08s;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-xs) var(--space-sm);
+  width: fit-content;
+}
+.pie-thumbnail-value {
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-bold);
+  color: var(--navy-100);
+  white-space: nowrap;
 }
 </style>
