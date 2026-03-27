@@ -222,9 +222,10 @@ watch(() => props.modelUrls, (newUrls) => {
 <style scoped>
 .speckle-viewer-container {
   width: 100%;
-  background: white;
+  height: 600px;
+  background: #f8f9fa;
   position: relative;
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   overflow: hidden;
 }
 .error-overlay {

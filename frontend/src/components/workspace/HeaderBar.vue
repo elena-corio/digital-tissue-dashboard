@@ -141,7 +141,7 @@ async function handleSignOut() {
   background-color: white;
   border: 1.5px solid var(--grey-100);
   /* No shadow */
-  cursor: default;
+  cursor: pointer;
   outline: none;
 }
 .dropdown-chevron {
