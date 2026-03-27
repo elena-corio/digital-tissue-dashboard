@@ -196,7 +196,7 @@ export const SITE = {
   timeline: 'Beginning 2026',
   typology: 'Hyperbuildings',
   city: 'Santiago Metropolitan Region',
-  address: 'Providentia, Santiago, Chile',
+  address: 'Providencia, Santiago, Chile',
   coordinates: { latitude: -33.4298, longitude: -70.6234 },
   siteArea: 85460, // in m2
   hypersArea: {hb01: 30630, hb02: 26635, hb03: 28195}, // in m2
