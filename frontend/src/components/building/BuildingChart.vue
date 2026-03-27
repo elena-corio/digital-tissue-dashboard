@@ -22,23 +22,17 @@
       <template v-else-if="selected === 'structure'">
         <StructurePieChart :data="structureData" />
       </template>
-      <template v-if="selected === 'program'">
-        <ViewerPanel
-          v-if="programCategories.length > 0"
-          :program-categories="programCategories"
-          v-bind="$attrs"
-        />
-      </template>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useSpeckleData } from '../../composables/useSpeckleData.js';
 import DataBarChart from './DataBarChart.vue';
 import ProgramPieChart from './ProgramPieChart.vue';
 import StructurePieChart from './StructurePieChart.vue';
+import { programPalette } from './programPalette.js';
 
 import ViewerPanel from '../metrics/ViewerPanel.vue';
 
@@ -69,7 +63,8 @@ const structureData = computed(() => {
     .map(([label, value], idx) => {
       let color = barColors[idx % barColors.length];
       if (label.toLowerCase() === 'concrete') color = '#3b479f'; // blue
-      if (label.toLowerCase() === 'steel') color = '#bdbdbd'; // grey
+      else if (label.toLowerCase() === 'steel') color = '#bdbdbd'; // grey
+      else if (label.toLowerCase() === 'glass') color = '#7fd8f5'; // light blue
       return {
         label,
         value,
@@ -120,7 +115,18 @@ const programCategories = computed(() => {
   return filtered;
 });
 
-const selected = ref('data');
+const props = defineProps({
+  modelValue: { type: String, default: 'data' }
+});
+const emit = defineEmits(['update:modelValue']);
+const selected = ref(props.modelValue);
+
+watch(() => props.modelValue, (val) => {
+  selected.value = val;
+});
+watch(selected, (val) => {
+  emit('update:modelValue', val);
+});
 
 // Key for DataBarChart to force remount on data change
 const clustersKey = computed(() => {

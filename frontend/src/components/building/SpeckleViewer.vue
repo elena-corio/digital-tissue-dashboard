@@ -12,7 +12,8 @@ import { Viewer, DefaultViewerParams, SpeckleLoader, UrlHelper, CameraController
 
 const props = defineProps({
   modelUrls: { type: Array, required: true },
-  authToken: { type: String, default: '' }
+  authToken: { type: String, default: '' },
+  filterConfig: { type: Object, default: null }
 });
 
 const emit = defineEmits(['viewer-ready', 'model-loaded', 'error', 'object-clicked']);
@@ -21,6 +22,14 @@ const viewerContainer = ref(null);
 const error = ref(null);
 let viewer = null;
 let filtering = null;
+
+// Bar colors for towers (same as DataBarChart)
+const BAR_COLORS = [
+  '#3b479f', // var(--blue-100)
+  '#4697e3', // var(--light-blue-100)
+  '#e7882f', // var(--orange-100)
+  '#f0b43a'  // var(--yellow-100)
+];
 
 const initViewer = async () => {
   try {
@@ -50,6 +59,7 @@ const initViewer = async () => {
     for (const url of props.modelUrls) {
       await loadModel(url);
     }
+    await applyColorFilter(props.filterConfig);
   } catch (err) {
     error.value = `Failed to initialize viewer: ${err.message}`;
     emit('error', err);
@@ -72,13 +82,70 @@ const loadModel = async (url) => {
   }
 };
 
+// Apply categorical coloring by property (tower/program/material)
+const applyColorFilter = async (config) => {
+  if (!viewer || !filtering || !config || !config.key) {
+    if (filtering) filtering.removeUserObjectColors();
+    return;
+  }
+  const propName = config.key;
+  const tree = viewer.getWorldTree();
+  const allNodes = tree.findAll((node) => node.model?.raw?.properties !== undefined);
+
+  // Build color mapping (case-insensitive)
+  const valueToColor = {};
+  (config.values || []).forEach((val, idx) => {
+    valueToColor[String(val).toUpperCase()] = (config.colors ? config.colors[idx % config.colors.length] : BAR_COLORS[idx % BAR_COLORS.length]);
+  });
+
+  // Helper: find parent cluster node for a given node
+  function findParentCluster(node) {
+    let parent = node.parent;
+    while (parent) {
+      if (parent.model?.raw?.properties && Object.keys(parent.model.raw.properties).some(k => k.startsWith('materialtype.'))) {
+        return parent;
+      }
+      parent = parent.parent;
+    }
+    return null;
+  }
+
+  // Assign color or transparent
+  const groups = {};
+  for (const node of allNodes) {
+    const props = node.model?.raw?.properties;
+    let val = undefined;
+    if (props && Object.prototype.hasOwnProperty.call(props, propName)) {
+      val = props[propName];
+    }
+    const hasValue = val !== undefined && val !== null && String(val).trim() !== '';
+    let color = 'rgba(255,255,255,0)'; // fully transparent white by default
+    if (hasValue) {
+      const normVal = String(val).toUpperCase();
+      color = valueToColor[normVal] || color;
+    }
+    if (!groups[color]) groups[color] = [];
+    groups[color].push(node.model.id);
+  }
+  filtering.setUserObjectColors(
+    Object.entries(groups).map(([color, objectIds]) => ({ objectIds, color }))
+  );
+};
+
 onMounted(initViewer);
+
+// Re-apply color filter if filterConfig changes
+watch(() => props.filterConfig, (newConfig) => {
+  applyColorFilter(newConfig);
+});
 
 watch(() => props.modelUrls, (newUrls) => {
   if (viewer && newUrls) {
     for (const url of newUrls) {
       loadModel(url);
     }
+    // Re-apply color filter after loading
+    applyColorFilter(props.filterConfig);
   }
 });
 </script>
