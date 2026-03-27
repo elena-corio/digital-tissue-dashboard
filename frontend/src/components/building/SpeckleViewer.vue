@@ -223,9 +223,9 @@ watch(() => props.modelUrls, (newUrls) => {
 .speckle-viewer-container {
   width: 100%;
   height: 600px;
-  background: #f8f9fa;
+  background:white;
   position: relative;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   overflow: hidden;
 }
 .error-overlay {
@@ -235,7 +235,7 @@ watch(() => props.modelUrls, (newUrls) => {
   align-items: center;
   justify-content: center;
   background: rgba(255,255,255,0.9);
-  color: #e9268c;
+  color: var(--color-error, #e74c3c);
   font-weight: bold;
   font-size: 1.2rem;
   z-index: 10;
