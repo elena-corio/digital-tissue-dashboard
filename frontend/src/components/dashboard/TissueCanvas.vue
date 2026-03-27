@@ -213,10 +213,13 @@ onBeforeUnmount(() => {
   border-radius: 50%;
   transition: box-shadow 0.3s, transform 0.2s;
   z-index: 1;
-  cursor: pointer;
+  cursor: default;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.tissue-cell.large {
+  cursor: pointer;
 }
 .tissue-cell.large:hover {
   z-index: 10;
